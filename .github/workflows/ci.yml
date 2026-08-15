@@ -4,6 +4,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -12,6 +15,7 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Verify pinned upstream OmegaClaw
         run: |
@@ -21,7 +25,9 @@ jobs:
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
       - name: Validate shell bootstrap
-        run: bash -n scripts/install-into-petta.sh
+        run: |
+          bash -n scripts/install-into-petta.sh
+          bash -n runtime/huggingface/hf_entrypoint.sh
 
       - uses: actions/setup-python@v5
         with:
@@ -30,8 +36,8 @@ jobs:
       - name: Install test tooling
         run: python -m pip install pytest ruff
 
-      - name: Lint AlphaClaw, certification, selection, ingress, qualification, and benchmark lab
-        run: ruff check tests certification selection ingress qualification benchmarks
+      - name: Lint AlphaClaw, certification, selection, ingress, qualification, runtime, and benchmark lab
+        run: ruff check tests certification selection ingress qualification runtime benchmarks
 
       - name: Certify pinned OmegaClaw residency contract
         run: |
@@ -39,7 +45,7 @@ jobs:
             --source OmegaClaw-Core \
             --output /tmp/omegaclaw-residency.json
 
-      - name: Test architecture, selection, ingress, qualification, and benchmark accounting
+      - name: Test architecture, selection, ingress, qualification, runtime, and benchmark accounting
         run: pytest -q
 
       - name: Dry-stage Hugging Face benchmark Space
@@ -60,3 +66,21 @@ jobs:
           for required in ("Dockerfile", "app.py", "analyze.py", "requirements.txt", "README.md", "LICENSE"):
               assert (destination / required).is_file(), required
           PY
+
+      - name: Dry-stage pinned Omega resident Space
+        run: |
+          tmp="$(mktemp -d)"
+          python runtime/huggingface/stage.py --destination "$tmp"
+          for required in \
+            Dockerfile \
+            Dockerfile.residency \
+            README.md \
+            LICENSE \
+            alphaclaw.metta \
+            run.metta \
+            hf_entrypoint.sh \
+            health.py; do
+            test -f "$tmp/$required"
+          done
+          test -f "$tmp/OmegaClaw-Core/run.metta"
+          test ! -e "$tmp/OmegaClaw-Core/.git"

@@ -1,0 +1,67 @@
+name: Control Omega resident Space
+
+on:
+  workflow_dispatch:
+    inputs:
+      state:
+        description: "Capability state"
+        required: true
+        type: choice
+        default: status
+        options:
+          - status
+          - on
+          - off
+
+permissions:
+  contents: read
+
+concurrency:
+  group: alphaclaw-omega-space
+  cancel-in-progress: false
+
+jobs:
+  control:
+    if: github.repository == 'PaulTiffany/AlphaClaw' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify pinned upstream OmegaClaw
+        run: |
+          test "$(git -C OmegaClaw-Core rev-parse HEAD)" = \
+            "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
+          test -z "$(git -C OmegaClaw-Core status --porcelain)"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install official Hugging Face client
+        run: python -m pip install huggingface_hub==1.24.0
+
+      - name: Inspect or revoke capability
+        if: inputs.state != 'on'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_OMEGA_SPACE_ID: ${{ vars.HF_OMEGA_SPACE_ID }}
+          HF_OMEGA_SPACE_PRIVATE: ${{ vars.HF_OMEGA_SPACE_PRIVATE }}
+        run: python runtime/huggingface/manage_space.py "${{ inputs.state }}"
+
+      - name: Synchronize and enable capability
+        if: inputs.state == 'on'
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          HF_OMEGA_SPACE_ID: ${{ vars.HF_OMEGA_SPACE_ID }}
+          HF_OMEGA_SPACE_PRIVATE: ${{ vars.HF_OMEGA_SPACE_PRIVATE }}
+          ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
+          OMEGA_WS_URL: ${{ vars.OMEGA_WS_URL }}
+          OMEGA_WS_TOKEN: ${{ secrets.OMEGA_WS_TOKEN }}
+          ALPHACLAW_SOURCE_SHA: ${{ github.sha }}
+        run: python runtime/huggingface/manage_space.py on

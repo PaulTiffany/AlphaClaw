@@ -1,0 +1,171 @@
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import tempfile
+from pathlib import Path
+
+try:
+    from .stage import MODEL, OMEGA_SHA, PROVIDER, stage
+except ImportError:
+    from stage import MODEL, OMEGA_SHA, PROVIDER, stage
+
+SPACE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$")
+DEFAULT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
+ASI_SECRET = "ASI_ONE_API_KEY"
+WS_SECRET = "OMEGA_WS_TOKEN"
+WS_VARIABLE = "OMEGA_WS_URL"
+ALPHA_VARIABLE = "ALPHACLAW_SOURCE_SHA"
+
+
+def as_bool(value: str | None, default: bool = True) -> bool:
+    if value is None or not value.strip():
+        return default
+    normalized = value.strip().casefold()
+    if normalized in {"1", "true", "yes", "on"}:
+        return True
+    if normalized in {"0", "false", "no", "off"}:
+        return False
+    raise RuntimeError("boolean value must be true/false, yes/no, on/off, or 1/0")
+
+
+def require_env(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"{name} is required")
+    return value
+
+
+def existing_secret_keys(api, repo_id: str) -> set[str]:
+    return set(api.get_space_secrets(repo_id=repo_id))
+
+
+def safe_runtime(runtime, secret_keys: set[str]) -> dict[str, object]:
+    return {
+        "stage": str(runtime.stage),
+        "hardware": runtime.hardware,
+        "requested_hardware": runtime.requested_hardware,
+        "provider": PROVIDER,
+        "model": MODEL,
+        "omega_source_sha": OMEGA_SHA,
+        "asi_secret_present": ASI_SECRET in secret_keys,
+        "ws_secret_present": WS_SECRET in secret_keys,
+    }
+
+
+def status(api, repo_id: str) -> dict[str, object]:
+    runtime = api.get_space_runtime(repo_id=repo_id)
+    return safe_runtime(runtime, existing_secret_keys(api, repo_id))
+
+
+def delete_secret_if_present(api, repo_id: str, key: str) -> None:
+    if key in existing_secret_keys(api, repo_id):
+        api.delete_space_secret(repo_id=repo_id, key=key)
+
+
+def turn_off(api, repo_id: str) -> dict[str, object]:
+    # Capability revocation precedes compute shutdown.
+    delete_secret_if_present(api, repo_id, ASI_SECRET)
+    delete_secret_if_present(api, repo_id, WS_SECRET)
+    api.pause_space(repo_id=repo_id)
+    return status(api, repo_id)
+
+
+def synchronize(api, repo_id: str, private: bool) -> None:
+    api.create_repo(
+        repo_id=repo_id,
+        repo_type="space",
+        space_sdk="docker",
+        private=private,
+        exist_ok=True,
+    )
+    with tempfile.TemporaryDirectory(prefix="alphaclaw-omega-space-") as temporary:
+        staged = Path(temporary)
+        stage(staged)
+        api.upload_folder(
+            repo_id=repo_id,
+            repo_type="space",
+            folder_path=staged,
+            delete_patterns="*",
+            commit_message=f"Synchronize AlphaClaw Omega resident at {OMEGA_SHA[:12]}",
+        )
+
+
+def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
+    asi_key = require_env("ASI_ONE_API_KEY")
+    synchronize(api, repo_id, private)
+
+    api.add_space_secret(
+        repo_id=repo_id,
+        key=ASI_SECRET,
+        value=asi_key,
+        description=(
+            "Canonical ASI:One credential; translated only at the Omega process boundary."
+        ),
+    )
+
+    alpha_sha = os.environ.get("ALPHACLAW_SOURCE_SHA", "").strip()
+    if alpha_sha:
+        api.add_space_variable(
+            repo_id=repo_id,
+            key=ALPHA_VARIABLE,
+            value=alpha_sha,
+            description="AlphaClaw source commit that synchronized this runtime.",
+        )
+
+    ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
+    if ws_url:
+        if not ws_url.startswith(("ws://", "wss://")):
+            raise RuntimeError("OMEGA_WS_URL must start with ws:// or wss://")
+        api.add_space_variable(
+            repo_id=repo_id,
+            key=WS_VARIABLE,
+            value=ws_url,
+            description="Outbound bounded Omega WebSocket gateway.",
+        )
+
+    ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
+    if ws_token:
+        api.add_space_secret(
+            repo_id=repo_id,
+            key=WS_SECRET,
+            value=ws_token,
+            description="Bearer token for the outbound bounded Omega WebSocket gateway.",
+        )
+
+    api.restart_space(repo_id=repo_id)
+    runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
+    if str(runtime.stage) != "RUNNING":
+        raise RuntimeError(f"Omega Space did not reach RUNNING; final stage={runtime.stage}")
+    return safe_runtime(runtime, existing_secret_keys(api, repo_id))
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Manually control the dedicated AlphaClaw Omega Space"
+    )
+    parser.add_argument("state", choices=("status", "on", "off"))
+    args = parser.parse_args()
+
+    repo_id = os.environ.get("HF_OMEGA_SPACE_ID", "").strip() or DEFAULT_SPACE_ID
+    token = require_env("HF_TOKEN")
+    if not SPACE_ID.fullmatch(repo_id):
+        raise RuntimeError("HF_OMEGA_SPACE_ID must have owner/name form")
+    private = as_bool(os.environ.get("HF_OMEGA_SPACE_PRIVATE"), default=True)
+
+    from huggingface_hub import HfApi
+
+    api = HfApi(token=token)
+    if args.state == "on":
+        result = turn_on(api, repo_id, private)
+    elif args.state == "off":
+        result = turn_off(api, repo_id)
+    else:
+        result = status(api, repo_id)
+    print(json.dumps(result, indent=2, sort_keys=True))
+
+
+if __name__ == "__main__":
+    main()

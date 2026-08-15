@@ -12,6 +12,7 @@ concurrency:
 
 jobs:
   qualify:
+    if: github.repository == 'PaulTiffany/AlphaClaw' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -28,16 +29,18 @@ jobs:
             "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
-      - name: Build pinned stock OmegaClaw image
-        run: docker build --tag omegaclaw:pinned OmegaClaw-Core
+      - name: Stage hardened pinned residency image
+        run: |
+          rm -rf /tmp/alphaclaw-omega-runtime
+          python3 runtime/huggingface/stage.py \
+            --destination /tmp/alphaclaw-omega-runtime
 
-      - name: Build AlphaClaw overlay
+      - name: Build hardened pinned AlphaClaw Omega image
         run: |
           docker build \
-            --file docker/Dockerfile.overlay \
-            --build-arg OMEGACLAW_IMAGE=omegaclaw:pinned \
+            --file /tmp/alphaclaw-omega-runtime/Dockerfile.residency \
             --tag alphaclaw:residency \
-            .
+            /tmp/alphaclaw-omega-runtime
 
       - name: Run one bounded real-model residency attempt
         env:
