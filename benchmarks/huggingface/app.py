@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import gradio as gr
-
 from analyze import compare
 
 
@@ -14,7 +13,7 @@ def run_analysis(baseline: str | None, alpha: str | None, rates: str | None):
             Path(alpha),
             Path(rates) if rates else None,
         )
-    except Exception as exc:
+    except (OSError, TypeError, ValueError) as exc:
         return {"error": str(exc)}
 
 
