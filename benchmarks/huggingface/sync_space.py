@@ -6,7 +6,8 @@ import shutil
 import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).parents[2]
+REPO_ROOT = Path(__file__).parents[2]
+BENCHMARKS_ROOT = REPO_ROOT / "benchmarks"
 HERE = Path(__file__).parent
 SPACE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$")
 
@@ -15,8 +16,8 @@ def stage(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
     for name in ("Dockerfile", "app.py", "requirements.txt", "README.md"):
         shutil.copy2(HERE / name, destination / name)
-    shutil.copy2(ROOT / "analyze.py", destination / "analyze.py")
-    shutil.copy2(ROOT.parent / "LICENSE", destination / "LICENSE")
+    shutil.copy2(BENCHMARKS_ROOT / "analyze.py", destination / "analyze.py")
+    shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
 
 
 def as_bool(value: str | None, default: bool = True) -> bool:
@@ -31,7 +32,9 @@ def main() -> None:
     private = as_bool(os.environ.get("HF_SPACE_PRIVATE"), default=True)
 
     if not SPACE_ID.fullmatch(repo_id):
-        raise SystemExit("HF_SPACE_ID must have owner/name form, for example PaulTiffany/alphaclaw-benchmarks")
+        raise SystemExit(
+            "HF_SPACE_ID must have owner/name form, for example PaulTiffany/alphaclaw-benchmarks"
+        )
     if not token:
         raise SystemExit("HF_TOKEN is required as a narrowly scoped GitHub Actions secret")
 
