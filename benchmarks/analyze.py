@@ -21,7 +21,7 @@ def read_jsonl(path: Path) -> list[dict[str, Any]]:
             except json.JSONDecodeError as exc:
                 raise ValueError(f"{path}:{lineno}: invalid JSON: {exc}") from exc
             if not isinstance(item, dict):
-                raise ValueError(f"{path}:{lineno}: each JSONL row must be an object")
+                raise TypeError(f"{path}:{lineno}: each JSONL row must be an object")
             records.append(item)
     return records
 
@@ -32,7 +32,7 @@ def read_rates(path: Path | None) -> dict[str, dict[str, float]]:
     data = json.loads(path.read_text(encoding="utf-8"))
     models = data.get("models", {})
     if not isinstance(models, dict):
-        raise ValueError("rate card must contain an object named 'models'")
+        raise TypeError("rate card must contain an object named 'models'")
     return models
 
 
@@ -71,9 +71,7 @@ def summarize(records: list[dict[str, Any]], rates: dict[str, dict[str, float]])
 
     multimodal_calls = sum(role_calls[role] for role in MULTIMODAL_ROLES)
     complete_cost = (
-        round(partial_estimated_cost, 8)
-        if records and priced_calls == len(records)
-        else None
+        round(partial_estimated_cost, 8) if records and priced_calls == len(records) else None
     )
 
     return {
