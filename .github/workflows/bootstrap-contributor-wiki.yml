@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/bootstrap-contributor-wiki.yml"
+  gollum:
   workflow_dispatch:
 
 permissions:
@@ -32,11 +33,8 @@ jobs:
           remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
 
           if ! git clone "$remote" "$wiki"; then
-            rm -rf "$wiki"
-            mkdir -p "$wiki"
-            git -C "$wiki" init
-            git -C "$wiki" branch -M master
-            git -C "$wiki" remote add origin "$remote"
+            echo "::notice title=One-time Wiki initialization needed::Open the repository Wiki in GitHub, create any first page, and choose Save Page. This workflow will rerun automatically and seed the contributor workspace."
+            exit 0
           fi
 
           install_if_absent() {
@@ -51,11 +49,11 @@ jobs:
           install_if_absent contributor/wiki-templates/Edge-Case-Evaluation.md "$wiki/Edge-Case-Evaluation.md"
           install_if_absent contributor/wiki-templates/Provenance-Log.md "$wiki/Provenance-Log.md"
 
-          if [ ! -e "$wiki/Home.md" ]; then
-            cat > "$wiki/Home.md" <<'EOF'
+          if [ ! -e "$wiki/Contributor-Workspace.md" ]; then
+            cat > "$wiki/Contributor-Workspace.md" <<'EOF'
           # AlphaClaw Contributor Workspace
 
-          This Wiki is the low-friction human contribution surface for AlphaClaw and Docent.
+          This is the low-friction human contribution surface for AlphaClaw and Docent.
 
           You do not need command-line Git. Choose the page that best matches what you want to contribute:
 
@@ -73,15 +71,31 @@ jobs:
 
           A ready save is compiled into a review-only pull request. It does not silently change `main`.
 
-          Each accepted save is recorded separately by its exact Wiki commit and Markdown hash, so these three working pages may be reused later without erasing earlier contributions.
+          Each ready save is recorded separately by its exact Wiki commit and Markdown hash, so the three working pages may be reused later without erasing earlier contributions.
 
           Do not place passwords, API keys, private messages, private personal information, or confidential third-party material in this public Wiki.
           EOF
           fi
 
+          touch "$wiki/Home.md"
+          if ! grep -q "alphaclaw-contributor-workspace:v1" "$wiki/Home.md"; then
+            cat >> "$wiki/Home.md" <<'EOF'
+
+          <!-- alphaclaw-contributor-workspace:v1 -->
+          ## Contributor workspace
+
+          For the low-friction AlphaClaw / Docent contribution path, start at [[Contributor Workspace|Contributor-Workspace]].
+          EOF
+          fi
+
           git -C "$wiki" config user.name "github-actions[bot]"
           git -C "$wiki" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C "$wiki" add Home.md Domain-Rule.md Edge-Case-Evaluation.md Provenance-Log.md
+          git -C "$wiki" add \
+            Home.md \
+            Contributor-Workspace.md \
+            Domain-Rule.md \
+            Edge-Case-Evaluation.md \
+            Provenance-Log.md
 
           if git -C "$wiki" diff --cached --quiet; then
             echo "Contributor Wiki is already bootstrapped."
@@ -89,5 +103,5 @@ jobs:
           fi
 
           git -C "$wiki" commit -m "Bootstrap low-friction contributor workspace"
-          branch="$(git -C "$wiki" symbolic-ref --short HEAD 2>/dev/null || echo master)"
+          branch="$(git -C "$wiki" symbolic-ref --short HEAD)"
           git -C "$wiki" push origin "HEAD:${branch}"
