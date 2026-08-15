@@ -2,120 +2,147 @@
 
 **Multimodal at the boundary. Symbolic in the loop.**
 
-AlphaClaw is an opinionated composition of **OmegaClaw**, not a reimplementation of it.
-The upstream `asi-alliance/OmegaClaw-Core` repository is carried intact as a pinned Git
-submodule. AlphaClaw owns only the boundary machinery required to turn multimodal input into a
-symbolic/text working state, hand that state to OmegaClaw, and expose multimodal models back to
-OmegaClaw as explicit tools when perception is needed again.
+AlphaClaw is an inference-aware composition of **OmegaClaw**, not a reimplementation of it.
+The upstream `asi-alliance/OmegaClaw-Core` repository is pinned intact as a Git submodule.
+AlphaClaw contributes one architectural mutation: it tells OmegaClaw what inference is currently
+resident, then treats richer multimodal inference as tooling to invoke only at the boundary of
+need.
 
 ```text
-multimodal user input
-        |
-        v
-  Alpha boundary          one multimodal normalization call
-        |
-        v
- symbolic/text state
-        |
-        v
+multimodal input
+      |
+      | one translation / handoff call
+      v
+symbolic + textual state
+      |
+      v
 +------------------+
-|   OmegaClaw-Core |      upstream submodule; symbolic agent loop
+| stock OmegaClaw  |  <-- resident text inference knows what it is
 +------------------+
-        |
-        +-----------> Alpha multimodal tool
-                         only when OmegaClaw asks
+      |
+      +-----------> existing multimodal tooling
+                     only when symbolic state is insufficient
 ```
 
-## The architectural constraint
+## The move
 
-**OmegaClaw stays upstream.** AlphaClaw does not fork or casually edit its cognitive core.
-Integration should happen beside it through the narrowest available extension surface.
+OmegaClaw already separates its symbolic loop from LLM providers and supports prompt extensions
+and dynamic skills. AlphaClaw uses those extension surfaces instead of forking the cognitive
+core.
 
-That gives us two independently inspectable layers:
+The central primitive is the **Inference Contract**. Every OmegaClaw context is told:
 
-- **OmegaClaw-Core** — the symbolic/stateful reasoning engine, pinned to an upstream commit.
-- **AlphaClaw** — multimodal ingress, symbolic handoff, selective multimodal tooling, adapters,
-  instrumentation, and benchmarks.
+- which provider is resident;
+- which model is resident;
+- which modalities the resident inference actually has;
+- that multimodal capability is tool-only;
+- which multimodal tool/capability is available;
+- which symbolic representation the perception boundary should target;
+- when the agent may call multimodal inference again.
 
-If an integration requires upstream changes, the preferred order is:
+The agent therefore does not have to infer its own capabilities from a model name. A text-only
+reasoner can know that it cannot directly see an image while also knowing that it can call a
+vision-capable tool when perception is required.
 
-1. use an existing OmegaClaw extension point;
-2. add an AlphaClaw-side adapter or launcher;
-3. propose a general-purpose upstream change;
-4. only as a last resort carry a clearly isolated patch.
+## Policy
 
-The submodule itself should remain clean.
+The default AlphaClaw policy is deliberately simple:
 
-## Thesis
+1. On first encounter with a new non-text source, make one multimodal translation/handoff call.
+2. Preserve literal observations, interpretations, uncertainty, unresolved details, and a handle
+   to the original evidence.
+3. Continue the trajectory using resident text/symbolic inference.
+4. Re-query multimodal tooling only when the symbolic state is insufficient, and make that query
+   narrow and evidence-directed.
+5. Treat tool output as an observation, not infallible ground truth.
 
-Do not keep expensive multimodal intelligence resident in every reasoning step.
-
-1. Observe multimodal input once.
-2. Compile it into a provenance-bearing symbolic/text representation.
-3. Let OmegaClaw reason over that representation.
-4. Re-open the original evidence through a multimodal tool only when OmegaClaw identifies a
-   perceptual gap.
-
-The scaling object is the **shared symbolic state**, not the pixels.
+AlphaClaw does **not** implement a competing multimodal stack. Configure it to name and use the
+multimodal capability already available in the OmegaClaw deployment.
 
 ## Repository layout
 
 ```text
 AlphaClaw/
-├── OmegaClaw-Core/       # pinned upstream git submodule
-├── src/alphaclaw/        # Alpha boundary/tooling code
-├── tests/                # Alpha contract tests
+├── OmegaClaw-Core/            # pristine pinned upstream submodule
+├── alphaclaw.metta            # Inference Contract overlay
+├── run.metta                  # stock OmegaClaw + Alpha overlay
+├── scripts/
+│   └── install-into-petta.sh  # deterministic PeTTa composition
+├── tests/                     # architectural invariants
 ├── .gitmodules
-├── pyproject.toml
-└── README.md
+└── LICENSE
 ```
 
-The current Python package is intentionally small. It is boundary code, not a competing agent
-framework.
+There is intentionally no AlphaClaw agent framework and no copied OmegaClaw source.
 
-## Clone
+## Install into PeTTa
+
+Clone AlphaClaw where PeTTa expects repository libraries:
 
 ```bash
+cd /path/to/PeTTa/repos
 git clone --recurse-submodules https://github.com/PaulTiffany/AlphaClaw.git
 cd AlphaClaw
+./scripts/install-into-petta.sh /path/to/PeTTa
 ```
 
-For an existing clone:
+The installer leaves the pinned submodule inside AlphaClaw and creates the library alias
+`PeTTa/repos/OmegaClaw-Core -> AlphaClaw/OmegaClaw-Core`. It refuses to overwrite an unrelated
+OmegaClaw checkout. It also installs `run-alphaclaw.metta` at the PeTTa root.
+
+Then run AlphaClaw using the normal OmegaClaw configuration path, for example:
 
 ```bash
-git submodule update --init --recursive
+cd /path/to/PeTTa
+OMEGACLAW_AUTH_SECRET=<channel-secret> \
+  sh run.sh run-alphaclaw.metta \
+  provider=OpenAI \
+  model=<text-model> \
+  alphaResidentModalities=text-only \
+  alphaMultimodalTool="<existing OmegaClaw multimodal capability>"
 ```
 
-## Boundary contract
+The model field is optional when the selected OmegaClaw provider already has a default. The
+Inference Contract resolves OmegaClaw's configured provider and provider-specific default model
+when possible.
 
-AlphaClaw preserves three distinctions that must not be collapsed by the ingress model:
+## Alpha configuration
 
-1. **Observation** — what the source literally contains.
-2. **Interpretation** — structured entities and relations inferred from it.
-3. **Claims** — propositions offered to OmegaClaw for reasoning.
+AlphaClaw reads configuration through OmegaClaw's existing configuration mechanism, so values can
+come from command-line arguments, `OMEGACLAW_<key>` environment variables, or a config file.
 
-It also preserves uncertainty and a durable source handle so OmegaClaw can ask a targeted
-multimodal question instead of hallucinating through missing perception.
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `alphaResidentModalities` | `text-only` | Capabilities resident in the reasoning model |
+| `alphaMultimodalTool` | `OmegaClaw multimodal tooling` | Human-readable name of the perception capability |
+| `alphaSymbolicTarget` | `MeTTa-compatible symbolic/text state` | Target representation for ingress translation |
+
+`provider` and `model` remain ordinary OmegaClaw configuration. AlphaClaw reports them to the
+reasoning model instead of silently leaving them in runtime plumbing.
 
 ## Hypersprint benchmark
 
-The first benchmark asks a deliberately simple question:
-
-> For equivalent task success, how much multimodal inference is actually necessary?
-
-Compare a multimodal-resident baseline against AlphaClaw's:
+The initial comparison is intentionally narrow:
 
 ```text
-1 ingress call + k targeted multimodal tool calls + symbolic OmegaClaw trajectory
+baseline:    multimodal inference resident throughout trajectory
+AlphaClaw:   1 ingress multimodal call + k targeted re-queries + text/symbolic trajectory
 ```
 
-Measure task success, multimodal calls/tokens, total inference cost, and latency.
+Measure task success, multimodal calls/tokens, total inference cost, latency, and the number of
+perceptual re-queries required.
 
-## Upstream
+The interesting question is not whether AlphaClaw has better vision. It is how much vision the
+reasoning trajectory actually needs.
 
-OmegaClaw-Core is an upstream dependency and retains its own Apache-2.0 license and notices.
-AlphaClaw's original code is licensed separately under MIT.
+## Upstream integrity
+
+CI verifies that `OmegaClaw-Core` is a real Git submodule, that the checked-out SHA matches the
+gitlink pinned by AlphaClaw, and that the submodule worktree remains clean. The Alpha overlay is
+tested separately.
 
 ## License
 
-MIT © 2026 Paul Carver Tiffany III.
+AlphaClaw original code: MIT © 2026 Paul Carver Tiffany III.
+
+`OmegaClaw-Core` remains an upstream dependency and retains its own upstream license and notices.
