@@ -6,7 +6,7 @@ colorTo: red
 sdk: docker
 app_port: 7860
 license: mit
-short_description: Compare OmegaClaw and AlphaClaw inference traces without running an agent.
+short_description: Compare OmegaClaw and AlphaClaw traces.
 ---
 
 # AlphaClaw Benchmark Lab
