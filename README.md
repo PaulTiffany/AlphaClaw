@@ -2,80 +2,119 @@
 
 **Multimodal at the boundary. Symbolic in the loop.**
 
-AlphaClaw is a thin multimodal ingress layer for text-first agent systems such as OmegaClaw.
-Instead of paying for multimodal inference throughout an agent trajectory, AlphaClaw performs
-one multimodal normalization pass at ingress, compiles the result into a compact symbolic/text
-working state, and lets the downstream agent reason over that state cheaply. The original
-source remains addressable so the agent can selectively call multimodal models again only when
-uncertainty requires it.
+AlphaClaw is an opinionated composition of **OmegaClaw**, not a reimplementation of it.
+The upstream `asi-alliance/OmegaClaw-Core` repository is carried intact as a pinned Git
+submodule. AlphaClaw owns only the boundary machinery required to turn multimodal input into a
+symbolic/text working state, hand that state to OmegaClaw, and expose multimodal models back to
+OmegaClaw as explicit tools when perception is needed again.
 
 ```text
-user input
-   |
-   v
-multimodal boundary model   <- one normalization call
-   |
-   v
-AlphaClaw IR
-   |
-   v
-text/symbolic reasoning loop
-   |
-   +----> targeted multimodal query when needed
+multimodal user input
+        |
+        v
+  Alpha boundary          one multimodal normalization call
+        |
+        v
+ symbolic/text state
+        |
+        v
++------------------+
+|   OmegaClaw-Core |      upstream submodule; symbolic agent loop
++------------------+
+        |
+        +-----------> Alpha multimodal tool
+                         only when OmegaClaw asks
 ```
 
-## Design thesis
+## The architectural constraint
 
-Multimodality should be a capability that can be invoked at the boundary of need, not necessarily
-a property resident in every inference step.
+**OmegaClaw stays upstream.** AlphaClaw does not fork or casually edit its cognitive core.
+Integration should happen beside it through the narrowest available extension surface.
 
-AlphaClaw therefore separates:
+That gives us two independently inspectable layers:
+
+- **OmegaClaw-Core** — the symbolic/stateful reasoning engine, pinned to an upstream commit.
+- **AlphaClaw** — multimodal ingress, symbolic handoff, selective multimodal tooling, adapters,
+  instrumentation, and benchmarks.
+
+If an integration requires upstream changes, the preferred order is:
+
+1. use an existing OmegaClaw extension point;
+2. add an AlphaClaw-side adapter or launcher;
+3. propose a general-purpose upstream change;
+4. only as a last resort carry a clearly isolated patch.
+
+The submodule itself should remain clean.
+
+## Thesis
+
+Do not keep expensive multimodal intelligence resident in every reasoning step.
+
+1. Observe multimodal input once.
+2. Compile it into a provenance-bearing symbolic/text representation.
+3. Let OmegaClaw reason over that representation.
+4. Re-open the original evidence through a multimodal tool only when OmegaClaw identifies a
+   perceptual gap.
+
+The scaling object is the **shared symbolic state**, not the pixels.
+
+## Repository layout
+
+```text
+AlphaClaw/
+├── OmegaClaw-Core/       # pinned upstream git submodule
+├── src/alphaclaw/        # Alpha boundary/tooling code
+├── tests/                # Alpha contract tests
+├── .gitmodules
+├── pyproject.toml
+└── README.md
+```
+
+The current Python package is intentionally small. It is boundary code, not a competing agent
+framework.
+
+## Clone
+
+```bash
+git clone --recurse-submodules https://github.com/PaulTiffany/AlphaClaw.git
+cd AlphaClaw
+```
+
+For an existing clone:
+
+```bash
+git submodule update --init --recursive
+```
+
+## Boundary contract
+
+AlphaClaw preserves three distinctions that must not be collapsed by the ingress model:
 
 1. **Observation** — what the source literally contains.
 2. **Interpretation** — structured entities and relations inferred from it.
-3. **Claims** — propositions suitable for downstream reasoning.
-4. **Uncertainty** — ambiguities and unresolved regions that should not be silently collapsed.
-5. **Provenance** — a durable handle back to the original evidence.
+3. **Claims** — propositions offered to OmegaClaw for reasoning.
 
-## Initial API
+It also preserves uncertainty and a durable source handle so OmegaClaw can ask a targeted
+multimodal question instead of hallucinating through missing perception.
 
-```python
-from alphaclaw import AlphaClaw, IngressRequest
+## Hypersprint benchmark
 
-state = AlphaClaw(multimodal_provider).ingest(
-    IngressRequest(source_ref="image://demo", instruction="Normalize for symbolic reasoning")
-)
+The first benchmark asks a deliberately simple question:
 
-print(state.claims)
+> For equivalent task success, how much multimodal inference is actually necessary?
+
+Compare a multimodal-resident baseline against AlphaClaw's:
+
+```text
+1 ingress call + k targeted multimodal tool calls + symbolic OmegaClaw trajectory
 ```
 
-When a downstream text agent needs more perceptual detail:
+Measure task success, multimodal calls/tokens, total inference cost, and latency.
 
-```python
-answer = alphaclaw.query_source(
-    state,
-    question="Is the arrow between node A and node B bidirectional?",
-    region="upper-right",
-)
-```
+## Upstream
 
-That answer is returned as another provenance-bearing observation rather than being allowed to
-silently rewrite prior state.
-
-## Hypersprint target
-
-The first benchmark is intentionally narrow:
-
-> For the same multimodal task success, how many multimodal calls/tokens are actually necessary?
-
-A baseline can keep a multimodal model resident throughout the reasoning trajectory. AlphaClaw
-uses one ingress call plus `k` targeted re-queries, then compares task success, multimodal token
-usage, total cost, and latency.
-
-## Status
-
-Early hypersprint prototype. The repository currently defines the symbolic handoff contract and
-provider interface; concrete provider adapters and OmegaClaw integration are next.
+OmegaClaw-Core is an upstream dependency and retains its own Apache-2.0 license and notices.
+AlphaClaw's original code is licensed separately under MIT.
 
 ## License
 
