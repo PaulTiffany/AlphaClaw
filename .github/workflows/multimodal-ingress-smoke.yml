@@ -1,0 +1,73 @@
+name: Multimodal ingress smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ingress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build deterministic vision fixture
+        run: |
+          python -m pip install pillow
+          python ingress/make_fixture.py /tmp/alphaclaw-fixture.png
+
+      - name: Translate fixture through free OpenRouter multimodal routing
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: |
+          test -n "$OPENROUTER_API_KEY" || {
+            echo "Add repository secret OPENROUTER_API_KEY before running this smoke."
+            exit 1
+          }
+          python ingress/openrouter_image.py \
+            --image /tmp/alphaclaw-fixture.png \
+            --model openrouter/free \
+            --output /tmp/alphaclaw-handoff.json \
+            --trace /tmp/alphaclaw-ingress.jsonl
+
+      - name: Mechanically grade symbolic handoff
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          handoff = json.loads(Path("/tmp/alphaclaw-handoff.json").read_text())
+          obs = handoff["observation"]
+          text = " ".join(
+              obs["literal"]
+              + [item["label"] for item in obs["entities"]]
+          ).lower()
+          assert obs["literal"], "no literal observations"
+          assert "alpha" in text and "claw" in text, text
+          assert handoff["provenance"]["resolved_model"], "missing resolved model"
+          print("resolved_model=", handoff["provenance"]["resolved_model"])
+          print("literal_observations=", len(obs["literal"]))
+          PY
+
+      - name: Build the exact Omega qualification task
+        run: |
+          python qualification/build_task.py \
+            --handoff /tmp/alphaclaw-handoff.json \
+            --marker FREE-MM-SMOKE \
+            --output /tmp/omega-qualification-task.txt
+
+      - name: Preserve ingress evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: alphaclaw-free-multimodal-ingress
+          path: |
+            /tmp/alphaclaw-fixture.png
+            /tmp/alphaclaw-handoff.json
+            /tmp/alphaclaw-ingress.jsonl
+            /tmp/omega-qualification-task.txt
+          retention-days: 7

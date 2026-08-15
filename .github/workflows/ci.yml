@@ -30,8 +30,8 @@ jobs:
       - name: Install test tooling
         run: python -m pip install pytest ruff
 
-      - name: Lint AlphaClaw, certification, selection, and benchmark lab
-        run: ruff check tests certification selection benchmarks
+      - name: Lint AlphaClaw, certification, selection, ingress, qualification, and benchmark lab
+        run: ruff check tests certification selection ingress qualification benchmarks
 
       - name: Certify pinned OmegaClaw residency contract
         run: |
@@ -39,7 +39,7 @@ jobs:
             --source OmegaClaw-Core \
             --output /tmp/omegaclaw-residency.json
 
-      - name: Test architecture, selection, and benchmark accounting
+      - name: Test architecture, selection, ingress, qualification, and benchmark accounting
         run: pytest -q
 
       - name: Dry-stage Hugging Face benchmark Space
