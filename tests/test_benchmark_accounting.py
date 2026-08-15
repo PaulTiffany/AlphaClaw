@@ -91,4 +91,6 @@ def test_benchmark_analyzer_counts_multimodal_calls_and_refuses_silent_free_call
     assert report["alpha"]["multimodal_calls"] == 1
     assert report["baseline"]["multimodal_calls"] == 0
     assert report["alpha"]["unpriced_calls"] == 1
-    assert report["alpha_minus_baseline"]["estimated_cost_usd"] is not None
+    assert report["alpha"]["estimated_cost_usd"] is None
+    assert report["alpha"]["partial_estimated_cost_usd"] is not None
+    assert report["alpha_minus_baseline"]["estimated_cost_usd"] is None
