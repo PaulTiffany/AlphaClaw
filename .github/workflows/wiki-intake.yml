@@ -1,0 +1,69 @@
+name: Compile Wiki contributor intake
+
+on:
+  gollum:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: wiki-contributor-intake
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Clone public Wiki history
+        run: git clone "https://github.com/${GITHUB_REPOSITORY}.wiki.git" /tmp/alphaclaw-wiki
+
+      - name: Compile ready Wiki pages
+        run: |
+          python ingress/wiki_intake.py \
+            --wiki-dir /tmp/alphaclaw-wiki \
+            --output-dir contributions/wiki/generated \
+            --repository "$GITHUB_REPOSITORY"
+
+      - name: Stop when the compiled intake is unchanged
+        id: changes
+        run: |
+          if git diff --quiet -- contributions/wiki/generated; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish review branch
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C wiki-intake
+          git add contributions/wiki/generated
+          git commit -m "Compile ready Wiki contributor intake"
+          git push --force origin HEAD:wiki-intake
+
+      - name: Open review pull request if needed
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          existing="$(gh pr list --head wiki-intake --base main --state open --json number --jq '.[0].number // empty')"
+          if [ -z "$existing" ]; then
+            gh pr create \
+              --head wiki-intake \
+              --base main \
+              --title "Review ready Wiki contributions" \
+              --body $'Generated from Wiki pages explicitly marked **Ready for review: yes**.\n\nEach JSON record retains the source Wiki commit, Git author, Wiki path, and SHA-256 of the exact Markdown. The compiler executes no Wiki content.\n\nHuman review is required before merge. Do not edit generated records by hand; revise the source Wiki page instead.'
+          fi
