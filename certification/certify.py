@@ -84,7 +84,7 @@ RULES: tuple[dict[str, Any], ...] = (
             "src/skills.metta": (
                 "(: add-skill",
                 "(add-atom &self (= (dynamic-skill $function)",
-                "(: add-prompt-extension",
+                "(= (add-prompt-extension $handle $text)",
             )
         },
     },
