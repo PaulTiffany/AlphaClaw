@@ -1,0 +1,36 @@
+name: ASI One free API smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asi-one-free-api-smoke
+  cancel-in-progress: false
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Spend exactly one ASI One request
+        env:
+          ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
+        run: |
+          python3 qualification/asi_one_probe.py \
+            --output /tmp/asi-one-probe.json
+          cat /tmp/asi-one-probe.json
+
+      - name: Upload probe evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: asi-one-free-api-smoke
+          path: /tmp/asi-one-probe.json
+          retention-days: 3
