@@ -10,7 +10,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
@@ -277,7 +277,7 @@ def build_census(
     )
     return {
         "schema_version": SCHEMA_VERSION,
-        "observed_at": datetime.now(timezone.utc).isoformat(),
+        "observed_at": datetime.now(UTC).isoformat(),
         "source": {
             "provider": "OpenRouter",
             "endpoint": source_url,
