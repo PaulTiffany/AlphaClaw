@@ -42,7 +42,7 @@ def summarize(records: list[dict[str, Any]], rates: dict[str, dict[str, float]])
     role_tokens: dict[str, dict[str, int]] = defaultdict(lambda: {"input": 0, "output": 0})
     total_input = 0
     total_output = 0
-    estimated_cost = 0.0
+    partial_estimated_cost = 0.0
     priced_calls = 0
     unpriced_calls = 0
 
@@ -63,13 +63,18 @@ def summarize(records: list[dict[str, Any]], rates: dict[str, dict[str, float]])
         if rate is None:
             unpriced_calls += 1
             continue
-        estimated_cost += (
+        partial_estimated_cost += (
             input_tokens * float(rate.get("input_per_million", 0.0))
             + output_tokens * float(rate.get("output_per_million", 0.0))
         ) / 1_000_000
         priced_calls += 1
 
     multimodal_calls = sum(role_calls[role] for role in MULTIMODAL_ROLES)
+    complete_cost = (
+        round(partial_estimated_cost, 8)
+        if records and priced_calls == len(records)
+        else None
+    )
 
     return {
         "calls": len(records),
@@ -80,7 +85,8 @@ def summarize(records: list[dict[str, Any]], rates: dict[str, dict[str, float]])
         "calls_by_role": dict(sorted(role_calls.items())),
         "tokens_by_role": dict(sorted(role_tokens.items())),
         "calls_by_model": dict(sorted(model_calls.items())),
-        "estimated_cost_usd": round(estimated_cost, 8) if priced_calls else None,
+        "estimated_cost_usd": complete_cost,
+        "partial_estimated_cost_usd": round(partial_estimated_cost, 8) if priced_calls else None,
         "priced_calls": priced_calls,
         "unpriced_calls": unpriced_calls,
     }
