@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Verify upstream submodule
+        run: |
+          test -f OmegaClaw-Core/run.metta
+          test -f OmegaClaw-Core/lib_omegaclaw.metta
+          git submodule status --recursive
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
