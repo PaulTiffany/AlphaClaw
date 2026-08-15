@@ -7,11 +7,11 @@ on:
         description: "Capability state"
         required: true
         type: choice
-        default: status
+        default: "status"
         options:
-          - status
-          - on
-          - off
+          - "status"
+          - "on"
+          - "off"
 
 permissions:
   contents: read
