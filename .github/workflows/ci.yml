@@ -11,14 +11,27 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Verify upstream submodule
+          fetch-depth: 0
+
+      - name: Verify pinned upstream OmegaClaw
         run: |
           test -f OmegaClaw-Core/run.metta
           test -f OmegaClaw-Core/lib_omegaclaw.metta
           git submodule status --recursive
+          test -z "$(git -C OmegaClaw-Core status --porcelain)"
+
+      - name: Validate shell bootstrap
+        run: bash -n scripts/install-into-petta.sh
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -e '.[dev]'
-      - run: ruff check .
-      - run: pytest -q
+
+      - name: Install test tooling
+        run: python -m pip install pytest ruff
+
+      - name: Lint tests
+        run: ruff check tests
+
+      - name: Test architecture
+        run: pytest -q
