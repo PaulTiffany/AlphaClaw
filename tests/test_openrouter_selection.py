@@ -1,6 +1,15 @@
+import importlib.util
 from pathlib import Path
 
-from selection.openrouter_models import build_census, normalize_model, witness_omega_openrouter
+SOURCE = Path("selection/openrouter_models.py")
+SPEC = importlib.util.spec_from_file_location("openrouter_models", SOURCE)
+MODULE = importlib.util.module_from_spec(SPEC)
+assert SPEC.loader is not None
+SPEC.loader.exec_module(MODULE)
+
+build_census = MODULE.build_census
+normalize_model = MODULE.normalize_model
+witness_omega_openrouter = MODULE.witness_omega_openrouter
 
 
 def test_normalize_model_preserves_metadata_without_claiming_qualification():
