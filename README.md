@@ -66,6 +66,9 @@ AlphaClaw/
 ├── OmegaClaw-Core/            # pristine pinned upstream submodule
 ├── alphaclaw.metta            # Inference Contract overlay
 ├── run.metta                  # stock OmegaClaw + Alpha overlay
+├── docker/
+│   └── Dockerfile.overlay     # tiny image layer over a pinned Omega image
+├── qualification/             # resident-model qualification contract
 ├── scripts/
 │   └── install-into-petta.sh  # deterministic PeTTa composition
 ├── tests/                     # architectural invariants
