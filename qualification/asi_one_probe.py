@@ -7,7 +7,7 @@ import json
 import os
 import urllib.error
 import urllib.request
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -78,7 +78,7 @@ def _probe_record(response: dict[str, Any]) -> dict[str, Any]:
         "provider": "ASI:One",
         "requested_model": MODEL,
         "resolved_model": resolved_model,
-        "observed_at": datetime.now(timezone.utc).isoformat(),
+        "observed_at": datetime.now(UTC).isoformat(),
         "reply": reply.strip(),
         "marker_exact": reply.strip() == MARKER,
         "usage": {

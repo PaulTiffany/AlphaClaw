@@ -1,0 +1,73 @@
+name: ASI One Omega residency qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asi-one-omega-residency
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact AlphaClaw and pinned OmegaClaw
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify pinned upstream source
+        run: |
+          test "$(git -C OmegaClaw-Core rev-parse HEAD)" = \
+            "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
+          test -z "$(git -C OmegaClaw-Core status --porcelain)"
+
+      - name: Build pinned stock OmegaClaw image
+        run: docker build --tag omegaclaw:pinned OmegaClaw-Core
+
+      - name: Build AlphaClaw overlay
+        run: |
+          docker build \
+            --file docker/Dockerfile.overlay \
+            --build-arg OMEGACLAW_IMAGE=omegaclaw:pinned \
+            --tag alphaclaw:residency \
+            .
+
+      - name: Run one bounded real-model residency attempt
+        env:
+          ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
+        run: |
+          mkdir -p /tmp/alphaclaw-residency
+          python3 qualification/run_omega_residency.py \
+            --source OmegaClaw-Core \
+            --image alphaclaw:residency \
+            --model asi1-mini \
+            --marker "ALPHACLAW-OMEGA-RESIDENCY-${GITHUB_RUN_ID}" \
+            --max-calls 8 \
+            --output /tmp/alphaclaw-residency/evidence.json \
+            --log-output /tmp/alphaclaw-residency/omegaclaw.log
+
+      - name: Show bounded evidence
+        if: always()
+        run: |
+          test ! -f /tmp/alphaclaw-residency/evidence.json || \
+            cat /tmp/alphaclaw-residency/evidence.json
+
+      - name: Upload residency evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asi-one-omega-residency-${{ github.run_id }}
+          path: /tmp/alphaclaw-residency/
+          if-no-files-found: warn
+          retention-days: 3
+
+      - name: Remove any surviving test container
+        if: always()
+        run: docker rm -f omegaclaw 2>/dev/null || true
