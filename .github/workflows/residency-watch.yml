@@ -3,7 +3,8 @@ name: OmegaClaw residency watch
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 9 * * *"
+    - cron: "20 4 * * *"
+      timezone: "America/New_York"
 
 permissions:
   contents: read
