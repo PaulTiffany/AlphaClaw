@@ -15,8 +15,10 @@ from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Any
 
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models"
+OPENROUTER_PRICE_SORT = "pricing-low-to-high"
+DYNAMIC_ROUTER_IDS = {"openrouter/auto", "openrouter/free"}
 SIGNAL_NAMES = (
     "tools",
     "tool_choice",
@@ -101,22 +103,32 @@ def witness_omega_openrouter(root: Path) -> dict[str, Any]:
     }
 
 
-def _price_is_zero(value: Any) -> bool:
+def _decimal_price(value: Any) -> Decimal | None:
     if value is None:
-        return True
+        return Decimal(0)
     try:
-        return Decimal(str(value)) == 0
+        price = Decimal(str(value))
     except (InvalidOperation, ValueError):
+        return None
+    if price < 0:
+        return None
+    return price
+
+
+def _has_text_pricing(pricing: Any) -> bool:
+    if not isinstance(pricing, dict):
         return False
+    return _decimal_price(pricing.get("prompt")) is not None and _decimal_price(
+        pricing.get("completion")
+    ) is not None
 
 
 def _zero_text_price(pricing: Any) -> bool:
-    if not isinstance(pricing, dict):
-        return False
-    if "prompt" not in pricing or "completion" not in pricing:
+    if not isinstance(pricing, dict) or not _has_text_pricing(pricing):
         return False
     keys = ("prompt", "completion", "request", "internal_reasoning")
-    return all(_price_is_zero(pricing.get(key)) for key in keys)
+    values = [_decimal_price(pricing.get(key)) for key in keys]
+    return all(value == 0 for value in values)
 
 
 def _list_strings(value: Any) -> list[str]:
@@ -125,7 +137,9 @@ def _list_strings(value: Any) -> list[str]:
     return sorted({item for item in value if isinstance(item, str)})
 
 
-def normalize_model(model: dict[str, Any]) -> dict[str, Any]:
+def normalize_model(
+    model: dict[str, Any], *, provider_price_rank: int | None = None
+) -> dict[str, Any]:
     architecture = model.get("architecture")
     if not isinstance(architecture, dict):
         architecture = {}
@@ -138,11 +152,14 @@ def normalize_model(model: dict[str, Any]) -> dict[str, Any]:
     output_modalities = _list_strings(architecture.get("output_modalities"))
     supported_parameters = _list_strings(model.get("supported_parameters"))
     pricing = model.get("pricing")
-    if not isinstance(pricing, (dict, list)):
+    if not isinstance(pricing, dict):
         pricing = {}
 
     addressable = bool(model_id) and "text" in input_modalities and "text" in output_modalities
     signals = {name: name in supported_parameters for name in SIGNAL_NAMES}
+    has_text_pricing = _has_text_pricing(pricing)
+    zero_text_price = _zero_text_price(pricing)
+    fixed_model_identity = model_id not in DYNAMIC_ROUTER_IDS
 
     return {
         "id": model_id,
@@ -158,8 +175,12 @@ def normalize_model(model: dict[str, Any]) -> dict[str, Any]:
         "supported_parameters": supported_parameters,
         "signals": signals,
         "pricing": pricing,
+        "provider_price_rank": provider_price_rank,
         "explicit_free_variant": model_id.endswith(":free"),
-        "zero_text_price": _zero_text_price(pricing),
+        "has_text_pricing": has_text_pricing,
+        "zero_text_price": zero_text_price,
+        "paid_text_route": has_text_pricing and not zero_text_price,
+        "fixed_model_identity": fixed_model_identity,
         "top_provider": model.get("top_provider"),
         "per_request_limits": model.get("per_request_limits"),
         "reasoning": model.get("reasoning"),
@@ -180,19 +201,27 @@ def normalize_catalog(payload: dict[str, Any]) -> list[dict[str, Any]]:
     if not isinstance(data, list):
         raise CensusError("OpenRouter response does not contain a data list")
 
-    models = [normalize_model(item) for item in data if isinstance(item, dict)]
-    return sorted(models, key=lambda item: item["id"])
+    models: list[dict[str, Any]] = []
+    for rank, item in enumerate(data, start=1):
+        if isinstance(item, dict):
+            models.append(normalize_model(item, provider_price_rank=rank))
+    return models
 
 
 def _fetch_payload(api_key: str) -> tuple[dict[str, Any], str]:
-    query = urllib.parse.urlencode({"output_modalities": "text"})
+    query = urllib.parse.urlencode(
+        {
+            "output_modalities": "text",
+            "sort": OPENROUTER_PRICE_SORT,
+        }
+    )
     url = f"{OPENROUTER_MODELS_URL}?{query}"
     request = urllib.request.Request(
         url,
         headers={
             "Authorization": f"Bearer {api_key}",
             "Accept": "application/json",
-            "User-Agent": "AlphaClaw-OpenRouter-Census/1",
+            "User-Agent": "AlphaClaw-OpenRouter-Census/2",
         },
     )
     try:
@@ -217,15 +246,27 @@ def _apply_filters(
     models: list[dict[str, Any]],
     *,
     free_only: bool,
+    paid_only: bool,
     min_context: int | None,
     require_signals: list[str],
 ) -> list[dict[str, Any]]:
-    selected = models
+    if free_only and paid_only:
+        raise CensusError("--free-only and --paid-only are mutually exclusive")
+
+    selected = [model for model in models if model["stock_omega_openrouter_addressable"]]
+
     if free_only:
         selected = [
             model
             for model in selected
             if model["explicit_free_variant"] or model["zero_text_price"]
+        ]
+
+    if paid_only:
+        selected = [
+            model
+            for model in selected
+            if model["paid_text_route"] and model["fixed_model_identity"]
         ]
 
     if min_context is not None:
@@ -242,6 +283,25 @@ def _apply_filters(
     return selected
 
 
+def _cheapest_paid_candidate(models: list[dict[str, Any]]) -> dict[str, Any] | None:
+    for model in models:
+        if (
+            model["stock_omega_openrouter_addressable"]
+            and model["paid_text_route"]
+            and model["fixed_model_identity"]
+        ):
+            return {
+                "id": model["id"],
+                "name": model["name"],
+                "provider_price_rank": model["provider_price_rank"],
+                "context_length": model["context_length"],
+                "pricing": model["pricing"],
+                "signals": model["signals"],
+                "qualification": model["qualification"],
+            }
+    return None
+
+
 def _counts(models: list[dict[str, Any]]) -> dict[str, int]:
     return {
         "models": len(models),
@@ -250,6 +310,7 @@ def _counts(models: list[dict[str, Any]]) -> dict[str, int]:
         ),
         "explicit_free_variants": sum(bool(model["explicit_free_variant"]) for model in models),
         "zero_text_price": sum(bool(model["zero_text_price"]) for model in models),
+        "paid_text_routes": sum(bool(model["paid_text_route"]) for model in models),
         "advertises_tools": sum(bool(model["signals"]["tools"]) for model in models),
         "advertises_reasoning": sum(bool(model["signals"]["reasoning"]) for model in models),
         "advertises_structured_outputs": sum(
@@ -264,6 +325,7 @@ def build_census(
     omega_source: Path,
     source_url: str,
     free_only: bool = False,
+    paid_only: bool = False,
     min_context: int | None = None,
     require_signals: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -272,17 +334,25 @@ def build_census(
     selected = _apply_filters(
         models,
         free_only=free_only,
+        paid_only=paid_only,
         min_context=min_context,
         require_signals=require_signals,
     )
+    cheapest_paid_candidate = _cheapest_paid_candidate(selected)
     return {
         "schema_version": SCHEMA_VERSION,
         "observed_at": datetime.now(UTC).isoformat(),
         "source": {
             "provider": "OpenRouter",
             "endpoint": source_url,
+            "provider_sort": OPENROUTER_PRICE_SORT,
+            "provider_sort_semantics": (
+                "OpenRouter server-side pricing order; AlphaClaw preserves provider order "
+                "and does not invent a local price weighting."
+            ),
             "filters": {
                 "free_only": free_only,
+                "paid_only": paid_only,
                 "min_context": min_context,
                 "require_signals": require_signals,
             },
@@ -292,6 +362,16 @@ def build_census(
             "This is a provider-metadata census for model selection. It does not certify that "
             "any listed model satisfies OmegaClaw's resident-model powers."
         ),
+        "resident_selection_policy": {
+            "default_cost_policy": "paid-only",
+            "free_routes": "informational; excluded from default resident selection",
+            "model_identity": "fixed model ids only; dynamic routers are excluded",
+            "qualification_gate": (
+                "The cheapest paid candidate remains unqualified until behavioral residency "
+                "tests demonstrate the OmegaClaw Residency Certificate powers."
+            ),
+            "cheapest_paid_candidate": cheapest_paid_candidate,
+        },
         "counts": _counts(selected),
         "models": selected,
     }
@@ -307,6 +387,11 @@ def _parser() -> argparse.ArgumentParser:
         help="Replay a saved OpenRouter /models JSON response instead of making a live request.",
     )
     parser.add_argument("--free-only", action="store_true")
+    parser.add_argument(
+        "--paid-only",
+        action="store_true",
+        help="Exclude free routes and dynamic routers; intended default for Omega residency.",
+    )
     parser.add_argument("--min-context", type=int)
     parser.add_argument(
         "--require-signal",
@@ -314,6 +399,11 @@ def _parser() -> argparse.ArgumentParser:
         choices=SIGNAL_NAMES,
         default=[],
         help="Metadata signal to require; may be repeated. This is not qualification.",
+    )
+    parser.add_argument(
+        "--require-paid-candidate",
+        action="store_true",
+        help="Fail if no paid fixed-identity stock-Omega candidate survives the filters.",
     )
     return parser
 
@@ -337,16 +427,22 @@ def main() -> int:
             omega_source=args.omega_source,
             source_url=source_url,
             free_only=args.free_only,
+            paid_only=args.paid_only,
             min_context=args.min_context,
             require_signals=args.require_signal,
         )
+        candidate = census["resident_selection_policy"]["cheapest_paid_candidate"]
+        if args.require_paid_candidate and candidate is None:
+            raise CensusError("no paid fixed-identity stock-Omega candidate survived the filters")
+
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(census, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         counts = census["counts"]
         print(f"omega_sha={census['omega']['sha']}")
         print(f"models={counts['models']}")
         print(f"addressable={counts['stock_omega_openrouter_addressable']}")
-        print(f"explicit_free_variants={counts['explicit_free_variants']}")
+        print(f"paid_text_routes={counts['paid_text_routes']}")
+        print(f"cheapest_paid_candidate={candidate['id'] if candidate else 'none'}")
         print(f"output={args.output}")
         return 0
     except (

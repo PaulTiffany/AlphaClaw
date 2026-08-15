@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Pull and normalize OpenRouter model catalog
+      - name: Pull cheapest paid OpenRouter candidates
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: |
@@ -29,11 +29,13 @@ jobs:
           }
           python selection/openrouter_models.py \
             --omega-source OmegaClaw-Core \
-            --output /tmp/openrouter-model-census.json
+            --output /tmp/openrouter-model-census.json \
+            --paid-only \
+            --require-paid-candidate
 
-      - name: Preserve census
+      - name: Preserve census and selected candidate
         uses: actions/upload-artifact@v4
         with:
-          name: openrouter-model-census
+          name: openrouter-paid-model-census
           path: /tmp/openrouter-model-census.json
           retention-days: 7

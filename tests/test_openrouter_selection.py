@@ -32,12 +32,15 @@ def test_normalize_model_preserves_metadata_without_claiming_qualification():
                 "request": "0",
                 "internal_reasoning": "0",
             },
-        }
+        },
+        provider_price_rank=1,
     )
 
     assert model["stock_omega_openrouter_addressable"] is True
     assert model["explicit_free_variant"] is True
     assert model["zero_text_price"] is True
+    assert model["paid_text_route"] is False
+    assert model["provider_price_rank"] == 1
     assert model["signals"]["tools"] is True
     assert model["signals"]["reasoning"] is True
     assert model["qualification"]["status"] == "unqualified"
@@ -52,14 +55,79 @@ def test_non_text_input_is_not_stock_omega_addressable():
                 "output_modalities": ["text"],
             },
             "supported_parameters": [],
-            "pricing": {"prompt": "0", "completion": "0"},
+            "pricing": {"prompt": "0.000001", "completion": "0.000002"},
         }
     )
 
     assert model["stock_omega_openrouter_addressable"] is False
 
 
-def test_build_census_filters_metadata_but_does_not_certify_models():
+def test_paid_selection_preserves_provider_price_order_and_skips_free_and_router():
+    payload = {
+        "data": [
+            {
+                "id": "example/free:free",
+                "context_length": 100000,
+                "architecture": {
+                    "input_modalities": ["text"],
+                    "output_modalities": ["text"],
+                },
+                "supported_parameters": ["reasoning", "max_tokens"],
+                "pricing": {"prompt": "0", "completion": "0"},
+            },
+            {
+                "id": "openrouter/auto",
+                "context_length": 200000,
+                "architecture": {
+                    "input_modalities": ["text"],
+                    "output_modalities": ["text"],
+                },
+                "supported_parameters": ["reasoning", "max_tokens"],
+                "pricing": {"prompt": "0.0000001", "completion": "0.0000001"},
+            },
+            {
+                "id": "example/cheap-paid",
+                "context_length": 100000,
+                "architecture": {
+                    "input_modalities": ["text"],
+                    "output_modalities": ["text"],
+                },
+                "supported_parameters": ["reasoning", "max_tokens"],
+                "pricing": {"prompt": "0.0000002", "completion": "0.0000003"},
+            },
+            {
+                "id": "example/expensive-paid",
+                "context_length": 200000,
+                "architecture": {
+                    "input_modalities": ["text"],
+                    "output_modalities": ["text"],
+                },
+                "supported_parameters": ["reasoning", "max_tokens"],
+                "pricing": {"prompt": "0.000001", "completion": "0.000002"},
+            },
+        ]
+    }
+
+    census = build_census(
+        payload,
+        omega_source=Path("OmegaClaw-Core"),
+        source_url="fixture?sort=pricing-low-to-high",
+        paid_only=True,
+        min_context=65536,
+        require_signals=["reasoning"],
+    )
+
+    assert [model["id"] for model in census["models"]] == [
+        "example/cheap-paid",
+        "example/expensive-paid",
+    ]
+    candidate = census["resident_selection_policy"]["cheapest_paid_candidate"]
+    assert candidate["id"] == "example/cheap-paid"
+    assert candidate["provider_price_rank"] == 3
+    assert candidate["qualification"]["status"] == "unqualified"
+
+
+def test_free_filter_remains_available_for_inventory_only():
     payload = {
         "data": [
             {
