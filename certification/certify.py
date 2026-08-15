@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Mechanically witness the resident-model powers demanded by an OmegaClaw tree."""
 
 from __future__ import annotations
