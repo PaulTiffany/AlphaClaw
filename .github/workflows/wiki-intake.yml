@@ -20,6 +20,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - uses: actions/setup-python@v5
         with:
@@ -27,6 +28,12 @@ jobs:
 
       - name: Clone public Wiki history
         run: git clone "https://github.com/${GITHUB_REPOSITORY}.wiki.git" /tmp/alphaclaw-wiki
+
+      - name: Restore pending review records if a Wiki intake PR is already open
+        run: |
+          if git fetch origin wiki-intake:refs/remotes/origin/wiki-intake 2>/dev/null; then
+            git checkout refs/remotes/origin/wiki-intake -- contributions/wiki/generated 2>/dev/null || true
+          fi
 
       - name: Compile ready Wiki pages
         run: |
@@ -38,7 +45,7 @@ jobs:
       - name: Stop when the compiled intake is unchanged
         id: changes
         run: |
-          if git diff --quiet -- contributions/wiki/generated; then
+          if [ -z "$(git status --porcelain -- contributions/wiki/generated)" ]; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -46,13 +53,16 @@ jobs:
 
       - name: Publish review branch
         if: steps.changes.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -C wiki-intake
           git add contributions/wiki/generated
           git commit -m "Compile ready Wiki contributor intake"
-          git push --force origin HEAD:wiki-intake
+          git push --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            HEAD:wiki-intake
 
       - name: Open review pull request if needed
         if: steps.changes.outputs.changed == 'true'
@@ -65,5 +75,5 @@ jobs:
               --head wiki-intake \
               --base main \
               --title "Review ready Wiki contributions" \
-              --body $'Generated from Wiki pages explicitly marked **Ready for review: yes**.\n\nEach JSON record retains the source Wiki commit, Git author, Wiki path, and SHA-256 of the exact Markdown. The compiler executes no Wiki content.\n\nHuman review is required before merge. Do not edit generated records by hand; revise the source Wiki page instead.'
+              --body $'Generated from Wiki pages explicitly marked **Ready for review: yes**.\n\nEach immutable JSON record is addressed by the exact source Wiki commit and retains the Git author, Wiki path, and SHA-256 of the exact Markdown. Pending records are preserved across later Wiki edits until human review resolves the PR. The compiler executes no Wiki content.\n\nHuman review is required before merge. Do not edit generated records by hand; revise the source Wiki page instead.'
           fi

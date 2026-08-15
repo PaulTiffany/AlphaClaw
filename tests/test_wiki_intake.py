@@ -46,6 +46,13 @@ def _git(*args: str, cwd: Path) -> str:
     return result.stdout.strip()
 
 
+def _init_wiki(path: Path) -> None:
+    path.mkdir()
+    _git("init", cwd=path)
+    _git("config", "user.name", "Sheila Example", cwd=path)
+    _git("config", "user.email", "sheila@example.invalid", cwd=path)
+
+
 def test_parse_ready_domain_rule() -> None:
     parsed = wiki_intake.parse_page(DOMAIN_PAGE, page_name="Domain-Rule-Test.md")
     assert parsed is not None
@@ -70,10 +77,7 @@ def test_ready_page_rejects_missing_required_section() -> None:
 
 def test_compile_wiki_records_git_and_content_provenance(tmp_path: Path) -> None:
     wiki = tmp_path / "wiki"
-    wiki.mkdir()
-    _git("init", cwd=wiki)
-    _git("config", "user.name", "Sheila Example", cwd=wiki)
-    _git("config", "user.email", "sheila@example.invalid", cwd=wiki)
+    _init_wiki(wiki)
     page = wiki / "Evidence-Boundary.md"
     page.write_text(DOMAIN_PAGE, encoding="utf-8")
     _git("add", "Evidence-Boundary.md", cwd=wiki)
@@ -83,19 +87,56 @@ def test_compile_wiki_records_git_and_content_provenance(tmp_path: Path) -> None
     output = tmp_path / "generated"
     written = wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw")
 
-    assert written == [output / "evidence-boundary.json"]
-    record = json.loads(written[0].read_text(encoding="utf-8"))
+    expected = output / f"evidence-boundary--{expected_commit}.json"
+    assert written == [expected]
+    record = json.loads(expected.read_text(encoding="utf-8"))
     assert record["kind"] == "domain-rule"
     assert record["source"]["wiki_commit"] == expected_commit
     assert record["source"]["wiki_author_name"] == "Sheila Example"
     assert record["source"]["wiki_author_email"] == "sheila@example.invalid"
     assert len(record["source"]["markdown_sha256"]) == 64
 
+    assert wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw") == []
+
+
+def test_compiled_history_is_append_only_across_reused_working_page(tmp_path: Path) -> None:
+    wiki = tmp_path / "wiki"
+    _init_wiki(wiki)
+    page = wiki / "Domain-Rule.md"
+    page.write_text(DOMAIN_PAGE, encoding="utf-8")
+    _git("add", "Domain-Rule.md", cwd=wiki)
+    _git("commit", "-m", "Submit first domain rule", cwd=wiki)
+    first_commit = _git("rev-parse", "HEAD", cwd=wiki)
+
+    output = tmp_path / "generated"
+    first_written = wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw")
+    first_record = output / f"domain-rule--{first_commit}.json"
+    assert first_written == [first_record]
+
+    draft = DOMAIN_PAGE.replace("## Ready for review\nyes", "## Ready for review\nno")
+    page.write_text(draft, encoding="utf-8")
+    _git("add", "Domain-Rule.md", cwd=wiki)
+    _git("commit", "-m", "Start next draft", cwd=wiki)
+    assert wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw") == []
+    assert first_record.exists()
+
+    second = DOMAIN_PAGE.replace("Preserve the evidence boundary", "Preserve human review")
+    page.write_text(second, encoding="utf-8")
+    _git("add", "Domain-Rule.md", cwd=wiki)
+    _git("commit", "-m", "Submit second domain rule", cwd=wiki)
+    second_commit = _git("rev-parse", "HEAD", cwd=wiki)
+    second_written = wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw")
+    second_record = output / f"domain-rule--{second_commit}.json"
+
+    assert second_written == [second_record]
+    assert first_record.exists()
+    assert second_record.exists()
+    assert len(list(output.glob("*.json"))) == 2
+
 
 def test_unmarked_wiki_page_is_ignored(tmp_path: Path) -> None:
     wiki = tmp_path / "wiki"
-    wiki.mkdir()
-    _git("init", cwd=wiki)
+    _init_wiki(wiki)
     (wiki / "Home.md").write_text("# Ordinary Wiki Home\n", encoding="utf-8")
     output = tmp_path / "generated"
     assert wiki_intake.compile_wiki(wiki, output, repository="PaulTiffany/AlphaClaw") == []

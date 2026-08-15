@@ -4,7 +4,6 @@ import argparse
 import hashlib
 import json
 import re
-import shutil
 import subprocess
 from pathlib import Path
 
@@ -163,8 +162,6 @@ def compile_wiki(wiki_dir: Path, output_dir: Path, *, repository: str) -> list[P
     if len(ready) > MAX_READY_PAGES:
         raise WikiIntakeError(f"too many ready Wiki pages: {len(ready)} > {MAX_READY_PAGES}")
 
-    if output_dir.exists():
-        shutil.rmtree(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     written: list[Path] = []
@@ -174,13 +171,16 @@ def compile_wiki(wiki_dir: Path, output_dir: Path, *, repository: str) -> list[P
         if slug in seen_slugs:
             raise WikiIntakeError(f"duplicate generated slug: {slug}")
         seen_slugs.add(slug)
+
         commit, author_name, author_email = _git_page_provenance(wiki_dir, relative)
+        contribution_type = parsed["contribution_type"]
+        fields = {key: value for key, value in parsed.items() if key != "contribution_type"}
         page_name = relative.stem
         record = {
             "schema_version": 1,
-            "kind": KIND_BY_TITLE[parsed.pop("contribution_type")],
-            "title": parsed["Title"],
-            "fields": parsed,
+            "kind": KIND_BY_TITLE[contribution_type],
+            "title": fields["Title"],
+            "fields": fields,
             "source": {
                 "repository": repository,
                 "wiki_page": page_name,
@@ -192,8 +192,15 @@ def compile_wiki(wiki_dir: Path, output_dir: Path, *, repository: str) -> list[P
                 "markdown_sha256": _sha256(markdown),
             },
         }
-        destination = output_dir / f"{slug}.json"
-        destination.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        serialized = json.dumps(record, indent=2, sort_keys=True) + "\n"
+        destination = output_dir / f"{slug}--{commit}.json"
+        if destination.exists():
+            if destination.read_text(encoding="utf-8") != serialized:
+                raise WikiIntakeError(
+                    f"immutable generated record conflicts with {destination.name}"
+                )
+            continue
+        destination.write_text(serialized, encoding="utf-8")
         written.append(destination)
 
     return written
@@ -206,7 +213,7 @@ def main() -> None:
     parser.add_argument("--repository", required=True)
     args = parser.parse_args()
     written = compile_wiki(args.wiki_dir, args.output_dir, repository=args.repository)
-    print(f"Compiled {len(written)} ready Wiki contribution(s).")
+    print(f"Compiled {len(written)} new ready Wiki contribution(s).")
 
 
 if __name__ == "__main__":
