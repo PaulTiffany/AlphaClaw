@@ -1,0 +1,17 @@
+ARG OMEGACLAW_IMAGE=omegaclaw:pinned
+FROM ${OMEGACLAW_IMAGE}
+
+# AlphaClaw is deliberately only an overlay on the OmegaClaw image.
+# The base image owns PeTTa, OmegaClaw-Core, providers, skills, memory,
+# communication channels, and the entrypoint.
+USER root
+RUN mkdir -p /PeTTa/repos/AlphaClaw
+COPY --chown=65534:65534 alphaclaw.metta /PeTTa/repos/AlphaClaw/alphaclaw.metta
+COPY --chown=65534:65534 run.metta /PeTTa/repos/AlphaClaw/run.metta
+RUN cp /PeTTa/repos/AlphaClaw/run.metta /PeTTa/run.metta \
+ && chown 65534:65534 /PeTTa/run.metta \
+ && chmod 0444 /PeTTa/run.metta \
+              /PeTTa/repos/AlphaClaw/run.metta \
+              /PeTTa/repos/AlphaClaw/alphaclaw.metta
+
+# Preserve the upstream OmegaClaw ENTRYPOINT and runtime configuration surface.
