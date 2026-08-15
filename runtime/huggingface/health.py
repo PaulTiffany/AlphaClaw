@@ -8,7 +8,7 @@ OMEGA_SHA = "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
 
 
 class Handler(BaseHTTPRequestHandler):
-    def do_GET(self) -> None:  # noqa: N802 - stdlib handler contract
+    def do_GET(self) -> None:
         if self.path not in {"/", "/health"}:
             self.send_error(404)
             return
