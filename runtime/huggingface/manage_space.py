@@ -104,7 +104,7 @@ def emit_build_logs(api, repo_id: str) -> None:
             print(text, end="" if text.endswith("\n") else "\n", file=sys.stderr)
         if not emitted:
             print("(no build log lines returned)", file=sys.stderr)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001 - diagnostics must not mask the build failure
         print(
             f"(unable to fetch build logs: {type(exc).__name__}: {exc})",
             file=sys.stderr,
