@@ -58,6 +58,8 @@ def safe_runtime(runtime, secret_keys: set[str]) -> dict[str, object]:
 
 def status(api, repo_id: str) -> dict[str, object]:
     runtime = api.get_space_runtime(repo_id=repo_id)
+    if str(runtime.stage) == "BUILD_ERROR":
+        emit_build_logs(api, repo_id)
     return safe_runtime(runtime, existing_secret_keys(api, repo_id))
 
 
