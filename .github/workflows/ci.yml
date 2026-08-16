@@ -84,3 +84,4 @@ jobs:
           done
           test -f "$tmp/OmegaClaw-Core/run.metta"
           test ! -e "$tmp/OmegaClaw-Core/.git"
+          test ! -e "$tmp/OmegaClaw-Core/Autotests"
