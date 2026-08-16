@@ -4,6 +4,7 @@ import argparse
 import json
 import os
 import re
+import sys
 import tempfile
 from pathlib import Path
 
@@ -93,6 +94,23 @@ def synchronize(api, repo_id: str, private: bool) -> None:
         )
 
 
+def emit_build_logs(api, repo_id: str) -> None:
+    print("----- Hugging Face build log -----", file=sys.stderr)
+    try:
+        emitted = False
+        for line in api.fetch_space_logs(repo_id=repo_id, build=True):
+            emitted = True
+            text = str(line)
+            print(text, end="" if text.endswith("\n") else "\n", file=sys.stderr)
+        if not emitted:
+            print("(no build log lines returned)", file=sys.stderr)
+    except Exception as exc:
+        print(
+            f"(unable to fetch build logs: {type(exc).__name__}: {exc})",
+            file=sys.stderr,
+        )
+
+
 def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     asi_key = require_env("ASI_ONE_API_KEY")
     synchronize(api, repo_id, private)
@@ -138,6 +156,8 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     api.restart_space(repo_id=repo_id)
     runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
     if str(runtime.stage) != "RUNNING":
+        if str(runtime.stage) == "BUILD_ERROR":
+            emit_build_logs(api, repo_id)
         raise RuntimeError(f"Omega Space did not reach RUNNING; final stage={runtime.stage}")
     return safe_runtime(runtime, existing_secret_keys(api, repo_id))
 
