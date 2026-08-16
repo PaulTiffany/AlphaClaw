@@ -68,11 +68,15 @@ def delete_secret_if_present(api, repo_id: str, key: str) -> None:
         api.delete_space_secret(repo_id=repo_id, key=key)
 
 
-def turn_off(api, repo_id: str) -> dict[str, object]:
-    # Capability revocation precedes compute shutdown.
+def revoke_runtime_authority(api, repo_id: str) -> None:
+    # Revoke credentials before removing compute authority.
     delete_secret_if_present(api, repo_id, ASI_SECRET)
     delete_secret_if_present(api, repo_id, WS_SECRET)
     api.pause_space(repo_id=repo_id)
+
+
+def turn_off(api, repo_id: str) -> dict[str, object]:
+    revoke_runtime_authority(api, repo_id)
     return status(api, repo_id)
 
 
@@ -115,53 +119,69 @@ def emit_build_logs(api, repo_id: str) -> None:
 
 def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     asi_key = require_env("ASI_ONE_API_KEY")
+    alpha_sha = os.environ.get("ALPHACLAW_SOURCE_SHA", "").strip()
+    ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
+    ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
+
+    # Validate all caller-controlled configuration before mutating external state.
+    if ws_url and not ws_url.startswith(("ws://", "wss://")):
+        raise RuntimeError("OMEGA_WS_URL must start with ws:// or wss://")
+
     synchronize(api, repo_id, private)
 
-    api.add_space_secret(
-        repo_id=repo_id,
-        key=ASI_SECRET,
-        value=asi_key,
-        description=(
-            "Canonical ASI:One credential; translated only at the Omega process boundary."
-        ),
-    )
-
-    alpha_sha = os.environ.get("ALPHACLAW_SOURCE_SHA", "").strip()
-    if alpha_sha:
-        api.add_space_variable(
-            repo_id=repo_id,
-            key=ALPHA_VARIABLE,
-            value=alpha_sha,
-            description="AlphaClaw source commit that synchronized this runtime.",
-        )
-
-    ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
-    if ws_url:
-        if not ws_url.startswith(("ws://", "wss://")):
-            raise RuntimeError("OMEGA_WS_URL must start with ws:// or wss://")
-        api.add_space_variable(
-            repo_id=repo_id,
-            key=WS_VARIABLE,
-            value=ws_url,
-            description="Outbound bounded Omega WebSocket gateway.",
-        )
-
-    ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
-    if ws_token:
+    try:
         api.add_space_secret(
             repo_id=repo_id,
-            key=WS_SECRET,
-            value=ws_token,
-            description="Bearer token for the outbound bounded Omega WebSocket gateway.",
+            key=ASI_SECRET,
+            value=asi_key,
+            description=(
+                "Canonical ASI:One credential; translated only at the Omega process boundary."
+            ),
         )
 
-    api.restart_space(repo_id=repo_id)
-    runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
-    if str(runtime.stage) != "RUNNING":
-        if str(runtime.stage) == "BUILD_ERROR":
-            emit_build_logs(api, repo_id)
-        raise RuntimeError(f"Omega Space did not reach RUNNING; final stage={runtime.stage}")
-    return safe_runtime(runtime, existing_secret_keys(api, repo_id))
+        if alpha_sha:
+            api.add_space_variable(
+                repo_id=repo_id,
+                key=ALPHA_VARIABLE,
+                value=alpha_sha,
+                description="AlphaClaw source commit that synchronized this runtime.",
+            )
+
+        if ws_url:
+            api.add_space_variable(
+                repo_id=repo_id,
+                key=WS_VARIABLE,
+                value=ws_url,
+                description="Outbound bounded Omega WebSocket gateway.",
+            )
+
+        if ws_token:
+            api.add_space_secret(
+                repo_id=repo_id,
+                key=WS_SECRET,
+                value=ws_token,
+                description="Bearer token for the outbound bounded Omega WebSocket gateway.",
+            )
+
+        api.restart_space(repo_id=repo_id)
+        runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
+        if str(runtime.stage) != "RUNNING":
+            if str(runtime.stage) == "BUILD_ERROR":
+                emit_build_logs(api, repo_id)
+            raise RuntimeError(
+                f"Omega Space did not reach RUNNING; final stage={runtime.stage}"
+            )
+        return safe_runtime(runtime, existing_secret_keys(api, repo_id))
+    except Exception as exc:  # noqa: BLE001 - activation must fail closed on ordinary errors
+        try:
+            revoke_runtime_authority(api, repo_id)
+        except Exception as cleanup_exc:  # noqa: BLE001 - report cleanup failure explicitly
+            raise RuntimeError(
+                "Omega activation failed and fail-closed cleanup also failed: "
+                f"activation={type(exc).__name__}: {exc}; "
+                f"cleanup={type(cleanup_exc).__name__}: {cleanup_exc}"
+            ) from exc
+        raise
 
 
 def main() -> None:
