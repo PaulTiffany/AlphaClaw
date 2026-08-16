@@ -131,7 +131,7 @@ def stage(destination: Path) -> None:
     shutil.copytree(
         OMEGA_ROOT,
         omega_destination,
-        ignore=shutil.ignore_patterns(".git"),
+        ignore=shutil.ignore_patterns(".git", "Autotests"),
         dirs_exist_ok=False,
     )
     shutil.copy2(REPO_ROOT / "alphaclaw.metta", destination / "alphaclaw.metta")
