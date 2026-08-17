@@ -16,13 +16,6 @@ Chad says:
 
 That is the joke.
 
-<p align="center">
-  <img src="https://i.kym-cdn.com/entries/icons/facebook/000/031/015/cover5.jpg" alt="Yes Chad / Nordic Gamer meme" width="430">
-  <img src="https://i.kym-cdn.com/photos/images/original/001/323/690/19d.png" alt="Virgin and Chad illustration" width="300">
-</p>
-
-> **Yes: these are third-party meme images.** We did not make them, and displaying them here does not make them ours. They are here because they are the cultural objects this document is talking about. Attribution and rights provenance are kept separately: **[learn where these images came from and what rights we do—and do not—claim](CHAD-PROVENANCE.md).**
-
 He does not necessarily deny the criticism.
 
 He simply refuses to let embarrassment decide what is true or what he should do.
@@ -226,8 +219,6 @@ An unknown person can be right.
 So:
 
 **Keep the receipts. Then check the claim.**
-
-This page tries to obey that rule even for its own joke. The visual receipts are in [`CHAD-PROVENANCE.md`](CHAD-PROVENANCE.md).
 
 ## Play is allowed
 
