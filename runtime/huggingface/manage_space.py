@@ -172,7 +172,7 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
                 f"Omega Space did not reach RUNNING; final stage={runtime.stage}"
             )
         return safe_runtime(runtime, existing_secret_keys(api, repo_id))
-    except Exception as exc:  # noqa: BLE001 - activation must fail closed on ordinary errors
+    except Exception as exc:  # activation must fail closed on ordinary errors
         try:
             revoke_runtime_authority(api, repo_id)
         except Exception as cleanup_exc:  # noqa: BLE001 - report cleanup failure explicitly
