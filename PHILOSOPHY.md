@@ -1,5 +1,7 @@
 # Chad Philosophy
 
+> **Illustration note.** The Chad figures below are original AI-generated interpretations of the philosophy lines they accompany. No canonical Chad/Wojak/GigaChad image was supplied as a reference. Each image is attributed to the generating model; exact generation and rights receipts live in [`assets/chad/PROVENANCE.md`](assets/chad/PROVENANCE.md).
+
 ## What does “Chad” mean?
 
 “Chad” is an internet joke.
@@ -98,11 +100,23 @@ In symbols:
 \text{accept the fact} \neq \text{accept the shame}
 \]
 
+<p align="center">
+  <img src="assets/chad/fact-not-shame.jpg" alt="Chad calmly separating a fact from social shame" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>bytedance-seed/seedream-4.5</code> · <a href="assets/chad/PROVENANCE.md#fact-not-shame">receipt</a></em></p>
+
 ## Reality gets the final vote
 
 The point is not to win arguments.
 
 The point is to find out what is actually true.
+
+<p align="center">
+  <img src="assets/chad/reality-votes.jpg" alt="Chad calmly letting reality cast the deciding vote" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>qwen/qwen-image-3</code> · <a href="assets/chad/PROVENANCE.md#reality-votes">receipt</a></em></p>
 
 That means preferring things that can be checked.
 
@@ -154,6 +168,12 @@ The philosophy must obey its own rule:
 
 ## Do not invent villains
 
+<p align="center">
+  <img src="assets/chad/no-villains.jpg" alt="Chad listening to disagreement without inventing a villain" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>x-ai/grok-imagine-image-2.0</code> · <a href="assets/chad/PROVENANCE.md#no-villains">receipt</a></em></p>
+
 It is easy to imagine that everyone who disagrees with you is stupid, dishonest, jealous, frightened, or corrupt.
 
 Sometimes people simply disagree.
@@ -175,6 +195,12 @@ These three statements are different:
 > “People will think this idea is wrong.”
 
 > “People will think badly of me for saying it.”
+
+<p align="center">
+  <img src="assets/chad/truth-not-reputation.jpg" alt="Chad separating truth from reputation and social chatter" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>black-forest-labs/flux.2-pro</code> · <a href="assets/chad/PROVENANCE.md#truth-not-reputation">receipt</a></em></p>
 
 All three can matter.
 
@@ -220,6 +246,12 @@ So:
 
 **Keep the receipts. Then check the claim.**
 
+<p align="center">
+  <img src="assets/chad/receipts.jpg" alt="Chad preserving receipts and checking the claim" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>bytedance-seed/seedream-5-0-pro</code> · <a href="assets/chad/PROVENANCE.md#receipts">receipt</a></em></p>
+
 ## Play is allowed
 
 People discover things by playing.
@@ -240,6 +272,12 @@ Say which is which.
 
 Then play.
 
+<p align="center">
+  <img src="assets/chad/play.jpg" alt="Chad in a business suit joyfully building a sandcastle" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>qwen/qwen-image-3-pro</code> · <a href="assets/chad/PROVENANCE.md#play">receipt</a></em></p>
+
 ## Know when to stop
 
 Human beings can keep explaining almost anything forever.
@@ -249,6 +287,12 @@ More explanation does not always produce more understanding.
 Once several different ways of examining something lead to the same answer, it may be time to stop talking and use what you learned.
 
 More words are not necessarily more wisdom.
+
+<p align="center">
+  <img src="assets/chad/stop.jpg" alt="Chad quietly drinking coffee after enough has been said" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4</code> · <a href="assets/chad/PROVENANCE.md#stop">receipt</a></em></p>
 
 ## The Chad test
 
