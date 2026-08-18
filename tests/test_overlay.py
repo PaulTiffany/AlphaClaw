@@ -50,6 +50,8 @@ def test_inference_contract_is_first_class_context() -> None:
         "resident_modalities:",
         "multimodal_capability: tool-only",
         "symbolic_target:",
+        "nontext_output: tool-mediated-actuation",
+        "effectors:",
         "prompt-extension alphaclaw-inference-contract",
     ]
     for phrase in required:
@@ -63,6 +65,20 @@ def test_policy_separates_resident_inference_from_perception_tools() -> None:
     assert "Continue the reasoning trajectory on the symbolic/text representation" in overlay
     assert "Re-query multimodal capability only when" in overlay
     assert "Never infer resident capabilities from the model brand" in overlay
+
+
+def test_policy_separates_intent_actuation_and_receipts() -> None:
+    overlay = read("alphaclaw.metta")
+    required = [
+        "Treat cognition, intent, actuation, and evidence of actuation as distinct stages.",
+        "use configured OmegaClaw tools or skills as effectors",
+        "generated media as an artifact produced by an effector invocation",
+        "Preserve an actuation receipt whenever the tool surface exposes one",
+        "must not be the sole certifier of its own actuation",
+        "embodiment/signposting are effects for observers to perceive",
+    ]
+    for phrase in required:
+        assert phrase in overlay
 
 
 def test_legacy_mini_agent_framework_is_gone() -> None:
