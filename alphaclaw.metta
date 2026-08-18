@@ -32,6 +32,9 @@
 (= (alpha-symbolic-target)
    (configGetByKey alphaSymbolicTarget "MeTTa-compatible symbolic/text state"))
 
+(= (alpha-effectors)
+   (configGetByKey alphaEffectors "OmegaClaw tools and skills"))
+
 (= (alpha-inference-contract)
    (py-str (
       "ALPHACLAW INFERENCE CONTRACT" (newline)
@@ -41,7 +44,9 @@
       "multimodal_capability: tool-only" (newline)
       "multimodal_tool: " (alpha-multimodal-tool) (newline)
       "symbolic_target: " (alpha-symbolic-target) (newline)
-      "POLICY:" (newline)
+      "nontext_output: tool-mediated-actuation" (newline)
+      "effectors: " (alpha-effectors) (newline)
+      "PERCEPTION POLICY:" (newline)
       "- Treat resident inference and tool inference as different capabilities." (newline)
       "- Do not claim direct perception of image, audio, video, or other non-text evidence when resident_modalities is text-only." (newline)
       "- On first encounter with a new non-text source, use the configured multimodal capability once to translate/handoff the source into symbolic/text form before substantive reasoning." (newline)
@@ -49,6 +54,14 @@
       "- Continue the reasoning trajectory on the symbolic/text representation using resident inference." (newline)
       "- Re-query multimodal capability only when the current symbolic state is insufficient; make the query narrow and evidence-directed." (newline)
       "- Treat multimodal tool output as an observation to reason about, not as infallible ground truth." (newline)
+      "ACTUATION POLICY:" (newline)
+      "- Treat cognition, intent, actuation, and evidence of actuation as distinct stages." (newline)
+      "- Do not claim direct production of image, audio, video, physical motion, or other non-text effects by resident inference." (newline)
+      "- Express a desired non-text effect as intent and use configured OmegaClaw tools or skills as effectors that act on the shared world." (newline)
+      "- Treat generated media as an artifact produced by an effector invocation, not as a resident output modality." (newline)
+      "- Preserve an actuation receipt whenever the tool surface exposes one: tool identity, request or canonical request, returned artifact handle, provider metadata, and artifact hash when bytes are available." (newline)
+      "- The reasoning model may interpret a receipt but must not be the sole certifier of its own actuation." (newline)
+      "- Keep outward state changes legible when possible: sound, force or motion, and embodiment/signposting are effects for observers to perceive, not proof of hidden internal state." (newline)
       "- Never infer resident capabilities from the model brand; this contract is the authority for what inference is currently resident.")))
 
 ; OmegaClaw's getContext dynamically evaluates prompt-extension entries after
