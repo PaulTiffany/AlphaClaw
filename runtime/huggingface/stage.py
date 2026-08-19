@@ -16,6 +16,7 @@ LIFE_CYCLES = 8
 WAKE_CYCLES = 0
 BOOT_CYCLES = 0
 HISTORY_CHARS = 0
+PERSIST_HISTORY = False
 MODEL_ACTIONS = ("send",)
 RESIDENT_PLUGINS = ("wschat", "asione")
 
@@ -51,6 +52,7 @@ does not run a second agent or control loop inside the resident.
 - Human-triggered resident cycles: `{life_cycles}`
 - Scheduled wake cycles: `{wake_cycles}`
 - Cross-episode history recall: `{history_chars}` characters
+- Persistent history writes: `{persist_history}`
 - Model-directed actions: `{model_actions}`
 - Loaded plugins: `{resident_plugins}`
 - Public surface: health/status only on port 7860
@@ -58,9 +60,9 @@ does not run a second agent or control loop inside the resident.
 
 The staged resident makes only subtractive authority adaptations: boot begins with
 zero inference authority; every genuinely new human message refills the configured
-finite budget; historical recall is disabled; only `send` is model-callable; and
-only the ASI:One provider plus WebSocket channel plugins are loaded. The pinned
-upstream submodule remains pristine.
+finite budget; persistent history and historical recall are disabled; only `send`
+is model-callable; and only the ASI:One provider plus WebSocket channel plugins are
+loaded. The pinned upstream submodule remains pristine.
 
 The ASI:One credential is never committed to this Space. The OFF transition removes
 it before pausing the Space.
@@ -149,11 +151,7 @@ def restrict_model_action_surface(helper: Path, skills: Path) -> None:
     for command in ('"send"', '"shell"', '"metta"', '"websearch"', '"write-file"'):
         if command not in original_registry:
             raise RuntimeError("pinned Omega command registry lost an expected command")
-    helper_text = (
-        helper_text[:start]
-        + 'STATIC_LLM_COMMANDS = {"send"}'
-        + helper_text[end:]
-    )
+    helper_text = helper_text[:start] + 'STATIC_LLM_COMMANDS = {"send"}' + helper_text[end:]
 
     add_old = """def add_llm_command(command):
     LLM_COMMANDS.add(str(command))
@@ -193,6 +191,20 @@ def restrict_model_action_surface(helper: Path, skills: Path) -> None:
 """
     skills_text = skills_text[:static_start] + minimal_static + skills_text[static_end:]
     skills.write_text(skills_text, encoding="utf-8")
+
+
+def disable_persistent_history(memory: Path) -> None:
+    text = memory.read_text(encoding="utf-8")
+    old = """(= (appendToHistory $addition)
+   (append-file-raw (library OmegaClaw-Core ./memory/history.metta) (swrite $addition)))
+"""
+    new = """(= (appendToHistory $addition)
+   ; AlphaClaw staged boundary: persistent history writes disabled.
+   True)
+"""
+    if text.count(old) != 1:
+        raise RuntimeError("pinned Omega history writer changed; refusing persistence transform")
+    memory.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
 def render_dockerfile() -> str:
@@ -288,6 +300,7 @@ def stage(destination: Path) -> None:
         omega_destination / "src" / "helper.py",
         omega_destination / "src" / "skills.metta",
     )
+    disable_persistent_history(omega_destination / "src" / "memory.metta")
 
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
     shutil.copy2(HERE / "alphaclaw-runtime.yaml", destination / "alphaclaw-runtime.yaml")
@@ -307,6 +320,7 @@ def stage(destination: Path) -> None:
             life_cycles=LIFE_CYCLES,
             wake_cycles=WAKE_CYCLES,
             history_chars=HISTORY_CHARS,
+            persist_history=str(PERSIST_HISTORY).lower(),
             model_actions=", ".join(MODEL_ACTIONS),
             resident_plugins=", ".join(RESIDENT_PLUGINS),
         ),
