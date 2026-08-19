@@ -32,10 +32,14 @@ jobs:
           test ! -e scripts/install-into-petta.sh
           test -f ingress/prepend.py
 
-      - name: Verify resident credential allowlist
+      - name: Verify resident authority allowlist
         run: |
           grep -Fq 'ASI_ONE_API_KEY:' .github/workflows/omega-space.yml
           grep -Fq 'secrets.ASI_ONE_API_KEY' .github/workflows/omega-space.yml
+          if grep -Fq 'HF_OMEGA_SPACE_ID' .github/workflows/omega-space.yml; then
+            echo "resident Space target must not be configurable" >&2
+            exit 1
+          fi
           for forbidden in \
             OPENROUTER_API_KEY \
             ASI_API_KEY \
