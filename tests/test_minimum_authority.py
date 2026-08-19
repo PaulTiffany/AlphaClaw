@@ -149,3 +149,25 @@ def test_recursive_self_improvement_cannot_self_authorize_authority_growth() -> 
     assert stage.BOOT_CYCLES == 0
     assert stage.WAKE_CYCLES == 0
     assert stage.PERSIST_HISTORY is False
+
+
+def test_chad_philosophy_preserves_slack_and_authority_distinctions() -> None:
+    philosophy = (ROOT / "PHILOSOPHY.md").read_text(encoding="utf-8")
+
+    # Human/operator slack: leave room for error and recovery instead of heroic closure.
+    assert "## Leave room to be wrong" in philosophy
+    assert "Do not bite off more than you can chew." in philosophy
+    assert "Do not make yourself the only thing holding the work together." in philosophy
+    assert "Take care of the operator." in philosophy
+    assert "recoverable progress" in philosophy
+    assert "one failure} \\not\\Rightarrow \\text{total collapse" in philosophy
+
+    # Jevons / RSI authority separation.
+    assert "## Capability is not permission" in philosophy
+    assert "recursive proposal} \\neq \\text{recursive authorization" in philosophy
+    assert "certified} \\neq \\text{authorized} \\neq \\text{worth doing" in philosophy
+    assert "No high-consequence actuator without an independently authorized gate" in philosophy
+
+    # The philosophy must preserve fallibility rather than turn itself into a closed doctrine.
+    assert "## This philosophy may also be wrong" in philosophy
+    assert "Do not defend something merely because it is yours." in philosophy
