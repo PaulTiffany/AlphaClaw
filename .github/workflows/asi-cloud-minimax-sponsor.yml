@@ -1,0 +1,77 @@
+name: ASI Cloud MiniMax sponsor qualification
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: asi-cloud-minimax-sponsor
+  cancel-in-progress: false
+
+jobs:
+  qualify:
+    if: github.repository == 'PaulTiffany/AlphaClaw' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout exact AlphaClaw and pinned OmegaClaw
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Verify pinned upstream source
+        run: |
+          test "$(git -C OmegaClaw-Core rev-parse HEAD)" = \
+            "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
+          test -z "$(git -C OmegaClaw-Core status --porcelain)"
+
+      - name: Stage hardened pinned residency image
+        run: |
+          rm -rf /tmp/alphaclaw-omega-runtime
+          python3 runtime/huggingface/stage.py \
+            --destination /tmp/alphaclaw-omega-runtime
+
+      - name: Build hardened pinned AlphaClaw Omega image
+        run: |
+          docker build \
+            --file /tmp/alphaclaw-omega-runtime/Dockerfile.residency \
+            --tag alphaclaw:residency \
+            /tmp/alphaclaw-omega-runtime
+
+      - name: Run one bounded sponsored MiniMax residency attempt
+        env:
+          ASI_API_KEY: ${{ secrets.ASI_API_KEY }}
+        run: |
+          mkdir -p /tmp/alphaclaw-minimax-residency
+          python3 qualification/run_omega_residency.py \
+            --source OmegaClaw-Core \
+            --image alphaclaw:residency \
+            --provider ASICloud \
+            --model minimax/minimax-m3 \
+            --marker "ALPHACLAW-MINIMAX-SPONSOR-${GITHUB_RUN_ID}" \
+            --max-calls 8 \
+            --output /tmp/alphaclaw-minimax-residency/evidence.json \
+            --log-output /tmp/alphaclaw-minimax-residency/omegaclaw.log
+
+      - name: Show bounded evidence
+        if: always()
+        run: |
+          test ! -f /tmp/alphaclaw-minimax-residency/evidence.json || \
+            cat /tmp/alphaclaw-minimax-residency/evidence.json
+
+      - name: Upload residency evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: asi-cloud-minimax-sponsor-${{ github.run_id }}
+          path: /tmp/alphaclaw-minimax-residency/
+          if-no-files-found: warn
+          retention-days: 3
+
+      - name: Remove any surviving test container
+        if: always()
+        run: docker rm -f omegaclaw 2>/dev/null || true
