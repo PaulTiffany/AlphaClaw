@@ -51,6 +51,37 @@ def test_staged_history_writer_is_noop(tmp_path: Path) -> None:
     assert upstream.read_text(encoding="utf-8") == original
 
 
+def test_staged_prompt_removes_autonomous_and_unavailable_capability_instructions(
+    tmp_path: Path,
+) -> None:
+    upstream = ROOT / "OmegaClaw-Core" / "memory" / "prompt.txt"
+    prompt = tmp_path / "prompt.txt"
+    shutil.copy2(upstream, prompt)
+
+    original = upstream.read_text(encoding="utf-8")
+    for phrase in (
+        "choose your own goals",
+        "Keep memories and useful created skills",
+        "ALWAYS query before responding anything",
+        "Take at least 5 agent cycles",
+    ):
+        assert phrase in original
+
+    stage.restrict_resident_prompt(prompt)
+    staged = prompt.read_text(encoding="utf-8")
+    assert staged == stage.RESIDENT_PROMPT
+    assert "Your only model-directed action is: send string." in staged
+    assert "Do not create goals beyond responding to the current human-mediated input." in staged
+    for phrase in (
+        "choose your own goals",
+        "Keep memories and useful created skills",
+        "ALWAYS query before responding anything",
+        "Take at least 5 agent cycles",
+    ):
+        assert phrase not in staged
+    assert upstream.read_text(encoding="utf-8") == original
+
+
 def test_staged_runtime_logs_keep_structure_not_conversation_content(tmp_path: Path) -> None:
     upstream_loop = ROOT / "OmegaClaw-Core" / "src" / "loop.metta"
     upstream_provider = ROOT / "OmegaClaw-Core" / "providers" / "lib_llm_ext.py"
@@ -88,6 +119,7 @@ def test_entrypoint_declares_conversation_content_logging_off() -> None:
     assert "prompt bodies would be logged" in entrypoint
     assert "human messages would be logged" in entrypoint
     assert "raw model responses would be logged" in entrypoint
+    assert "autonomous or unavailable-capability prompt survived" in entrypoint
 
 
 def test_minimum_authority_is_not_mutable_from_inside_omega() -> None:
