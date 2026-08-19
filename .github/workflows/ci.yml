@@ -32,6 +32,21 @@ jobs:
           test ! -e scripts/install-into-petta.sh
           test -f ingress/prepend.py
 
+      - name: Verify resident credential allowlist
+        run: |
+          grep -Fq 'ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}' .github/workflows/omega-space.yml
+          for forbidden in \
+            OPENROUTER_API_KEY \
+            ASI_API_KEY \
+            OPENAI_API_KEY \
+            ANTHROPIC_API_KEY \
+            MINIMAX_API_KEY; do
+            if grep -Fq "$forbidden" .github/workflows/omega-space.yml; then
+              echo "resident workflow exposes forbidden credential: $forbidden" >&2
+              exit 1
+            fi
+          done
+
       - name: Validate shell bootstrap
         run: bash -n runtime/huggingface/hf_entrypoint.sh
 
@@ -89,10 +104,15 @@ jobs:
           done
           test ! -e "$tmp/alphaclaw.metta"
           test ! -e "$tmp/run.metta"
+          test ! -e "$tmp/ingress"
           test ! -e "$tmp/OmegaClaw-Core/.git"
           test ! -e "$tmp/AlphaClaw"
           test -f "$tmp/OmegaClaw-Core/run.metta"
           test -f "$tmp/OmegaClaw-Core/Autotests/mock/comm.py"
-          grep -q '(change-state! &loops 0)' "$tmp/OmegaClaw-Core/src/loop.metta"
-          test "$(grep -c '(change-state! &loops (maxNewInputLoops))' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
-          grep -q 'collapse (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"
+          test "$(grep -Fc '(change-state! &loops 0)' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
+          test "$(grep -Fc '(change-state! &loops (maxNewInputLoops))' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
+          grep -Fq 'collapse (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"
+          if grep -Fq 'once (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"; then
+            echo "staged Omega plugin loader was modified" >&2
+            exit 1
+          fi
