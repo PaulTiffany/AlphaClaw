@@ -36,7 +36,7 @@ def test_generated_dockerfile_preserves_pin_and_public_surface() -> None:
     assert f"ARG CHROMADB_REF={stage.CHROMADB_SHA}" in dockerfile
     assert 'checkout --detach "${CHROMADB_REF}"' in dockerfile
     assert "cmake --build build --config Release --parallel 1" in dockerfile
-    assert "cmake --build build --config Release --parallel \\n" not in dockerfile
+    assert "cmake --build build --config Release --parallel \\\n" not in dockerfile
     assert "EXPOSE 7860" in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' in dockerfile
     assert "OmegaClaw-Core/proxy/*" in dockerfile
@@ -53,6 +53,18 @@ def test_residency_dockerfile_uses_stock_omega_entrypoint_but_same_alpha_config(
     assert 'ENTRYPOINT ["/PeTTa/repos/OmegaClaw-Core/entrypoint.sh"]' in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' not in dockerfile
     assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
+
+
+def test_staged_omega_entrypoint_preserves_alpha_config(tmp_path: Path) -> None:
+    entrypoint = tmp_path / "entrypoint.sh"
+    entrypoint.write_text(
+        'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL \\\n'
+        '  PYTHONDONTWRITEBYTECODE PYTHONUNBUFFERED"\n',
+        encoding="utf-8",
+    )
+    stage.preserve_alpha_config_through_privilege_drop(entrypoint)
+    text = entrypoint.read_text(encoding="utf-8")
+    assert "LC_ALL OMEGACLAW_config" in text
 
 
 def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
@@ -72,6 +84,48 @@ def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     assert "minimax/minimax-m3" not in entrypoint
     assert "commchannel=websocket" in entrypoint
     assert "8080" not in entrypoint
+
+
+def test_runtime_log_redaction() -> None:
+    text = manage.redact("alpha secret-a omega secret-b", ("secret-a", "secret-b"))
+    assert text == "alpha [REDACTED] omega [REDACTED]"
+
+
+def test_runtime_error_is_witnessed_before_fail_closed_cleanup(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+    monkeypatch.setenv("ASI_ONE_API_KEY", "asi-secret")
+    monkeypatch.setenv("OMEGA_WS_TOKEN", "ws-secret")
+    monkeypatch.setattr(manage, "synchronize", lambda api, repo_id, private: None)
+    monkeypatch.setattr(
+        manage,
+        "emit_runtime_logs",
+        lambda api, repo_id, secrets: calls.append("runtime-logs"),
+    )
+    monkeypatch.setattr(
+        manage,
+        "revoke_runtime_authority",
+        lambda api, repo_id: calls.append("revoke"),
+    )
+
+    class API:
+        def add_space_secret(self, **kwargs):
+            return None
+
+        def add_space_variable(self, **kwargs):
+            return None
+
+        def restart_space(self, repo_id: str):
+            return None
+
+        def wait_for_space(self, **kwargs):
+            return type("Runtime", (), {"stage": "RUNTIME_ERROR"})()
+
+    with pytest.raises(RuntimeError, match="final stage=RUNTIME_ERROR"):
+        manage.turn_on(API(), "PaulTiffany/omega", True)
+
+    assert calls == ["runtime-logs", "revoke"]
 
 
 def test_off_revokes_secret_before_pause() -> None:
