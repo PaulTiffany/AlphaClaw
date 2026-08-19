@@ -35,6 +35,8 @@ def test_generated_dockerfile_preserves_pin_and_public_surface() -> None:
     dockerfile = stage.render_dockerfile()
     assert f"ARG CHROMADB_REF={stage.CHROMADB_SHA}" in dockerfile
     assert 'checkout --detach "${CHROMADB_REF}"' in dockerfile
+    assert "cmake --build build --config Release --parallel 1" in dockerfile
+    assert "cmake --build build --config Release --parallel \\n" not in dockerfile
     assert "EXPOSE 7860" in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' in dockerfile
     assert "OmegaClaw-Core/proxy/*" in dockerfile
