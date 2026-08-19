@@ -33,6 +33,7 @@ loop=/PeTTa/repos/OmegaClaw-Core/src/loop.metta
 memory=/PeTTa/repos/OmegaClaw-Core/src/memory.metta
 plugin=/PeTTa/repos/OmegaClaw-Core/src/plugin.metta
 plugins=/PeTTa/repos/OmegaClaw-Core/config/plugins.yaml
+llm_ext=/PeTTa/repos/OmegaClaw-Core/providers/lib_llm_ext.py
 runtime_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
 
 test "$(grep -Fc '(change-state! &loops 0)' "$loop")" = 1
@@ -87,6 +88,24 @@ PY
 grep -Fq 'AlphaClaw staged boundary: persistent history writes disabled.' "$memory"
 grep -Fq 'maxHistory: 0' "$runtime_config"
 
+# Runtime logs are structural witnesses, not a second conversation archive.
+grep -Fq '(HUMAN-MSG-CHARS: (string_length $msg))' "$loop"
+grep -Fq '(CHARS_SENT: (string_length $send))' "$loop"
+grep -Fq 'RESPONSE-PARSED' "$loop"
+grep -Fq 'COMMAND-RESULTS-AVAILABLE' "$loop"
+if grep -Fq '(CHARS_SENT: (string_length $send) $send)' "$loop"; then
+  echo "refusing resident start: prompt bodies would be logged" >&2
+  exit 1
+fi
+if grep -Fq '(log INFO "loop" $lastmessage)' "$loop"; then
+  echo "refusing resident start: human messages would be logged" >&2
+  exit 1
+fi
+if grep -Fq 'raw={raw!r}' "$llm_ext"; then
+  echo "refusing resident start: raw model responses would be logged" >&2
+  exit 1
+fi
+
 if [[ -n "${OMEGA_WS_URL:-}" && "${OMEGA_WS_URL}" != wss://* ]]; then
   echo "refusing resident start: OMEGA_WS_URL must use wss://" >&2
   exit 1
@@ -97,10 +116,12 @@ readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8
 readonly ALPHACLAW_MAX_WAKE_LOOPS=0
 readonly ALPHACLAW_MAX_HISTORY_CHARS=0
 readonly ALPHACLAW_PERSIST_HISTORY=0
+readonly ALPHACLAW_LOG_CONVERSATION_CONTENT=0
 readonly ALPHACLAW_MODEL_ACTIONS=send
 readonly ALPHACLAW_RESIDENT_PLUGINS=wschat,asione
 export ALPHACLAW_BOOT_LOOPS ALPHACLAW_MAX_NEW_INPUT_LOOPS ALPHACLAW_MAX_WAKE_LOOPS
 export ALPHACLAW_MAX_HISTORY_CHARS ALPHACLAW_PERSIST_HISTORY
+export ALPHACLAW_LOG_CONVERSATION_CONTENT
 export ALPHACLAW_MODEL_ACTIONS ALPHACLAW_RESIDENT_PLUGINS
 
 python3 /opt/alphaclaw-hf/health.py &
