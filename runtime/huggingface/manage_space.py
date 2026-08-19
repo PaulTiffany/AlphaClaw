@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import sys
 import tempfile
 from pathlib import Path
@@ -13,8 +12,7 @@ try:
 except ImportError:
     from stage import MODEL, OMEGA_SHA, PROVIDER, stage
 
-SPACE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$")
-DEFAULT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
+RESIDENT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
 ASI_SECRET = "ASI_ONE_API_KEY"
 WS_SECRET = "OMEGA_WS_TOKEN"
 WS_VARIABLE = "OMEGA_WS_URL"
@@ -61,6 +59,7 @@ def safe_runtime(runtime, secret_keys: set[str]) -> dict[str, object]:
         "stage": str(runtime.stage),
         "hardware": runtime.hardware,
         "requested_hardware": runtime.requested_hardware,
+        "space_id": RESIDENT_SPACE_ID,
         "provider": PROVIDER,
         "model": MODEL,
         "omega_source_sha": OMEGA_SHA,
@@ -173,6 +172,9 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
     ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
 
+    if repo_id != RESIDENT_SPACE_ID:
+        raise RuntimeError(f"resident Space is fixed to {RESIDENT_SPACE_ID}")
+
     # Validate all caller-controlled configuration before mutating external state.
     if ws_url and not ws_url.startswith("wss://"):
         raise RuntimeError("OMEGA_WS_URL must start with wss://")
@@ -256,10 +258,8 @@ def main() -> None:
     parser.add_argument("state", choices=("status", "on", "off"))
     args = parser.parse_args()
 
-    repo_id = os.environ.get("HF_OMEGA_SPACE_ID", "").strip() or DEFAULT_SPACE_ID
+    repo_id = RESIDENT_SPACE_ID
     token = require_env("HF_TOKEN")
-    if not SPACE_ID.fullmatch(repo_id):
-        raise RuntimeError("HF_OMEGA_SPACE_ID must have owner/name form")
     private = as_bool(os.environ.get("HF_OMEGA_SPACE_PRIVATE"), default=True)
 
     from huggingface_hub import HfApi
