@@ -55,6 +55,7 @@ does not run a second agent or control loop inside the resident.
 - Persistent history writes: `{persist_history}`
 - Model-directed actions: `{model_actions}`
 - Loaded plugins: `{resident_plugins}`
+- Conversation content in runtime logs: disabled
 - Public surface: health/status only on port 7860
 - Agent communication: outbound WSS when `OMEGA_WS_URL` is configured
 
@@ -62,7 +63,8 @@ The staged resident makes only subtractive authority adaptations: boot begins wi
 zero inference authority; every genuinely new human message refills the configured
 finite budget; persistent history and historical recall are disabled; only `send`
 is model-callable; and only the ASI:One provider plus WebSocket channel plugins are
-loaded. The pinned upstream submodule remains pristine.
+loaded. Runtime logs keep structural telemetry but not human/model prompt bodies.
+The pinned upstream submodule remains pristine.
 
 The ASI:One credential is never committed to this Space. The OFF transition removes
 it before pausing the Space.
@@ -207,6 +209,42 @@ def disable_persistent_history(memory: Path) -> None:
     memory.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
+def sanitize_runtime_logging(loop: Path, llm_ext: Path) -> None:
+    loop_text = loop.read_text(encoding="utf-8")
+    replacements = {
+        '(log INFO "loop" $lastmessage)': (
+            '(log INFO "loop" (HUMAN-MSG-CHARS: (string_length $msg)))'
+        ),
+        '(CHARS_SENT: (string_length $send) $send)': (
+            '(CHARS_SENT: (string_length $send))'
+        ),
+        '(log INFO "loop" (RESPONSE: $sexpr))': (
+            '(log INFO "loop" RESPONSE-PARSED)'
+        ),
+        '(log INFO "loop" (RESPONSE: $results))': (
+            '(log INFO "loop" COMMAND-RESULTS-AVAILABLE)'
+        ),
+    }
+    for old, new in replacements.items():
+        if loop_text.count(old) != 1:
+            raise RuntimeError(f"pinned Omega log statement changed: {old}")
+        loop_text = loop_text.replace(old, new, 1)
+    loop.write_text(loop_text, encoding="utf-8")
+
+    provider_text = llm_ext.read_text(encoding="utf-8")
+    raw_old = (
+        'logger.debug(f"[LLM_RAW] provider={provider} model={model} '
+        'chars={len(raw or \'\')} raw={raw!r}")'
+    )
+    raw_new = (
+        'logger.debug(f"[LLM_RAW] provider={provider} model={model} '
+        'chars={len(raw or \'\')}")'
+    )
+    if provider_text.count(raw_old) != 1:
+        raise RuntimeError("pinned Omega raw-response logger changed")
+    llm_ext.write_text(provider_text.replace(raw_old, raw_new, 1), encoding="utf-8")
+
+
 def render_dockerfile() -> str:
     text = (OMEGA_ROOT / "Dockerfile").read_text(encoding="utf-8")
     replacements = {
@@ -294,13 +332,15 @@ def stage(destination: Path) -> None:
         dirs_exist_ok=False,
     )
     preserve_runtime_config_through_privilege_drop(omega_destination / "entrypoint.sh")
-    require_human_input_before_inference(omega_destination / "src" / "loop.metta")
+    loop = omega_destination / "src" / "loop.metta"
+    require_human_input_before_inference(loop)
     restrict_resident_plugins(omega_destination / "config" / "plugins.yaml")
     restrict_model_action_surface(
         omega_destination / "src" / "helper.py",
         omega_destination / "src" / "skills.metta",
     )
     disable_persistent_history(omega_destination / "src" / "memory.metta")
+    sanitize_runtime_logging(loop, omega_destination / "providers" / "lib_llm_ext.py")
 
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
     shutil.copy2(HERE / "alphaclaw-runtime.yaml", destination / "alphaclaw-runtime.yaml")
