@@ -1,0 +1,5 @@
+# AlphaClaw embodiment constants.
+# Deliberately not exposed as deployment inputs: changing these requires an
+# explicit source change that can be reviewed and witnessed.
+maxNewInputLoops: 8
+maxWakeLoops: 0

@@ -27,29 +27,45 @@ def test_hf_runtime_constants_match_pinned_residency() -> None:
     assert stage.CHROMADB_SHA == "218484875d5d1bfb217a9a03d3983dc1ed9d406c"
     assert stage.PROVIDER == "ASIOne"
     assert stage.MODEL == "asi1-mini"
+    assert stage.LIFE_CYCLES == 8
+    assert stage.WAKE_CYCLES == 0
 
 
 def test_generated_dockerfile_preserves_pin_and_public_surface() -> None:
     dockerfile = stage.render_dockerfile()
     assert f"ARG CHROMADB_REF={stage.CHROMADB_SHA}" in dockerfile
     assert 'checkout --detach "${CHROMADB_REF}"' in dockerfile
+    assert "cmake --build build --config Release --parallel 1" in dockerfile
+    assert "cmake --build build --config Release --parallel \\n" not in dockerfile
     assert "EXPOSE 7860" in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' in dockerfile
     assert "OmegaClaw-Core/proxy/*" in dockerfile
+    assert "COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
+    assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
 
 
-def test_residency_dockerfile_uses_stock_omega_entrypoint() -> None:
+def test_residency_dockerfile_uses_stock_omega_entrypoint_but_same_alpha_config() -> None:
     dockerfile = stage.render_residency_dockerfile()
     assert 'ENTRYPOINT ["/PeTTa/repos/OmegaClaw-Core/entrypoint.sh"]' in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' not in dockerfile
+    assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
 
 
-def test_health_server_is_only_explicit_public_surface() -> None:
+def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
+    runtime_config = (ROOT / "runtime" / "huggingface" / "alphaclaw-runtime.yaml").read_text()
+
     assert "health.py" in entrypoint
+    assert "ASI_ONE_API_KEY" in entrypoint
     assert "ASIONE_API_KEY" in entrypoint
     assert "provider=ASIOne" in entrypoint
     assert "model=asi1-mini" in entrypoint
+    assert "readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8" in entrypoint
+    assert "readonly ALPHACLAW_MAX_WAKE_LOOPS=0" in entrypoint
+    assert "maxNewInputLoops: 8" in runtime_config
+    assert "maxWakeLoops: 0" in runtime_config
+    assert "provider=ASICloud" not in entrypoint
+    assert "minimax/minimax-m3" not in entrypoint
     assert "commchannel=websocket" in entrypoint
     assert "8080" not in entrypoint
 

@@ -1,4 +1,4 @@
-name: ASI One Omega residency qualification
+name: ASI Cloud MiniMax sponsor qualification
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: asi-one-omega-residency
+  group: asi-cloud-minimax-sponsor
   cancel-in-progress: false
 
 jobs:
@@ -42,33 +42,33 @@ jobs:
             --tag alphaclaw:residency \
             /tmp/alphaclaw-omega-runtime
 
-      - name: Run one bounded real-model residency attempt
+      - name: Run one bounded sponsored MiniMax residency attempt
         env:
-          ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
+          ASI_API_KEY: ${{ secrets.ASI_API_KEY }}
         run: |
-          mkdir -p /tmp/alphaclaw-residency
+          mkdir -p /tmp/alphaclaw-minimax-residency
           python3 qualification/run_omega_residency.py \
             --source OmegaClaw-Core \
             --image alphaclaw:residency \
-            --provider ASIOne \
-            --model asi1-mini \
-            --marker "ALPHACLAW-OMEGA-RESIDENCY-${GITHUB_RUN_ID}" \
+            --provider ASICloud \
+            --model minimax/minimax-m3 \
+            --marker "ALPHACLAW-MINIMAX-SPONSOR-${GITHUB_RUN_ID}" \
             --max-calls 8 \
-            --output /tmp/alphaclaw-residency/evidence.json \
-            --log-output /tmp/alphaclaw-residency/omegaclaw.log
+            --output /tmp/alphaclaw-minimax-residency/evidence.json \
+            --log-output /tmp/alphaclaw-minimax-residency/omegaclaw.log
 
       - name: Show bounded evidence
         if: always()
         run: |
-          test ! -f /tmp/alphaclaw-residency/evidence.json || \
-            cat /tmp/alphaclaw-residency/evidence.json
+          test ! -f /tmp/alphaclaw-minimax-residency/evidence.json || \
+            cat /tmp/alphaclaw-minimax-residency/evidence.json
 
       - name: Upload residency evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: asi-one-omega-residency-${{ github.run_id }}
-          path: /tmp/alphaclaw-residency/
+          name: asi-cloud-minimax-sponsor-${{ github.run_id }}
+          path: /tmp/alphaclaw-minimax-residency/
           if-no-files-found: warn
           retention-days: 3
 

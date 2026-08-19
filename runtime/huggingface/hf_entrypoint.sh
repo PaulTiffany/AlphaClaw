@@ -8,6 +8,12 @@ set -euo pipefail
 export ASIONE_API_KEY="${ASI_ONE_API_KEY}"
 export ALPHACLAW_SOURCE_SHA="${ALPHACLAW_SOURCE_SHA:-unknown}"
 
+# Mirrors the read-only AlphaClaw runtime YAML baked into the image. These are
+# exposed only for the health witness; Omega reads the typed YAML itself.
+readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8
+readonly ALPHACLAW_MAX_WAKE_LOOPS=0
+export ALPHACLAW_MAX_NEW_INPUT_LOOPS ALPHACLAW_MAX_WAKE_LOOPS
+
 python3 /opt/alphaclaw-hf/health.py &
 
 args=(

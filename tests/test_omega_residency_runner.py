@@ -25,6 +25,27 @@ def test_residency_handoff_is_deterministic_and_model_bound() -> None:
     assert MODULE.FIXTURE_TEXT.endswith("\n")
 
 
+def test_sponsor_handoff_is_provider_bound() -> None:
+    handoff = MODULE.make_handoff("minimax/minimax-m3", "ASICloud")
+    assert handoff["provenance"] == {
+        "provider": "ASICloud",
+        "resolved_model": "minimax/minimax-m3",
+    }
+
+
+def test_provider_credentials_are_explicit_and_minimal() -> None:
+    assert MODULE.provider_config("ASIOne") == {
+        "canonical_key_env": "ASI_ONE_API_KEY",
+        "stock_key_env": "ASIONE_API_KEY",
+        "default_model": "asi1-mini",
+    }
+    assert MODULE.provider_config("ASICloud") == {
+        "canonical_key_env": "ASI_API_KEY",
+        "stock_key_env": "ASI_API_KEY",
+        "default_model": "minimax/minimax-m3",
+    }
+
+
 def test_expected_file_is_exactly_the_qualification_contract() -> None:
     handoff = MODULE.make_handoff("asi1-mini")
 

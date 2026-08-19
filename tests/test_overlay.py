@@ -48,23 +48,38 @@ def test_inference_contract_is_first_class_context() -> None:
         "resident_provider:",
         "resident_model:",
         "resident_modalities:",
-        "multimodal_capability: tool-only",
+        "multimodal_capability: ingress-only",
         "symbolic_target:",
         "nontext_output: tool-mediated-actuation",
         "effectors:",
+        "AGENCY HORIZON:",
+        "cycles_per_new_human_input:",
+        "scheduled_wake_cycles:",
         "prompt-extension alphaclaw-inference-contract",
     ]
     for phrase in required:
         assert phrase in overlay
 
 
-def test_policy_separates_resident_inference_from_perception_tools() -> None:
+def test_policy_makes_ingress_one_call_and_fixed() -> None:
     overlay = read("alphaclaw.metta")
-    assert "Treat resident inference and tool inference as different capabilities." in overlay
-    assert "use the configured multimodal capability once" in overlay
-    assert "Continue the reasoning trajectory on the symbolic/text representation" in overlay
-    assert "Re-query multimodal capability only when" in overlay
+    assert "Treat resident inference and ingress inference as different capabilities." in overlay
+    assert "uses the configured multimodal capability once" in overlay
+    assert "symbolic handoff as fixed input evidence" in overlay
+    assert "Continue the reasoning trajectory on the fixed symbolic/text representation" in overlay
+    assert "Do not re-query ingress inference from inside the resident loop" in overlay
+    assert "ask for a new human-mediated ingress" in overlay
     assert "Never infer resident capabilities from the model brand" in overlay
+
+
+def test_policy_exposes_mechanical_finite_horizon_without_second_counter() -> None:
+    overlay = read("alphaclaw.metta")
+    assert "configGetByKey maxNewInputLoops 50" in overlay
+    assert "configGetByKey maxWakeLoops 1" in overlay
+    assert "mechanically governs this resident" in overlay
+    assert "AlphaClaw grants no extra cycles" in overlay
+    assert "Plan within the finite horizon" in overlay
+    assert "wait for new human input" in overlay
 
 
 def test_policy_separates_intent_actuation_and_receipts() -> None:
