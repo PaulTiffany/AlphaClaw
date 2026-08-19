@@ -12,6 +12,8 @@ OMEGA_SHA = "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
 CHROMADB_SHA = "218484875d5d1bfb217a9a03d3983dc1ed9d406c"
 MODEL = "asi1-mini"
 PROVIDER = "ASIOne"
+LIFE_CYCLES = 8
+WAKE_CYCLES = 0
 
 README = """---
 title: AlphaClaw Omega Resident
@@ -28,6 +30,8 @@ This Space is a bounded runtime artifact for AlphaClaw on the pinned OmegaClaw s
 - OmegaClaw source: `{omega_sha}`
 - Provider: `{provider}`
 - Model: `{model}`
+- Human-triggered resident cycles: `{life_cycles}`
+- Scheduled wake cycles: `{wake_cycles}`
 - Public surface: health/status only on port 7860
 - Agent communication: outbound WebSocket when `OMEGA_WS_URL` is configured
 - Runtime capability is controlled by the AlphaClaw manual Hugging Face toggle workflow.
@@ -90,13 +94,16 @@ USER root
 RUN mkdir -p /PeTTa/repos/AlphaClaw /opt/alphaclaw-hf
 COPY --chown=65534:65534 alphaclaw.metta /PeTTa/repos/AlphaClaw/alphaclaw.metta
 COPY --chown=65534:65534 run.metta /PeTTa/repos/AlphaClaw/run.metta
+COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml
 COPY hf_entrypoint.sh /opt/alphaclaw-hf/entrypoint.sh
 COPY health.py /opt/alphaclaw-hf/health.py
+ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
 RUN cp /PeTTa/repos/AlphaClaw/run.metta /PeTTa/run.metta \\
  && chown 65534:65534 /PeTTa/run.metta \\
  && chmod 0444 /PeTTa/run.metta \\
               /PeTTa/repos/AlphaClaw/run.metta \\
               /PeTTa/repos/AlphaClaw/alphaclaw.metta \\
+              /opt/alphaclaw-hf/alphaclaw-runtime.yaml \\
               /opt/alphaclaw-hf/health.py \\
  && chmod 0555 /opt/alphaclaw-hf/entrypoint.sh
 
@@ -137,6 +144,7 @@ def stage(destination: Path) -> None:
     shutil.copy2(REPO_ROOT / "alphaclaw.metta", destination / "alphaclaw.metta")
     shutil.copy2(REPO_ROOT / "run.metta", destination / "run.metta")
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
+    shutil.copy2(HERE / "alphaclaw-runtime.yaml", destination / "alphaclaw-runtime.yaml")
     shutil.copy2(HERE / "hf_entrypoint.sh", destination / "hf_entrypoint.sh")
     shutil.copy2(HERE / "health.py", destination / "health.py")
     (destination / "Dockerfile").write_text(render_dockerfile(), encoding="utf-8")
@@ -145,7 +153,13 @@ def stage(destination: Path) -> None:
         encoding="utf-8",
     )
     (destination / "README.md").write_text(
-        README.format(omega_sha=OMEGA_SHA, provider=PROVIDER, model=MODEL),
+        README.format(
+            omega_sha=OMEGA_SHA,
+            provider=PROVIDER,
+            model=MODEL,
+            life_cycles=LIFE_CYCLES,
+            wake_cycles=WAKE_CYCLES,
+        ),
         encoding="utf-8",
     )
 
