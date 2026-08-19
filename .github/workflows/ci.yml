@@ -84,5 +84,5 @@ jobs:
             test -f "$tmp/$required"
           done
           test -f "$tmp/OmegaClaw-Core/run.metta"
+          test -f "$tmp/OmegaClaw-Core/Autotests/mock/comm.py"
           test ! -e "$tmp/OmegaClaw-Core/.git"
-          test ! -e "$tmp/OmegaClaw-Core/Autotests"

@@ -155,10 +155,13 @@ def stage(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
 
     omega_destination = destination / "OmegaClaw-Core"
+    # Stage the complete pinned upstream substrate. Git metadata is deployment-irrelevant,
+    # but upstream code decides which source directories are runtime-relevant. In particular,
+    # the pinned mockchannel imports Autotests.mock.comm during normal plugin initialization.
     shutil.copytree(
         OMEGA_ROOT,
         omega_destination,
-        ignore=shutil.ignore_patterns(".git", "Autotests"),
+        ignore=shutil.ignore_patterns(".git"),
         dirs_exist_ok=False,
     )
     preserve_alpha_config_through_privilege_drop(omega_destination / "entrypoint.sh")
