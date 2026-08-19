@@ -16,6 +16,34 @@ Therefore those powers are absent from the resident authority surface.
 Omega may mutate internal symbolic state. Internal mutation cannot grant additional inference,
 commands, plugins, credentials, persistence, or Alpha capabilities.
 
+## Bounded recursive self-improvement
+
+AlphaClaw permits reasoning about improvements and internal symbolic self-modification only inside
+an externally fixed authority envelope. A resident may propose a change; it may not make that change
+authoritative merely by proposing, evaluating, or recursively reproducing it itself.
+
+The invariant is:
+
+```text
+recursive proposal != recursive authorization
+
+descendant authority <= externally granted ancestor authority
+```
+
+In particular, no resident-controlled path may combine all of the following without an external
+review and authorization boundary:
+
+```text
+propose -> self-evaluate -> self-deploy -> widen authority -> recurse
+```
+
+Promotion of any change that affects inference budget, callable actions, plugins, credentials,
+persistence, network destinations, Alpha ingress, or the authority boundary itself must occur
+outside Omega's mutable state and must preserve or reduce the resident's currently granted authority.
+
+A model's own judgment that a modification is safe, useful, or superior is evidence to consider, not
+authorization to deploy it.
+
 ## Restoration rule
 
 A removed capability is not restored because a benchmark, demo, or convenience path expects it.
