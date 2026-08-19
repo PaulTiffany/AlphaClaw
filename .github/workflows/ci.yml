@@ -24,10 +24,16 @@ jobs:
           git submodule status --recursive
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
-      - name: Validate shell bootstrap
+      - name: Verify Alpha stays outside Omega
         run: |
-          bash -n scripts/install-into-petta.sh
-          bash -n runtime/huggingface/hf_entrypoint.sh
+          test ! -e alphaclaw.metta
+          test ! -e run.metta
+          test ! -e docker/Dockerfile.overlay
+          test ! -e scripts/install-into-petta.sh
+          test -f ingress/prepend.py
+
+      - name: Validate shell bootstrap
+        run: bash -n runtime/huggingface/hf_entrypoint.sh
 
       - uses: actions/setup-python@v5
         with:
@@ -67,7 +73,7 @@ jobs:
               assert (destination / required).is_file(), required
           PY
 
-      - name: Dry-stage pinned Omega resident Space
+      - name: Dry-stage bounded stock Omega resident Space
         run: |
           tmp="$(mktemp -d)"
           python runtime/huggingface/stage.py --destination "$tmp"
@@ -76,13 +82,17 @@ jobs:
             Dockerfile.residency \
             README.md \
             LICENSE \
-            alphaclaw.metta \
             alphaclaw-runtime.yaml \
-            run.metta \
             hf_entrypoint.sh \
             health.py; do
             test -f "$tmp/$required"
           done
+          test ! -e "$tmp/alphaclaw.metta"
+          test ! -e "$tmp/run.metta"
+          test ! -e "$tmp/OmegaClaw-Core/.git"
+          test ! -e "$tmp/AlphaClaw"
           test -f "$tmp/OmegaClaw-Core/run.metta"
           test -f "$tmp/OmegaClaw-Core/Autotests/mock/comm.py"
-          test ! -e "$tmp/OmegaClaw-Core/.git"
+          grep -q '(change-state! &loops 0)' "$tmp/OmegaClaw-Core/src/loop.metta"
+          test "$(grep -c '(change-state! &loops (maxNewInputLoops))' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
+          grep -q 'collapse (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"
