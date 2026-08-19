@@ -69,6 +69,15 @@ def preserve_alpha_config_through_privilege_drop(entrypoint: Path) -> None:
     entrypoint.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
+def commit_metta_plugin_initializers(plugin_loader: Path) -> None:
+    text = plugin_loader.read_text(encoding="utf-8")
+    old = "(let $rcs (collapse (eval (loadOmegaClawPlugin))) ())"
+    new = "(let $rcs (collapse (once (eval (loadOmegaClawPlugin)))) ())"
+    if text.count(old) != 1:
+        raise RuntimeError("pinned Omega MeTTa plugin initializer changed")
+    plugin_loader.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
 def render_dockerfile() -> str:
     text = (OMEGA_ROOT / "Dockerfile").read_text(encoding="utf-8")
     replacements = {
@@ -165,6 +174,10 @@ def stage(destination: Path) -> None:
         dirs_exist_ok=False,
     )
     preserve_alpha_config_through_privilege_drop(omega_destination / "entrypoint.sh")
+    # A plugin initializer is an effectful one-shot boundary, not a search surface. The pinned
+    # loader enumerates every result with collapse(eval(...)); on PeTTa v1.0.4 that backtracks
+    # through initializer side effects and can grow the atomspace while it is being enumerated.
+    commit_metta_plugin_initializers(omega_destination / "src" / "plugin.metta")
     shutil.copy2(REPO_ROOT / "alphaclaw.metta", destination / "alphaclaw.metta")
     shutil.copy2(REPO_ROOT / "run.metta", destination / "run.metta")
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
