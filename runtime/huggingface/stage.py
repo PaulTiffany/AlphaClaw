@@ -64,6 +64,9 @@ def render_dockerfile() -> str:
     text = (OMEGA_ROOT / "Dockerfile").read_text(encoding="utf-8")
     replacements = {
         "ARG CHROMADB_REF=master": f"ARG CHROMADB_REF={CHROMADB_SHA}",
+        "cmake --build build --config Release --parallel": (
+            "cmake --build build --config Release --parallel 1"
+        ),
         'RUN mkdir -p /PeTTa/repos \\\n && git clone --depth 1 --branch "${CHROMADB_REF}" "${CHROMADB_REPO}" /PeTTa/repos/petta_lib_chromadb': (
             'RUN mkdir -p /PeTTa/repos \\\n && git clone "${CHROMADB_REPO}" /PeTTa/repos/petta_lib_chromadb \\\n && git -C /PeTTa/repos/petta_lib_chromadb checkout --detach "${CHROMADB_REF}"'
         ),
