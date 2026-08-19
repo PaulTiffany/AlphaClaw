@@ -86,6 +86,17 @@ def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     assert "8080" not in entrypoint
 
 
+def test_hf_entrypoint_preflights_staged_libraries_before_health() -> None:
+    entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
+    omega_check = "test -f /PeTTa/repos/OmegaClaw-Core/lib_omegaclaw.metta"
+    alpha_check = "test -f /PeTTa/repos/AlphaClaw/alphaclaw.metta"
+    health_start = "python3 /opt/alphaclaw-hf/health.py &"
+    assert omega_check in entrypoint
+    assert alpha_check in entrypoint
+    assert entrypoint.index(omega_check) < entrypoint.index(health_start)
+    assert entrypoint.index(alpha_check) < entrypoint.index(health_start)
+
+
 def test_runtime_log_redaction() -> None:
     text = manage.redact("alpha secret-a omega secret-b", ("secret-a", "secret-b"))
     assert text == "alpha [REDACTED] omega [REDACTED]"
