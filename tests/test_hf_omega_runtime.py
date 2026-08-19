@@ -31,6 +31,7 @@ def test_hf_runtime_constants_match_bounded_residency() -> None:
     assert stage.BOOT_CYCLES == 0
     assert stage.LIFE_CYCLES == 8
     assert stage.WAKE_CYCLES == 0
+    assert manage.RESIDENT_SPACE_ID == "PaulTiffany/alphaclaw-omega"
 
 
 def test_generated_dockerfile_is_stock_omega_plus_boundary_bindings() -> None:
@@ -136,6 +137,14 @@ def test_forbidden_secret_set_excludes_resident_authority() -> None:
     assert {"OPENROUTER_API_KEY", "ASI_API_KEY"} <= manage.FORBIDDEN_RESIDENT_SECRET_KEYS
 
 
+def test_controller_has_no_configurable_space_target() -> None:
+    source = (ROOT / "runtime" / "huggingface" / "manage_space.py").read_text()
+    workflow = (ROOT / ".github" / "workflows" / "omega-space.yml").read_text()
+    assert "HF_OMEGA_SPACE_ID" not in source
+    assert "HF_OMEGA_SPACE_ID" not in workflow
+    assert manage.RESIDENT_SPACE_ID in source
+
+
 def test_scrub_forbidden_resident_secrets() -> None:
     secrets = {
         manage.ASI_SECRET: object(),
@@ -152,7 +161,7 @@ def test_scrub_forbidden_resident_secrets() -> None:
             deleted.append(key)
             secrets.pop(key, None)
 
-    manage.scrub_forbidden_resident_secrets(API(), "PaulTiffany/omega")
+    manage.scrub_forbidden_resident_secrets(API(), manage.RESIDENT_SPACE_ID)
     assert set(deleted) == {"OPENROUTER_API_KEY", "ASI_API_KEY"}
     assert set(secrets) == {manage.ASI_SECRET}
 
@@ -197,10 +206,25 @@ def test_turn_on_scrubs_forbidden_secrets_before_restart(
                 },
             )()
 
-    result = manage.turn_on(API(), "PaulTiffany/omega", True)
+    result = manage.turn_on(API(), manage.RESIDENT_SPACE_ID, True)
     assert events.index("delete:OPENROUTER_API_KEY") < events.index("restart")
+    assert result["space_id"] == manage.RESIDENT_SPACE_ID
     assert result["forbidden_resident_secrets"] == []
     assert result["asi_secret_present"] is True
+
+
+def test_turn_on_rejects_wrong_space_before_sync(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("ASI_ONE_API_KEY", "asi-secret")
+    called = False
+
+    def synchronize(*args, **kwargs):
+        nonlocal called
+        called = True
+
+    monkeypatch.setattr(manage, "synchronize", synchronize)
+    with pytest.raises(RuntimeError, match="resident Space is fixed"):
+        manage.turn_on(object(), "someone/else", True)
+    assert called is False
 
 
 def test_turn_on_rejects_plaintext_websocket_before_sync(
@@ -216,7 +240,7 @@ def test_turn_on_rejects_plaintext_websocket_before_sync(
 
     monkeypatch.setattr(manage, "synchronize", synchronize)
     with pytest.raises(RuntimeError, match="must start with wss://"):
-        manage.turn_on(object(), "PaulTiffany/omega", True)
+        manage.turn_on(object(), manage.RESIDENT_SPACE_ID, True)
     assert called is False
 
 
@@ -266,7 +290,7 @@ def test_runtime_error_is_witnessed_before_fail_closed_cleanup(
             return type("Runtime", (), {"stage": "RUNTIME_ERROR"})()
 
     with pytest.raises(RuntimeError, match="final stage=RUNTIME_ERROR"):
-        manage.turn_on(API(), "PaulTiffany/omega", True)
+        manage.turn_on(API(), manage.RESIDENT_SPACE_ID, True)
 
     assert calls == ["runtime-logs", "revoke"]
 
@@ -303,8 +327,8 @@ def test_off_revokes_all_resident_and_forbidden_secrets_before_pause() -> None:
                 },
             )()
 
-    result = manage.turn_off(API(), "PaulTiffany/omega")
-    pause_index = calls.index(("pause_space", "PaulTiffany/omega"))
+    result = manage.turn_off(API(), manage.RESIDENT_SPACE_ID)
+    pause_index = calls.index(("pause_space", manage.RESIDENT_SPACE_ID))
     delete_indexes = [i for i, call in enumerate(calls) if call[0] == "delete_space_secret"]
     assert delete_indexes
     assert max(delete_indexes) < pause_index
