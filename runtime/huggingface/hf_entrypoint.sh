@@ -31,13 +31,57 @@ test ! -e /PeTTa/repos/AlphaClaw
 # before health starts and before Omega receives provider authority.
 loop=/PeTTa/repos/OmegaClaw-Core/src/loop.metta
 plugin=/PeTTa/repos/OmegaClaw-Core/src/plugin.metta
+plugins=/PeTTa/repos/OmegaClaw-Core/config/plugins.yaml
+runtime_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
+
 test "$(grep -Fc '(change-state! &loops 0)' "$loop")" = 1
 test "$(grep -Fc '(change-state! &loops (maxNewInputLoops))' "$loop")" = 1
-grep -Fq '(collapse (eval (loadOmegaClawPlugin)))' "$plugin"
-if grep -Fq '(once (eval (loadOmegaClawPlugin)))' "$plugin"; then
+if grep -Fq '(and (> $k 1) $msgnew)' "$loop"; then
+  echo "refusing resident start: first-iteration human input would not refill authority" >&2
+  exit 1
+fi
+
+grep -Fq 'collapse (eval (loadOmegaClawPlugin))' "$plugin"
+if grep -Fq 'once (eval (loadOmegaClawPlugin))' "$plugin"; then
   echo "refusing resident start: Omega plugin loader was modified" >&2
   exit 1
 fi
+
+# Only the channel and provider needed by this deployment are loadable.
+python3 - "$plugins" <<'PY'
+from pathlib import Path
+import sys
+
+names = []
+for line in Path(sys.argv[1]).read_text(encoding="utf-8").splitlines():
+    if line.startswith("- name: "):
+        names.append(line.removeprefix("- name: ").strip())
+if names != ["wschat", "asione"]:
+    raise SystemExit(f"refusing resident start: unexpected plugin allowlist {names!r}")
+PY
+
+# The model may communicate with the human. It may not acquire shell, web,
+# file, memory, arbitrary MeTTa, or dynamically-added command authority.
+PYTHONPATH=/PeTTa/repos/OmegaClaw-Core python3 - <<'PY'
+from src import helper
+
+if helper.STATIC_LLM_COMMANDS != {"send"}:
+    raise SystemExit(
+        f"refusing resident start: unexpected static model actions {helper.STATIC_LLM_COMMANDS!r}"
+    )
+if helper.LLM_COMMANDS != {"send"}:
+    raise SystemExit(
+        f"refusing resident start: unexpected model actions {helper.LLM_COMMANDS!r}"
+    )
+if helper.add_llm_command("shell"):
+    raise SystemExit("refusing resident start: dynamic command expansion is enabled")
+if helper.LLM_COMMANDS != {"send"}:
+    raise SystemExit("refusing resident start: command set changed during expansion probe")
+if "UNKNOWN_SKILL_CALL" not in helper.balance_parentheses("shell env"):
+    raise SystemExit("refusing resident start: shell-like model output was not rejected")
+PY
+
+grep -Fq 'maxHistory: 0' "$runtime_config"
 
 if [[ -n "${OMEGA_WS_URL:-}" && "${OMEGA_WS_URL}" != wss://* ]]; then
   echo "refusing resident start: OMEGA_WS_URL must use wss://" >&2
@@ -47,7 +91,11 @@ fi
 readonly ALPHACLAW_BOOT_LOOPS=0
 readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8
 readonly ALPHACLAW_MAX_WAKE_LOOPS=0
+readonly ALPHACLAW_MAX_HISTORY_CHARS=0
+readonly ALPHACLAW_MODEL_ACTIONS=send
+readonly ALPHACLAW_RESIDENT_PLUGINS=wschat,asione
 export ALPHACLAW_BOOT_LOOPS ALPHACLAW_MAX_NEW_INPUT_LOOPS ALPHACLAW_MAX_WAKE_LOOPS
+export ALPHACLAW_MAX_HISTORY_CHARS ALPHACLAW_MODEL_ACTIONS ALPHACLAW_RESIDENT_PLUGINS
 
 python3 /opt/alphaclaw-hf/health.py &
 
