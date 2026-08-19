@@ -36,6 +36,8 @@ def test_upstream_submodule_is_pristine() -> None:
 
 def test_runner_composes_stock_omegaclaw_with_alpha_overlay() -> None:
     runner = read("run.metta")
+    assert '!(git-import! "https://github.com/asi-alliance/OmegaClaw-Core.git")' in runner
+    assert '!(git-import! "https://github.com/PaulTiffany/AlphaClaw.git")' in runner
     assert "(library OmegaClaw-Core lib_omegaclaw)" in runner
     assert "(library AlphaClaw alphaclaw)" in runner
     assert "!(omegaclaw)" in runner
