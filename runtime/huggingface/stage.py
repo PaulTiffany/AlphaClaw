@@ -31,6 +31,15 @@ MINIMAL_PLUGINS = """# AlphaClaw staged resident plugin allowlist.
   location: "{REPO}/providers"
 """
 
+RESIDENT_PROMPT = """You are a bounded OmegaClaw resident responding to the current human-mediated input.
+Reason from the current input and ephemeral working state only.
+Your only model-directed action is: send string.
+Use send to communicate a useful response to the human.
+Do not assume or attempt shell, web, file, memory, dynamic-skill, plugin, or other unavailable capabilities.
+Do not create goals beyond responding to the current human-mediated input.
+If information is insufficient, send what is missing rather than inventing evidence or capabilities.
+"""
+
 README = """---
 title: AlphaClaw Omega Resident
 emoji: 🦀
@@ -57,17 +66,18 @@ does not run a second agent or control loop inside the resident.
 - Loaded plugins: `{resident_plugins}`
 - Conversation content in runtime logs: disabled
 - Public surface: health/status only on port 7860
-- Agent communication: outbound WSS when `OMEGA_WS_URL` is configured
+- Agent communication: outbound WSS when a reviewed endpoint is source-pinned
 
 The staged resident makes only subtractive authority adaptations: boot begins with
 zero inference authority; every genuinely new human message refills the configured
 finite budget; persistent history and historical recall are disabled; only `send`
 is model-callable; and only the ASI:One provider plus WebSocket channel plugins are
-loaded. Runtime logs keep structural telemetry but not human/model prompt bodies.
-The pinned upstream submodule remains pristine.
+loaded. The stock autonomous-goal/memory prompt is replaced with a prompt matching
+that reduced authority. Runtime logs keep structural telemetry but not human/model
+prompt bodies. The pinned upstream submodule remains pristine.
 
-The ASI:One credential is never committed to this Space. The OFF transition removes
-it before pausing the Space.
+Activation remains disabled until the exact WSS human gateway is reviewed and
+committed in the AlphaClaw controller source.
 """
 
 
@@ -209,6 +219,20 @@ def disable_persistent_history(memory: Path) -> None:
     memory.write_text(text.replace(old, new, 1), encoding="utf-8")
 
 
+def restrict_resident_prompt(prompt: Path) -> None:
+    text = prompt.read_text(encoding="utf-8")
+    required = (
+        "choose your own goals",
+        "Keep memories and useful created skills",
+        "ALWAYS query before responding anything",
+        "Take at least 5 agent cycles",
+    )
+    for phrase in required:
+        if phrase not in text:
+            raise RuntimeError("pinned Omega base prompt changed; refusing prompt reduction")
+    prompt.write_text(RESIDENT_PROMPT, encoding="utf-8")
+
+
 def sanitize_runtime_logging(loop: Path, llm_ext: Path) -> None:
     loop_text = loop.read_text(encoding="utf-8")
     replacements = {
@@ -340,6 +364,7 @@ def stage(destination: Path) -> None:
         omega_destination / "src" / "skills.metta",
     )
     disable_persistent_history(omega_destination / "src" / "memory.metta")
+    restrict_resident_prompt(omega_destination / "memory" / "prompt.txt")
     sanitize_runtime_logging(loop, omega_destination / "providers" / "lib_llm_ext.py")
 
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
