@@ -117,6 +117,31 @@ def emit_build_logs(api, repo_id: str) -> None:
         )
 
 
+def redact(text: str, secrets: tuple[str, ...]) -> str:
+    redacted = text
+    for secret in secrets:
+        if secret:
+            redacted = redacted.replace(secret, "[REDACTED]")
+    return redacted
+
+
+def emit_runtime_logs(api, repo_id: str, secrets: tuple[str, ...]) -> None:
+    print("----- Hugging Face runtime log -----", file=sys.stderr)
+    try:
+        emitted = False
+        for line in api.fetch_space_logs(repo_id=repo_id, build=False):
+            emitted = True
+            text = redact(str(line), secrets)
+            print(text, end="" if text.endswith("\n") else "\n", file=sys.stderr)
+        if not emitted:
+            print("(no runtime log lines returned)", file=sys.stderr)
+    except Exception as exc:  # noqa: BLE001 - diagnostics must not mask the runtime failure
+        print(
+            f"(unable to fetch runtime logs: {type(exc).__name__}: {exc})",
+            file=sys.stderr,
+        )
+
+
 def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     asi_key = require_env("ASI_ONE_API_KEY")
     alpha_sha = os.environ.get("ALPHACLAW_SOURCE_SHA", "").strip()
@@ -165,9 +190,12 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
 
         api.restart_space(repo_id=repo_id)
         runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
-        if str(runtime.stage) != "RUNNING":
-            if str(runtime.stage) == "BUILD_ERROR":
+        runtime_stage = str(runtime.stage)
+        if runtime_stage != "RUNNING":
+            if runtime_stage == "BUILD_ERROR":
                 emit_build_logs(api, repo_id)
+            else:
+                emit_runtime_logs(api, repo_id, (asi_key, ws_token))
             raise RuntimeError(
                 f"Omega Space did not reach RUNNING; final stage={runtime.stage}"
             )
