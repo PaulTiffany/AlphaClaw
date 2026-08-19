@@ -2,206 +2,145 @@
 
 **Multimodal at the boundary. Symbolic in the loop. Tool-mediated at the boundary of action.**
 
-AlphaClaw is an inference-aware composition of **OmegaClaw**, not a reimplementation of it.
-The upstream `asi-alliance/OmegaClaw-Core` repository is pinned intact as a Git submodule.
-AlphaClaw contributes one architectural mutation: it tells OmegaClaw what inference is currently
-resident, then treats richer multimodal inference and non-text outward effects as tooling to invoke
-only at the boundary of need.
+AlphaClaw is a small boundary around a pinned **OmegaClaw** resident. It is not a second agent,
+not an Omega fork, and not an Alpha process living inside Omega's symbolic state.
 
 ```text
-multimodal input
-      |
-      | one translation / handoff call
-      v
-symbolic + textual state
+human / media
       |
       v
-+------------------+
-| stock OmegaClaw  |  <-- resident text inference knows what it is
-+------------------+
+external Python ingress
+  optional one multimodal translation
+  + fixed Alpha directions
       |
-      +-----------> perception tooling
-      |              only when symbolic state is insufficient
-      |
-      +-----------> intent
-                     |
-                     v
-                tool / skill effector
-                     |
-                     +----> artifact, sound, force/motion, or sign in the world
-                     |
-                     +----> actuation receipt when the tool surface exposes one
+      v
+pinned stock OmegaClaw
+  ASI:One / asi1-mini
+  boot: 0 inference cycles
+  new human input: 8 cycles
+  scheduled wake: 0 cycles
 ```
 
-## The move
+## The rule
 
-OmegaClaw already separates its symbolic loop from LLM providers and supports prompt extensions
-and dynamic skills. AlphaClaw uses those extension surfaces instead of forking the cognitive
-core.
+AlphaClaw does three things:
 
-The central primitive is the **Inference Contract**. Every OmegaClaw context is told:
+1. translate new non-text evidence once when needed;
+2. prepend a fixed boundary contract once;
+3. mechanically bound the resident Omega trajectory.
 
-- which provider is resident;
-- which model is resident;
-- which modalities the resident inference actually has;
-- that multimodal capability is tool-only;
-- which multimodal tool/capability is available;
-- which symbolic representation the perception boundary should target;
-- when the agent may call multimodal inference again;
-- that non-text output is tool-mediated actuation rather than a resident modality;
-- which OmegaClaw tools and skills are available as effectors;
-- that cognition, intent, actuation, and evidence of actuation are distinct stages.
+Everything else belongs to OmegaClaw.
 
-The agent therefore does not have to infer its own capabilities from a model name. A text-only
-reasoner can know that it cannot directly see an image while also knowing that it can call a
-vision-capable tool when perception is required. Likewise, it need not pretend that it directly
-"outputs images" or "outputs video": it can express an intent, invoke an effector, and reason over
-the artifact and receipt returned by that invocation.
+There is no `alphaclaw.metta`, no custom Alpha `run.metta`, no Alpha library inside PeTTa, and no
+Alpha callback that Omega can invoke. If the resident needs more evidence, it waits for another
+human-mediated ingress.
 
-## Boundary anatomy
+## Pinned Omega
 
-The motivating analogy is biological rather than model-symmetric. Humans have many sensory
-channels, but outward action is comparatively narrow: acoustic pressure, mechanical force or
-motion, and embodied or persistent signs that other observers then perceive. Seeing an image does
-not imply possessing a matching biological "image-output modality."
+`OmegaClaw-Core/` is a pristine Git submodule pinned to an exact upstream commit. Hugging Face
+staging copies the complete pinned source tree except Git metadata. AlphaClaw does not decide that
+upstream tests, plugins, channels, or support directories are disposable.
 
-AlphaClaw follows the same asymmetry:
+The resident uses Omega's native configuration surface. The bounded HF configuration is:
+
+```yaml
+maxNewInputLoops: 8
+maxWakeLoops: 0
+```
+
+Provider and model are bound at the process boundary as `ASIOne` / `asi1-mini`.
+
+## Human-start gate
+
+Pinned Omega normally begins with `maxNewInputLoops` already available at process startup. That is
+broader authority than AlphaClaw intends.
+
+The deployed copy therefore has one narrow semantic adaptation: startup initializes Omega's loop
+budget to `0`; stock Omega's existing new-human-message path still refills the budget to
+`maxNewInputLoops`. The staged copy also initializes the wake timestamp so the zero-cycle boot path
+is defined.
+
+The pinned submodule itself remains unchanged.
 
 ```text
-world -> sensors/tools -> observations -> symbolic state -> OmegaClaw
-                                                   |
-                                                   v
-                                                 intent
-                                                   |
-                                                   v
-                                            tools / effectors
-                                                   |
-                                                   v
-                                                world
+boot             -> 0 cycles
+new human input  -> 8 cycles
+scheduled wake   -> 0 useful inference cycles
 ```
 
-Generated media is therefore an **artifact of an effector invocation**, not a resident cognitive
-modality. When the underlying tool surface exposes provenance, AlphaClaw asks the trajectory to
-preserve an actuation receipt: tool identity, request or canonical request, returned artifact
-handle, provider metadata, and an artifact hash when bytes are available. The reasoning model may
-interpret that receipt, but it must not be the sole certifier of its own actuation.
+Inference bounds and capability bounds are separate. The loop budget limits model calls; Omega's
+own security/tool policy governs what a model call may touch.
 
-This is intentionally a structural distinction rather than a moral instruction. The useful path to
-non-text action already crosses a tool boundary, so provenance can ride the same path instead of
-being reconstructed after the fact.
+## External ingress
 
-## Policy
+For text, `ingress/prepend.py` adds the fixed Alpha boundary contract before the message enters
+OmegaClaw:
 
-The default AlphaClaw policy is deliberately simple:
+```bash
+python ingress/prepend.py --text "your message"
+```
 
-1. On first encounter with a new non-text source, make one multimodal translation/handoff call.
-2. Preserve literal observations, interpretations, uncertainty, unresolved details, and a handle
-   to the original evidence.
-3. Continue the trajectory using resident text/symbolic inference.
-4. Re-query multimodal tooling only when the symbolic state is insufficient, and make that query
-   narrow and evidence-directed.
-5. Treat tool output as an observation, not infallible ground truth.
-6. For a desired non-text outward effect, express the effect as intent and invoke an OmegaClaw tool
-   or skill as the effector.
-7. Preserve the effector's receipt/provenance when available, rather than letting the reasoning
-   model certify its own action from memory.
-8. Treat outward signs as observable effects, not as proof of hidden internal state.
+For non-text evidence, use an external one-call translator first. The existing image path is:
 
-AlphaClaw does **not** implement a competing multimodal or actuation stack. Configure it to name and
-use capabilities already available in the OmegaClaw deployment.
+```bash
+python ingress/openrouter_image.py \
+  --image image.png \
+  --output handoff.json
+
+python ingress/prepend.py --input-file handoff.json
+```
+
+The multimodal credential belongs to that external ingress process, not to the Omega resident.
+The handoff is fixed before Omega sees it.
+
+## Hugging Face resident
+
+`runtime/huggingface/stage.py` deterministically stages the pinned Omega source and the small HF
+boundary files. The generated image contains no `/PeTTa/repos/AlphaClaw` library; the runtime
+entrypoint fails closed if one appears.
+
+The public Space surface is health/status only. Runtime provider credentials are injected at enable
+time and revoked before a failed or disabled Space is paused.
 
 ## Repository layout
 
 ```text
 AlphaClaw/
-├── OmegaClaw-Core/            # pristine pinned upstream submodule
-├── alphaclaw.metta            # inference + boundary contract overlay
-├── run.metta                  # stock OmegaClaw + Alpha overlay
-├── docker/
-│   └── Dockerfile.overlay     # tiny image layer over a pinned Omega image
-├── qualification/             # resident-model qualification contract
-├── certification/             # source-witnessed OmegaClaw residency certificates
-├── ingress/                   # boundary translation helpers
-├── scripts/
-│   └── install-into-petta.sh  # deterministic PeTTa composition
-├── tests/                     # architectural invariants
+├── OmegaClaw-Core/                 # pristine pinned upstream submodule
+├── ingress/
+│   ├── prepend.py                  # fixed external Alpha directions
+│   └── openrouter_image.py         # optional one-call image translation
+├── runtime/huggingface/
+│   ├── alphaclaw-runtime.yaml      # Omega-native 8 / 0 dials
+│   ├── hf_entrypoint.sh            # runtime bindings + absence guard
+│   ├── health.py                   # deployment witness
+│   └── stage.py                    # deterministic HF embodiment
+├── qualification/                  # bounded resident qualification
+├── certification/                  # pinned-source witnesses
+├── tests/                          # architectural invariants
+├── docs/runtime-composition.md
 ├── .gitmodules
 └── LICENSE
 ```
 
-There is intentionally no AlphaClaw agent framework and no copied OmegaClaw source.
+## Development invariant
 
-## Install into PeTTa
-
-Clone AlphaClaw where PeTTa expects repository libraries:
-
-```bash
-cd /path/to/PeTTa/repos
-git clone --recurse-submodules https://github.com/PaulTiffany/AlphaClaw.git
-cd AlphaClaw
-./scripts/install-into-petta.sh /path/to/PeTTa
-```
-
-The installer leaves the pinned submodule inside AlphaClaw and creates the library alias
-`PeTTa/repos/OmegaClaw-Core -> AlphaClaw/OmegaClaw-Core`. It refuses to overwrite an unrelated
-OmegaClaw checkout. It also installs `run-alphaclaw.metta` at the PeTTa root.
-
-Then run AlphaClaw using the normal OmegaClaw configuration path, for example:
-
-```bash
-cd /path/to/PeTTa
-OMEGACLAW_AUTH_SECRET=<channel-secret> \
-  sh run.sh run-alphaclaw.metta \
-  provider=OpenAI \
-  model=<text-model> \
-  alphaResidentModalities=text-only \
-  alphaMultimodalTool="<existing OmegaClaw multimodal capability>" \
-  alphaEffectors="<existing OmegaClaw tools and skills>"
-```
-
-The model field is optional when the selected OmegaClaw provider already has a default. The
-Inference Contract resolves OmegaClaw's configured provider and provider-specific default model
-when possible.
-
-## Alpha configuration
-
-AlphaClaw reads configuration through OmegaClaw's existing configuration mechanism, so values can
-come from command-line arguments, `OMEGACLAW_<key>` environment variables, or a config file.
-
-| Key | Default | Meaning |
-| --- | --- | --- |
-| `alphaResidentModalities` | `text-only` | Capabilities resident in the reasoning model |
-| `alphaMultimodalTool` | `OmegaClaw multimodal tooling` | Human-readable name of the perception capability |
-| `alphaSymbolicTarget` | `MeTTa-compatible symbolic/text state` | Target representation for ingress translation |
-| `alphaEffectors` | `OmegaClaw tools and skills` | Human-readable name of outward action capabilities |
-
-`provider` and `model` remain ordinary OmegaClaw configuration. AlphaClaw reports them to the
-reasoning model instead of silently leaving them in runtime plumbing.
-
-## Hypersprint benchmark
-
-The initial comparison is intentionally narrow:
+Before modifying an Omega subsystem to make AlphaClaw work, first reproduce the requirement on
+vanilla pinned Omega.
 
 ```text
-baseline:    multimodal inference resident throughout trajectory
-AlphaClaw:   1 ingress multimodal call + k targeted re-queries + text/symbolic trajectory
+Does vanilla pinned Omega exhibit the problem?
+        |
+   +----+----+
+   |         |
+   no        yes
+   |         |
+remove      isolate the smallest
+Alpha       compatibility change
+complexity  and witness it
 ```
 
-Measure task success, multimodal calls/tokens, total inference cost, latency, and the number of
-perceptual re-queries required.
-
-The interesting question is not whether AlphaClaw has better vision. It is how much vision the
-reasoning trajectory actually needs.
-
-A corresponding outward-action benchmark can ask whether tool-mediated generation changes task
-success while increasing provenance coverage: how often a non-text effect has a mechanically
-recoverable tool identity, request, artifact handle, provider receipt, or content hash.
-
-## Upstream integrity
-
-CI verifies that `OmegaClaw-Core` is a real Git submodule, that the checked-out SHA matches the
-gitlink pinned by AlphaClaw, and that the submodule worktree remains clean. The Alpha overlay is
-tested separately.
+Alpha is a gate, not a god.
 
 ## License
 

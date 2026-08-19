@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import shutil
 import sys
 from pathlib import Path
 
@@ -22,52 +23,72 @@ stage = _load("stage", ROOT / "runtime" / "huggingface" / "stage.py")
 manage = _load("omega_hf_manage", ROOT / "runtime" / "huggingface" / "manage_space.py")
 
 
-def test_hf_runtime_constants_match_pinned_residency() -> None:
+def test_hf_runtime_constants_match_bounded_residency() -> None:
     assert stage.OMEGA_SHA == "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
     assert stage.CHROMADB_SHA == "218484875d5d1bfb217a9a03d3983dc1ed9d406c"
     assert stage.PROVIDER == "ASIOne"
     assert stage.MODEL == "asi1-mini"
+    assert stage.BOOT_CYCLES == 0
     assert stage.LIFE_CYCLES == 8
     assert stage.WAKE_CYCLES == 0
 
 
-def test_generated_dockerfile_preserves_pin_and_public_surface() -> None:
+def test_generated_dockerfile_is_stock_omega_plus_boundary_bindings() -> None:
     dockerfile = stage.render_dockerfile()
     assert f"ARG CHROMADB_REF={stage.CHROMADB_SHA}" in dockerfile
     assert 'checkout --detach "${CHROMADB_REF}"' in dockerfile
     assert "cmake --build build --config Release --parallel 1" in dockerfile
-    assert "cmake --build build --config Release --parallel \\\n" not in dockerfile
     assert "EXPOSE 7860" in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' in dockerfile
     assert "OmegaClaw-Core/proxy/*" in dockerfile
     assert "error_log /tmp/nginx-error.log warn;" in dockerfile
     assert "access_log /tmp/nginx-access.log;" in dockerfile
-    assert "s#error_log /dev/stderr warn;#" in dockerfile
-    assert "s#access_log /dev/stdout;#" in dockerfile
     assert "COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
     assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
+    assert "COPY alphaclaw.metta" not in dockerfile
+    assert "COPY run.metta" not in dockerfile
+    assert "mkdir -p /PeTTa/repos/AlphaClaw" not in dockerfile
+    assert "test ! -e /PeTTa/repos/AlphaClaw" in dockerfile
 
 
-def test_residency_dockerfile_uses_stock_omega_entrypoint_but_same_alpha_config() -> None:
+def test_residency_dockerfile_uses_stock_omega_entrypoint() -> None:
     dockerfile = stage.render_residency_dockerfile()
     assert 'ENTRYPOINT ["/PeTTa/repos/OmegaClaw-Core/entrypoint.sh"]' in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' not in dockerfile
     assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
 
 
-def test_staged_omega_entrypoint_preserves_alpha_config(tmp_path: Path) -> None:
+def test_staged_omega_entrypoint_preserves_runtime_config(tmp_path: Path) -> None:
     entrypoint = tmp_path / "entrypoint.sh"
     entrypoint.write_text(
         'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL \\\n'
         '  PYTHONDONTWRITEBYTECODE PYTHONUNBUFFERED"\n',
         encoding="utf-8",
     )
-    stage.preserve_alpha_config_through_privilege_drop(entrypoint)
+    stage.preserve_runtime_config_through_privilege_drop(entrypoint)
     text = entrypoint.read_text(encoding="utf-8")
     assert "LC_ALL OMEGACLAW_config" in text
 
 
-def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
+def test_boot_gate_changes_only_initial_authority(tmp_path: Path) -> None:
+    upstream = ROOT / "OmegaClaw-Core" / "src" / "loop.metta"
+    loop = tmp_path / "loop.metta"
+    shutil.copy2(upstream, loop)
+
+    original = upstream.read_text(encoding="utf-8")
+    assert original.count("(change-state! &loops (maxNewInputLoops))") == 2
+
+    stage.require_human_input_before_inference(loop)
+    transformed = loop.read_text(encoding="utf-8")
+
+    assert "AlphaClaw embodiment gate: boot grants no inference authority" in transformed
+    assert "(change-state! &loops 0)" in transformed
+    assert "(change-state! &nextWakeAt (+ (get_time) (wakeupInterval)))" in transformed
+    assert transformed.count("(change-state! &loops (maxNewInputLoops))") == 1
+    assert upstream.read_text(encoding="utf-8") == original
+
+
+def test_default_resident_is_asi_one_mini_with_human_only_life_cap() -> None:
     entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
     runtime_config = (ROOT / "runtime" / "huggingface" / "alphaclaw-runtime.yaml").read_text()
 
@@ -76,6 +97,7 @@ def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     assert "ASIONE_API_KEY" in entrypoint
     assert "provider=ASIOne" in entrypoint
     assert "model=asi1-mini" in entrypoint
+    assert "readonly ALPHACLAW_BOOT_LOOPS=0" in entrypoint
     assert "readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8" in entrypoint
     assert "readonly ALPHACLAW_MAX_WAKE_LOOPS=0" in entrypoint
     assert "maxNewInputLoops: 8" in runtime_config
@@ -86,15 +108,16 @@ def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     assert "8080" not in entrypoint
 
 
-def test_hf_entrypoint_preflights_staged_libraries_before_health() -> None:
+def test_hf_entrypoint_refuses_in_process_alpha_before_health() -> None:
     entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
     omega_check = "test -f /PeTTa/repos/OmegaClaw-Core/lib_omegaclaw.metta"
-    alpha_check = "test -f /PeTTa/repos/AlphaClaw/alphaclaw.metta"
+    alpha_absence = "test ! -e /PeTTa/repos/AlphaClaw"
     health_start = "python3 /opt/alphaclaw-hf/health.py &"
     assert omega_check in entrypoint
-    assert alpha_check in entrypoint
+    assert alpha_absence in entrypoint
     assert entrypoint.index(omega_check) < entrypoint.index(health_start)
-    assert entrypoint.index(alpha_check) < entrypoint.index(health_start)
+    assert entrypoint.index(alpha_absence) < entrypoint.index(health_start)
+    assert "alphaclaw.metta" not in entrypoint
 
 
 def test_runtime_log_redaction() -> None:

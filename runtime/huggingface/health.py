@@ -20,9 +20,12 @@ class Handler(BaseHTTPRequestHandler):
         payload = json.dumps(
             {
                 "status": "ok",
-                "resident": "alphaclaw-omega",
+                "resident": "bounded-stock-omega",
                 "provider": "ASIOne",
                 "model": "asi1-mini",
+                "boot_inference_cycles": int(
+                    os.environ.get("ALPHACLAW_BOOT_LOOPS", "0")
+                ),
                 "cycles_per_new_human_input": int(
                     os.environ.get("ALPHACLAW_MAX_NEW_INPUT_LOOPS", "8")
                 ),
@@ -30,7 +33,7 @@ class Handler(BaseHTTPRequestHandler):
                     os.environ.get("ALPHACLAW_MAX_WAKE_LOOPS", "0")
                 ),
                 "omega_source_sha": OMEGA_SHA,
-                "alpha_source_sha": os.environ.get("ALPHACLAW_SOURCE_SHA", ""),
+                "wrapper_source_sha": os.environ.get("ALPHACLAW_SOURCE_SHA", ""),
             },
             sort_keys=True,
         ).encode("utf-8")

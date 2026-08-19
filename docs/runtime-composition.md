@@ -1,82 +1,74 @@
 # AlphaClaw runtime composition
 
-AlphaClaw is an overlay on a complete pinned OmegaClaw substrate. Hugging Face is only the current embodiment.
+AlphaClaw is a boundary around a pinned OmegaClaw resident, not an agent inside it.
 
 ```text
-AlphaClaw repository
-├── OmegaClaw-Core @ pinned SHA   complete upstream substrate
-├── alphaclaw.metta               Alpha directions / prompt extension
-├── run.metta                     composition point
-└── runtime/huggingface/
-    ├── alphaclaw-runtime.yaml     Alpha-selected Omega dials
-    ├── hf_entrypoint.sh           secret/runtime binding
-    └── stage.py                   deterministic HF embodiment
+human / media
+     |
+     v
+external Python ingress
+  - optional one multimodal translation
+  - fixed Alpha directions prepended once
+     |
+     v
+pinned stock OmegaClaw
+  - provider: ASIOne
+  - model: asi1-mini
+  - boot inference cycles: 0
+  - cycles per new human input: 8
+  - scheduled wake cycles: 0
 ```
 
-## 1. Substrate: pinned OmegaClaw
+## Substrate
 
-`OmegaClaw-Core` is authoritative upstream code. The HF staging path copies the complete pinned source tree except Git metadata. AlphaClaw does not decide that an upstream directory is runtime-irrelevant merely because its name looks like tests, examples, or development support. If upstream startup imports it, it is part of the substrate.
+`OmegaClaw-Core` is a pristine pinned Git submodule. The Hugging Face stage copies the complete
+upstream tree except Git metadata. AlphaClaw does not import an Alpha MeTTa library, replace
+Omega's runner, patch the plugin loader, or install a second control loop.
 
-The submodule SHA is the source identity. Staging may make narrowly documented embodiment adaptations, but the submodule itself remains pristine.
+## Alpha boundary
 
-## 2. Directions: append through Omega's prompt-extension surface
+Alpha directions are prepared outside the resident by `ingress/prepend.py`. Non-text ingress may
+first pass through a single external Python translation call such as `ingress/openrouter_image.py`.
+The resulting handoff is fixed before it crosses into Omega.
 
-AlphaClaw does not replace Omega's loop or base prompt. `run.metta` registers and imports the pinned Omega library, then imports `AlphaClaw/alphaclaw.metta`.
+Omega has no callback into the Alpha ingress path. If evidence is insufficient, the resident must
+wait for new human-mediated input rather than autonomously re-running ingress.
 
-`alphaclaw.metta` defines:
+## Omega dials
 
-```metta
-(= (prompt-extension alphaclaw-inference-contract)
-   (alpha-inference-contract))
-```
-
-Omega's own `getContext` evaluates `(prompt-extension $_)` and appends the resulting text to the context. That is the Alpha instruction seam: stock Omega prompt + stock skills + Alpha contract.
-
-## 3. Dials: use Omega's configuration surface
-
-AlphaClaw changes Omega behavior through Omega's existing configuration mechanism rather than a second control loop.
-
-Omega resolves a configuration key in this order:
-
-1. command-line `key=value`
-2. `OMEGACLAW_<key>` environment variable
-3. the selected YAML config file
-4. Omega default
-
-For the HF resident, `OMEGACLAW_config` points to `runtime/huggingface/alphaclaw-runtime.yaml`. Mechanically important Alpha-selected values belong there when possible so they remain typed, reviewable, and witnessed. The current finite-life dials are:
+The resident uses Omega's native configuration surface:
 
 ```yaml
 maxNewInputLoops: 8
 maxWakeLoops: 0
 ```
 
-The HF entrypoint currently binds deployment-specific selections such as resident provider/model/channel and translates secret names at the process boundary. Because command-line values outrank YAML, any value supplied there is the effective Omega value and must be treated as part of the embodiment contract.
+The HF entrypoint binds provider/model/channel and secrets at the process boundary. It explicitly
+refuses startup if an in-process `/PeTTa/repos/AlphaClaw` library exists.
 
-AlphaClaw must not maintain a second shadow copy of an Omega dial. Its prompt contract reads the same Omega configuration values that govern the loop.
+## Boot gate
 
-## 4. Embodiment: Hugging Face
+Pinned Omega normally initializes `&loops` to `maxNewInputLoops`, which grants inference authority
+at process start. AlphaClaw makes one narrowly scoped staged compatibility transform: the deployed
+copy starts `&loops` at `0` and initializes the wake timestamp. Stock Omega's existing new-human-
+message refill remains unchanged and still grants `maxNewInputLoops` cycles.
 
-The HF Space is a deployment artifact, not the source of agent semantics. Staging performs four jobs:
+The upstream submodule is never edited.
 
-1. verify the exact pinned Omega SHA and a pristine submodule;
-2. copy the complete upstream substrate into the image;
-3. add the Alpha overlay and Alpha-selected config without editing the submodule;
-4. make only narrowly required HF compatibility adaptations and expose health/provenance witnesses.
+## Capability boundary
 
-Runtime credentials are injected separately and are revoked before a failed resident is paused.
+The loop budget limits inference calls. Omega's own security/tool policy independently limits what
+an inference may touch. These are separate controls and should stay separate.
 
-## Composition invariant
+## Invariant
 
 ```text
-complete pinned Omega
-        +
-Alpha prompt extension
-        +
-Omega-native configuration dials
-        +
-embodiment bindings / secrets
-        =
-AlphaClaw resident
+Alpha = external gate
+Omega = pinned reasoner
+HF = embodiment
+human input = inference refill authority
 ```
 
-If a proposed change edits Omega cognition to express Alpha policy, creates a second lifecycle counter, or deletes pieces of the pinned substrate based on an Alpha-side guess, it is probably crossing the wrong seam.
+If a change requires Alpha code to live in Omega's atomspace, modifies Omega plugin semantics, adds
+a second lifecycle authority, or gives Omega a callback into Alpha ingress, reject it unless a
+minimal control experiment proves the requirement.
