@@ -35,6 +35,9 @@ class Handler(BaseHTTPRequestHandler):
                 "history_recall_chars": int(
                     os.environ.get("ALPHACLAW_MAX_HISTORY_CHARS", "0")
                 ),
+                "persistent_history": bool(
+                    int(os.environ.get("ALPHACLAW_PERSIST_HISTORY", "0"))
+                ),
                 "model_actions": [
                     item
                     for item in os.environ.get("ALPHACLAW_MODEL_ACTIONS", "send").split(",")
