@@ -40,6 +40,10 @@ def test_generated_dockerfile_preserves_pin_and_public_surface() -> None:
     assert "EXPOSE 7860" in dockerfile
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' in dockerfile
     assert "OmegaClaw-Core/proxy/*" in dockerfile
+    assert "error_log /tmp/nginx-error.log warn;" in dockerfile
+    assert "access_log /tmp/nginx-access.log;" in dockerfile
+    assert "s#error_log /dev/stderr warn;#" in dockerfile
+    assert "s#access_log /dev/stdout;#" in dockerfile
     assert "COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
     assert "ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml" in dockerfile
 
