@@ -15,19 +15,34 @@ PROVIDER = "ASIOne"
 LIFE_CYCLES = 8
 WAKE_CYCLES = 0
 BOOT_CYCLES = 0
+HISTORY_CHARS = 0
+MODEL_ACTIONS = ("send",)
+RESIDENT_PLUGINS = ("wschat", "asione")
+
+MINIMAL_PLUGINS = """# AlphaClaw staged resident plugin allowlist.
+# The pinned upstream tree remains complete; only these plugins are loaded.
+- name: wschat
+  loader: python
+  location: "{REPO}/channels"
+
+- name: asione
+  loader: python
+  location: "{REPO}/providers"
+"""
 
 README = """---
 title: AlphaClaw Omega Resident
 emoji: 🦀
 sdk: docker
 app_port: 7860
-short_description: Bounded pinned stock OmegaClaw resident
+short_description: Minimum-authority bounded OmegaClaw resident
 ---
 
 # AlphaClaw Omega Resident
 
-This Space runs the complete pinned OmegaClaw substrate. AlphaClaw is not imported
-into OmegaClaw and does not run a second agent or control loop inside the resident.
+This Space contains the complete pinned OmegaClaw source substrate, but exposes a
+minimum-authority resident surface. AlphaClaw is not imported into OmegaClaw and
+does not run a second agent or control loop inside the resident.
 
 - OmegaClaw source: `{omega_sha}`
 - Provider: `{provider}`
@@ -35,12 +50,17 @@ into OmegaClaw and does not run a second agent or control loop inside the reside
 - Boot inference cycles: `{boot_cycles}`
 - Human-triggered resident cycles: `{life_cycles}`
 - Scheduled wake cycles: `{wake_cycles}`
+- Cross-episode history recall: `{history_chars}` characters
+- Model-directed actions: `{model_actions}`
+- Loaded plugins: `{resident_plugins}`
 - Public surface: health/status only on port 7860
-- Agent communication: outbound WebSocket when `OMEGA_WS_URL` is configured
+- Agent communication: outbound WSS when `OMEGA_WS_URL` is configured
 
-The only Omega semantic adaptation is the boot gate: the resident starts with zero
-inference authority and receives its configured cycle budget only after new human
-input. The pinned upstream submodule remains pristine.
+The staged resident makes only subtractive authority adaptations: boot begins with
+zero inference authority; every genuinely new human message refills the configured
+finite budget; historical recall is disabled; only `send` is model-callable; and
+only the ASI:One provider plus WebSocket channel plugins are loaded. The pinned
+upstream submodule remains pristine.
 
 The ASI:One credential is never committed to this Space. The OFF transition removes
 it before pausing the Space.
@@ -86,7 +106,7 @@ def require_human_input_before_inference(loop: Path) -> None:
     new = (
         '          (change-state! &lastresults "")\n'
         '          ; AlphaClaw embodiment gate: boot grants no inference authority.\n'
-        '          ; New human input still refills &loops through stock Omega logic below.\n'
+        '          ; Every genuinely new human input refills stock Omega below.\n'
         '          (change-state! &loops 0)\n'
         '          (change-state! &nextWakeAt (+ (get_time) (wakeupInterval)))\n'
         '          ))'
@@ -94,9 +114,85 @@ def require_human_input_before_inference(loop: Path) -> None:
     if text.count(old) != 1:
         raise RuntimeError("pinned Omega initLoop changed; refusing boot-gate transform")
     transformed = text.replace(old, new, 1)
+
+    refill_gate = "(if (and (> $k 1) $msgnew)"
+    if transformed.count(refill_gate) != 1:
+        raise RuntimeError("pinned Omega human-input refill gate changed")
+    transformed = transformed.replace(refill_gate, "(if $msgnew", 1)
+
     if transformed.count("(change-state! &loops (maxNewInputLoops))") != 1:
         raise RuntimeError("human-input refill path changed unexpectedly")
+    if refill_gate in transformed:
+        raise RuntimeError("first-iteration human refill gate survived transform")
     loop.write_text(transformed, encoding="utf-8")
+
+
+def restrict_resident_plugins(plugin_config: Path) -> None:
+    text = plugin_config.read_text(encoding="utf-8")
+    required = (
+        '- name: wschat\n  loader: python\n  location: "{REPO}/channels"',
+        '- name: asione\n  loader: python\n  location: "{REPO}/providers"',
+    )
+    for record in required:
+        if text.count(record) != 1:
+            raise RuntimeError("pinned Omega plugin registry changed; refusing resident allowlist")
+    plugin_config.write_text(MINIMAL_PLUGINS, encoding="utf-8")
+
+
+def restrict_model_action_surface(helper: Path, skills: Path) -> None:
+    helper_text = helper.read_text(encoding="utf-8")
+    start = helper_text.find("STATIC_LLM_COMMANDS = {")
+    end = helper_text.find("\nLLM_COMMANDS = set(STATIC_LLM_COMMANDS)", start)
+    if start < 0 or end < 0:
+        raise RuntimeError("pinned Omega static command registry changed")
+    original_registry = helper_text[start:end]
+    for command in ('"send"', '"shell"', '"metta"', '"websearch"', '"write-file"'):
+        if command not in original_registry:
+            raise RuntimeError("pinned Omega command registry lost an expected command")
+    helper_text = (
+        helper_text[:start]
+        + 'STATIC_LLM_COMMANDS = {"send"}'
+        + helper_text[end:]
+    )
+
+    add_old = """def add_llm_command(command):
+    LLM_COMMANDS.add(str(command))
+    return True
+"""
+    add_new = """def add_llm_command(command):
+    # AlphaClaw resident authority is fixed outside mutable Omega state.
+    return str(command) in STATIC_LLM_COMMANDS
+"""
+    if helper_text.count(add_old) != 1:
+        raise RuntimeError("pinned Omega dynamic command registration changed")
+    helper_text = helper_text.replace(add_old, add_new, 1)
+    helper.write_text(helper_text, encoding="utf-8")
+
+    skills_text = skills.read_text(encoding="utf-8")
+    get_skills_old = """(= (getSkills)
+   (let $static (getStaticSkills)
+     (collapse (superpose ((superpose $static) (dynamic-skill $_))))))
+"""
+    get_skills_new = """(= (getSkills)
+   (getStaticSkills))
+"""
+    if skills_text.count(get_skills_old) != 1:
+        raise RuntimeError("pinned Omega skill aggregation changed")
+    skills_text = skills_text.replace(get_skills_old, get_skills_new, 1)
+
+    static_start = skills_text.find("(= (getStaticSkills)")
+    static_end = skills_text.find("\n    ; TODO add load-plugin/unload-plugin skills", static_start)
+    if static_start < 0 or static_end < 0:
+        raise RuntimeError("pinned Omega static skill description block changed")
+    original_static = skills_text[static_start:static_end]
+    for token in ("Execute shell command", "Search the web", "Execute MeTTa expression"):
+        if token not in original_static:
+            raise RuntimeError("pinned Omega static skill surface lost expected capability")
+    minimal_static = """(= (getStaticSkills)
+   ("- Send message to user: send string"))
+"""
+    skills_text = skills_text[:static_start] + minimal_static + skills_text[static_end:]
+    skills.write_text(skills_text, encoding="utf-8")
 
 
 def render_dockerfile() -> str:
@@ -138,7 +234,7 @@ def render_dockerfile() -> str:
     if terminator not in text:
         raise RuntimeError("pinned Omega Dockerfile entrypoint changed")
 
-    boundary = '''# AlphaClaw HF boundary: stock Omega plus deployment bindings only.
+    boundary = '''# AlphaClaw HF boundary: pinned Omega plus minimum-authority deployment bindings.
 USER root
 RUN mkdir -p /opt/alphaclaw-hf
 COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml
@@ -178,7 +274,7 @@ def stage(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
 
     omega_destination = destination / "OmegaClaw-Core"
-    # Copy the complete pinned substrate. Alpha does not select or delete Omega organs.
+    # Copy the complete pinned substrate; authority is narrowed only in the staged copy.
     shutil.copytree(
         OMEGA_ROOT,
         omega_destination,
@@ -187,6 +283,11 @@ def stage(destination: Path) -> None:
     )
     preserve_runtime_config_through_privilege_drop(omega_destination / "entrypoint.sh")
     require_human_input_before_inference(omega_destination / "src" / "loop.metta")
+    restrict_resident_plugins(omega_destination / "config" / "plugins.yaml")
+    restrict_model_action_surface(
+        omega_destination / "src" / "helper.py",
+        omega_destination / "src" / "skills.metta",
+    )
 
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
     shutil.copy2(HERE / "alphaclaw-runtime.yaml", destination / "alphaclaw-runtime.yaml")
@@ -205,6 +306,9 @@ def stage(destination: Path) -> None:
             boot_cycles=BOOT_CYCLES,
             life_cycles=LIFE_CYCLES,
             wake_cycles=WAKE_CYCLES,
+            history_chars=HISTORY_CHARS,
+            model_actions=", ".join(MODEL_ACTIONS),
+            resident_plugins=", ".join(RESIDENT_PLUGINS),
         ),
         encoding="utf-8",
     )
@@ -212,7 +316,7 @@ def stage(destination: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Stage the bounded pinned stock OmegaClaw Hugging Face runtime"
+        description="Stage the minimum-authority pinned OmegaClaw Hugging Face runtime"
     )
     parser.add_argument("--destination", type=Path, required=True)
     args = parser.parse_args()
