@@ -22,8 +22,28 @@ DEFAULT_TARGET = "/tmp/alphaclaw-qualification.json"
 FIXTURE_TEXT = "AlphaClaw Omega residency fixture v1\n"
 LITERAL_OBSERVATIONS = ["ALPHA CLAW", "OMEGA RESIDENCY", "FIXTURE 17"]
 
+PROVIDER_CONFIG = {
+    "ASIOne": {
+        "canonical_key_env": "ASI_ONE_API_KEY",
+        "stock_key_env": "ASIONE_API_KEY",
+        "default_model": "asi1-mini",
+    },
+    "ASICloud": {
+        "canonical_key_env": "ASI_API_KEY",
+        "stock_key_env": "ASI_API_KEY",
+        "default_model": "minimax/minimax-m3",
+    },
+}
 
-def make_handoff(model: str) -> dict:
+
+def provider_config(provider: str) -> dict[str, str]:
+    try:
+        return PROVIDER_CONFIG[provider]
+    except KeyError as exc:
+        raise ValueError(f"unsupported qualification provider: {provider}") from exc
+
+
+def make_handoff(model: str, provider: str = "ASIOne") -> dict:
     return {
         "schema_version": 1,
         "source": {
@@ -32,7 +52,7 @@ def make_handoff(model: str) -> dict:
         },
         "literal_observations": list(LITERAL_OBSERVATIONS),
         "provenance": {
-            "provider": "ASIOne",
+            "provider": provider,
             "resolved_model": model,
         },
     }
@@ -114,12 +134,15 @@ def run(args: argparse.Namespace) -> int:
     sys.path.insert(0, str(mock_dir))
     from comm import COMM_MOCK_PORT, CommMockServer  # type: ignore
 
-    api_key = os.environ.get("ASI_ONE_API_KEY", "")
+    config = provider_config(args.provider)
+    canonical_key_env = config["canonical_key_env"]
+    stock_key_env = config["stock_key_env"]
+    api_key = os.environ.get(canonical_key_env, "")
     if not api_key:
-        raise RuntimeError("ASI_ONE_API_KEY is required")
+        raise RuntimeError(f"{canonical_key_env} is required")
 
     marker_message = f"QUALIFIED {args.marker}"
-    handoff = make_handoff(args.model)
+    handoff = make_handoff(args.model, args.provider)
     expected = expected_file(handoff, args.marker)
     task = build_task(handoff, args.marker, args.target)
     transcript: list[dict] = []
@@ -134,16 +157,16 @@ def run(args: argparse.Namespace) -> int:
     server = CommMockServer(("0.0.0.0", COMM_MOCK_PORT))
     try:
         env = os.environ.copy()
+        env[stock_key_env] = api_key
         env["TEST_SERVER_IP"] = "host.docker.internal"
         env["IMPORT_KB_ON_START"] = "0"
         subprocess.run(
             [
                 "bash",
-                "scripts/with-asi-one-key.sh",
                 str(launcher),
                 "start",
                 "-p",
-                "ASIOne",
+                args.provider,
                 "-m",
                 args.model,
                 "-t",
@@ -206,7 +229,11 @@ def run(args: argparse.Namespace) -> int:
 
     redacted_logs = redact(
         final_logs,
-        [api_key, os.environ.get("ASIONE_API_KEY", "")],
+        [
+            api_key,
+            os.environ.get(canonical_key_env, ""),
+            os.environ.get(stock_key_env, ""),
+        ],
     )
     redacted_logs = redacted_logs[-200_000:]
     args.log_output.parent.mkdir(parents=True, exist_ok=True)
@@ -220,7 +247,7 @@ def run(args: argparse.Namespace) -> int:
         "schema_version": 1,
         "qualified": qualified,
         "marker": args.marker,
-        "provider": "ASIOne",
+        "provider": args.provider,
         "requested_model": args.model,
         "omega_source_sha": omega_sha,
         "alpha_source_sha": os.environ.get("GITHUB_SHA", ""),
@@ -247,7 +274,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=Path("OmegaClaw-Core"))
     parser.add_argument("--image", default="alphaclaw:residency")
-    parser.add_argument("--model", default="asi1-mini")
+    parser.add_argument("--provider", choices=tuple(PROVIDER_CONFIG), default="ASIOne")
+    parser.add_argument("--model")
     parser.add_argument("--marker", required=True)
     parser.add_argument("--target", default=DEFAULT_TARGET)
     parser.add_argument("--max-calls", type=int, default=8)
@@ -266,6 +294,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.max_calls < 1:
         parser.error("--max-calls must be at least 1")
+    if args.model is None:
+        args.model = provider_config(args.provider)["default_model"]
     raise SystemExit(run(args))
 
 
