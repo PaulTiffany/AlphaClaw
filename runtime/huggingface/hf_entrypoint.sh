@@ -30,6 +30,7 @@ test ! -e /PeTTa/repos/AlphaClaw
 # Refuse to run if the bounded staged semantics drifted. These checks happen
 # before health starts and before Omega receives provider authority.
 loop=/PeTTa/repos/OmegaClaw-Core/src/loop.metta
+memory=/PeTTa/repos/OmegaClaw-Core/src/memory.metta
 plugin=/PeTTa/repos/OmegaClaw-Core/src/plugin.metta
 plugins=/PeTTa/repos/OmegaClaw-Core/config/plugins.yaml
 runtime_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
@@ -81,6 +82,9 @@ if "UNKNOWN_SKILL_CALL" not in helper.balance_parentheses("shell env"):
     raise SystemExit("refusing resident start: shell-like model output was not rejected")
 PY
 
+# Human payloads and model responses must not be silently retained by the
+# stock history writer, nor reintroduced into later human episodes.
+grep -Fq 'AlphaClaw staged boundary: persistent history writes disabled.' "$memory"
 grep -Fq 'maxHistory: 0' "$runtime_config"
 
 if [[ -n "${OMEGA_WS_URL:-}" && "${OMEGA_WS_URL}" != wss://* ]]; then
@@ -92,10 +96,12 @@ readonly ALPHACLAW_BOOT_LOOPS=0
 readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8
 readonly ALPHACLAW_MAX_WAKE_LOOPS=0
 readonly ALPHACLAW_MAX_HISTORY_CHARS=0
+readonly ALPHACLAW_PERSIST_HISTORY=0
 readonly ALPHACLAW_MODEL_ACTIONS=send
 readonly ALPHACLAW_RESIDENT_PLUGINS=wschat,asione
 export ALPHACLAW_BOOT_LOOPS ALPHACLAW_MAX_NEW_INPUT_LOOPS ALPHACLAW_MAX_WAKE_LOOPS
-export ALPHACLAW_MAX_HISTORY_CHARS ALPHACLAW_MODEL_ACTIONS ALPHACLAW_RESIDENT_PLUGINS
+export ALPHACLAW_MAX_HISTORY_CHARS ALPHACLAW_PERSIST_HISTORY
+export ALPHACLAW_MODEL_ACTIONS ALPHACLAW_RESIDENT_PLUGINS
 
 python3 /opt/alphaclaw-hf/health.py &
 
