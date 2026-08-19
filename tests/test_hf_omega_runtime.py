@@ -44,12 +44,19 @@ def test_residency_dockerfile_uses_stock_omega_entrypoint() -> None:
     assert 'ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]' not in dockerfile
 
 
-def test_health_server_is_only_explicit_public_surface() -> None:
+def test_default_resident_is_asi_one_mini_with_hard_life_cap() -> None:
     entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
     assert "health.py" in entrypoint
+    assert "ASI_ONE_API_KEY" in entrypoint
     assert "ASIONE_API_KEY" in entrypoint
     assert "provider=ASIOne" in entrypoint
     assert "model=asi1-mini" in entrypoint
+    assert "readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8" in entrypoint
+    assert "readonly ALPHACLAW_MAX_WAKE_LOOPS=0" in entrypoint
+    assert 'maxNewInputLoops=${ALPHACLAW_MAX_NEW_INPUT_LOOPS}' in entrypoint
+    assert 'maxWakeLoops=${ALPHACLAW_MAX_WAKE_LOOPS}' in entrypoint
+    assert "provider=ASICloud" not in entrypoint
+    assert "minimax/minimax-m3" not in entrypoint
     assert "commchannel=websocket" in entrypoint
     assert "8080" not in entrypoint
 
