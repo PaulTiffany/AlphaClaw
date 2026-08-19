@@ -50,6 +50,7 @@ jobs:
           python3 qualification/run_omega_residency.py \
             --source OmegaClaw-Core \
             --image alphaclaw:residency \
+            --provider ASIOne \
             --model asi1-mini \
             --marker "ALPHACLAW-OMEGA-RESIDENCY-${GITHUB_RUN_ID}" \
             --max-calls 8 \
