@@ -3,3 +3,4 @@
 # explicit source change that can be reviewed and witnessed.
 maxNewInputLoops: 8
 maxWakeLoops: 0
+maxHistory: 0

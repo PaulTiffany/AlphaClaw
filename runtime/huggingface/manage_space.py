@@ -13,6 +13,9 @@ except ImportError:
     from stage import MODEL, OMEGA_SHA, PROVIDER, stage
 
 RESIDENT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
+# Fail closed until the one allowed outbound human gateway is reviewed and
+# committed here. Activation is intentionally impossible while this is empty.
+RESIDENT_WS_URL = ""
 ASI_SECRET = "ASI_ONE_API_KEY"
 WS_SECRET = "OMEGA_WS_TOKEN"
 WS_VARIABLE = "OMEGA_WS_URL"
@@ -63,6 +66,7 @@ def safe_runtime(runtime, secret_keys: set[str]) -> dict[str, object]:
         "provider": PROVIDER,
         "model": MODEL,
         "omega_source_sha": OMEGA_SHA,
+        "ws_endpoint_pinned": bool(RESIDENT_WS_URL),
         "asi_secret_present": ASI_SECRET in secret_keys,
         "ws_secret_present": WS_SECRET in secret_keys,
         "forbidden_resident_secrets": sorted(forbidden_resident_secrets(secret_keys)),
@@ -169,15 +173,18 @@ def emit_runtime_logs(api, repo_id: str, secrets: tuple[str, ...]) -> None:
 def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     asi_key = require_env("ASI_ONE_API_KEY")
     alpha_sha = os.environ.get("ALPHACLAW_SOURCE_SHA", "").strip()
-    ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
     ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
 
     if repo_id != RESIDENT_SPACE_ID:
         raise RuntimeError(f"resident Space is fixed to {RESIDENT_SPACE_ID}")
 
-    # Validate all caller-controlled configuration before mutating external state.
-    if ws_url and not ws_url.startswith("wss://"):
-        raise RuntimeError("OMEGA_WS_URL must start with wss://")
+    # The only model-directed data sink must be reviewed in source, not supplied
+    # by a mutable deployment variable. Empty means activation is disabled.
+    ws_url = RESIDENT_WS_URL.strip()
+    if not ws_url:
+        raise RuntimeError("resident WSS endpoint is not source-pinned; activation disabled")
+    if not ws_url.startswith("wss://"):
+        raise RuntimeError("source-pinned resident WSS endpoint must start with wss://")
 
     synchronize(api, repo_id, private)
 
@@ -203,20 +210,19 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
                 description="AlphaClaw source commit that synchronized this runtime.",
             )
 
-        if ws_url:
-            api.add_space_variable(
-                repo_id=repo_id,
-                key=WS_VARIABLE,
-                value=ws_url,
-                description="Outbound bounded Omega WebSocket gateway.",
-            )
+        api.add_space_variable(
+            repo_id=repo_id,
+            key=WS_VARIABLE,
+            value=ws_url,
+            description="Source-pinned outbound bounded Omega WebSocket gateway.",
+        )
 
         if ws_token:
             api.add_space_secret(
                 repo_id=repo_id,
                 key=WS_SECRET,
                 value=ws_token,
-                description="Bearer token for the outbound bounded Omega WebSocket gateway.",
+                description="Bearer token for the source-pinned Omega WebSocket gateway.",
             )
 
         secret_keys = existing_secret_keys(api, repo_id)

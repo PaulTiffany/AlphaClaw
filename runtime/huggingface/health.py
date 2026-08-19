@@ -20,7 +20,7 @@ class Handler(BaseHTTPRequestHandler):
         payload = json.dumps(
             {
                 "status": "ok",
-                "resident": "bounded-stock-omega",
+                "resident": "minimum-authority-omega",
                 "provider": "ASIOne",
                 "model": "asi1-mini",
                 "boot_inference_cycles": int(
@@ -32,6 +32,27 @@ class Handler(BaseHTTPRequestHandler):
                 "scheduled_wake_cycles": int(
                     os.environ.get("ALPHACLAW_MAX_WAKE_LOOPS", "0")
                 ),
+                "history_recall_chars": int(
+                    os.environ.get("ALPHACLAW_MAX_HISTORY_CHARS", "0")
+                ),
+                "persistent_history": bool(
+                    int(os.environ.get("ALPHACLAW_PERSIST_HISTORY", "0"))
+                ),
+                "conversation_content_logging": bool(
+                    int(os.environ.get("ALPHACLAW_LOG_CONVERSATION_CONTENT", "0"))
+                ),
+                "model_actions": [
+                    item
+                    for item in os.environ.get("ALPHACLAW_MODEL_ACTIONS", "send").split(",")
+                    if item
+                ],
+                "resident_plugins": [
+                    item
+                    for item in os.environ.get(
+                        "ALPHACLAW_RESIDENT_PLUGINS", "wschat,asione"
+                    ).split(",")
+                    if item
+                ],
                 "omega_source_sha": OMEGA_SHA,
                 "wrapper_source_sha": os.environ.get("ALPHACLAW_SOURCE_SHA", ""),
             },

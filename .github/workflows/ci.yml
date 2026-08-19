@@ -93,7 +93,7 @@ jobs:
               assert (destination / required).is_file(), required
           PY
 
-      - name: Dry-stage bounded stock Omega resident Space
+      - name: Dry-stage minimum-authority Omega resident Space
         run: |
           tmp="$(mktemp -d)"
           python runtime/huggingface/stage.py --destination "$tmp"
@@ -114,10 +114,43 @@ jobs:
           test ! -e "$tmp/AlphaClaw"
           test -f "$tmp/OmegaClaw-Core/run.metta"
           test -f "$tmp/OmegaClaw-Core/Autotests/mock/comm.py"
-          test "$(grep -Fc '(change-state! &loops 0)' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
-          test "$(grep -Fc '(change-state! &loops (maxNewInputLoops))' "$tmp/OmegaClaw-Core/src/loop.metta")" = 1
+
+          loop="$tmp/OmegaClaw-Core/src/loop.metta"
+          helper="$tmp/OmegaClaw-Core/src/helper.py"
+          skills="$tmp/OmegaClaw-Core/src/skills.metta"
+          plugins="$tmp/OmegaClaw-Core/config/plugins.yaml"
+
+          test "$(grep -Fc '(change-state! &loops 0)' "$loop")" = 1
+          test "$(grep -Fc '(change-state! &loops (maxNewInputLoops))' "$loop")" = 1
+          ! grep -Fq '(and (> $k 1) $msgnew)' "$loop"
           grep -Fq 'collapse (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"
           if grep -Fq 'once (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"; then
             echo "staged Omega plugin loader was modified" >&2
             exit 1
           fi
+
+          test "$(grep -c '^- name:' "$plugins")" = 2
+          grep -Fq -- '- name: wschat' "$plugins"
+          grep -Fq -- '- name: asione' "$plugins"
+          ! grep -Fq -- '- name: workflow' "$plugins"
+          ! grep -Fq -- '- name: openclaw' "$plugins"
+          ! grep -Fq -- '- name: openrouter' "$plugins"
+
+          grep -Fq 'STATIC_LLM_COMMANDS = {"send"}' "$helper"
+          ! grep -Fq 'LLM_COMMANDS.add' "$helper"
+          grep -Fq '(= (getSkills)' "$skills"
+          grep -Fq '"- Send message to user: send string"' "$skills"
+          ! grep -Fq 'Execute shell command' "$skills"
+          ! grep -Fq 'Search the web' "$skills"
+          ! grep -Fq 'Execute MeTTa expression' "$skills"
+          grep -Fq 'maxHistory: 0' "$tmp/alphaclaw-runtime.yaml"
+
+          PYTHONPATH="$tmp/OmegaClaw-Core" python - <<'PY' "$tmp"
+          from src import helper
+
+          assert helper.STATIC_LLM_COMMANDS == {"send"}
+          assert helper.LLM_COMMANDS == {"send"}
+          assert helper.add_llm_command("shell") is False
+          assert helper.LLM_COMMANDS == {"send"}
+          assert "UNKNOWN_SKILL_CALL" in helper.balance_parentheses("shell env")
+          PY

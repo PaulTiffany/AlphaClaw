@@ -59,7 +59,6 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           HF_OMEGA_SPACE_PRIVATE: ${{ vars.HF_OMEGA_SPACE_PRIVATE }}
           ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
-          OMEGA_WS_URL: ${{ vars.OMEGA_WS_URL }}
           OMEGA_WS_TOKEN: ${{ secrets.OMEGA_WS_TOKEN }}
           ALPHACLAW_SOURCE_SHA: ${{ github.sha }}
         run: python runtime/huggingface/manage_space.py on
