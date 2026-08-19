@@ -128,3 +128,24 @@ def test_minimum_authority_is_not_mutable_from_inside_omega() -> None:
     assert "return str(command) in STATIC_LLM_COMMANDS" in staging_source
     assert stage.MODEL_ACTIONS == ("send",)
     assert stage.RESIDENT_PLUGINS == ("wschat", "asione")
+
+
+def test_recursive_self_improvement_cannot_self_authorize_authority_growth() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    decision = (ROOT / "docs" / "security-minimum-authority.md").read_text(encoding="utf-8")
+    staging_source = (ROOT / "runtime" / "huggingface" / "stage.py").read_text(encoding="utf-8")
+
+    assert "recursive proposal != recursive authorization" in readme
+    assert "descendant authority <= externally granted ancestor authority" in readme
+    assert "propose -> self-evaluate -> self-deploy -> widen authority -> recurse" in readme
+    assert "A model's own judgment" in decision
+    assert "not\nauthorization to deploy it" in decision
+
+    # Policy is backed by the concrete resident authority boundary, not only prose.
+    assert 'STATIC_LLM_COMMANDS = {"send"}' in staging_source
+    assert "return str(command) in STATIC_LLM_COMMANDS" in staging_source
+    assert stage.MODEL_ACTIONS == ("send",)
+    assert stage.RESIDENT_PLUGINS == ("wschat", "asione")
+    assert stage.BOOT_CYCLES == 0
+    assert stage.WAKE_CYCLES == 0
+    assert stage.PERSIST_HISTORY is False
