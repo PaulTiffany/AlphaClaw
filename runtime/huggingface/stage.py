@@ -14,29 +14,36 @@ MODEL = "asi1-mini"
 PROVIDER = "ASIOne"
 LIFE_CYCLES = 8
 WAKE_CYCLES = 0
+BOOT_CYCLES = 0
 
 README = """---
 title: AlphaClaw Omega Resident
 emoji: 🦀
 sdk: docker
 app_port: 7860
-short_description: Pinned OmegaClaw resident with AlphaClaw overlay
+short_description: Bounded pinned stock OmegaClaw resident
 ---
 
 # AlphaClaw Omega Resident
 
-This Space is a bounded runtime artifact for AlphaClaw on the pinned OmegaClaw source.
+This Space runs the complete pinned OmegaClaw substrate. AlphaClaw is not imported
+into OmegaClaw and does not run a second agent or control loop inside the resident.
 
 - OmegaClaw source: `{omega_sha}`
 - Provider: `{provider}`
 - Model: `{model}`
+- Boot inference cycles: `{boot_cycles}`
 - Human-triggered resident cycles: `{life_cycles}`
 - Scheduled wake cycles: `{wake_cycles}`
 - Public surface: health/status only on port 7860
 - Agent communication: outbound WebSocket when `OMEGA_WS_URL` is configured
-- Runtime capability is controlled by the AlphaClaw manual Hugging Face toggle workflow.
 
-The ASI:One credential is never committed to this Space. The OFF transition removes it before pausing the Space.
+The only Omega semantic adaptation is the boot gate: the resident starts with zero
+inference authority and receives its configured cycle budget only after new human
+input. The pinned upstream submodule remains pristine.
+
+The ASI:One credential is never committed to this Space. The OFF transition removes
+it before pausing the Space.
 """
 
 
@@ -60,13 +67,36 @@ def validate_source() -> None:
         raise RuntimeError("OmegaClaw-Core submodule is dirty")
 
 
-def preserve_alpha_config_through_privilege_drop(entrypoint: Path) -> None:
+def preserve_runtime_config_through_privilege_drop(entrypoint: Path) -> None:
     text = entrypoint.read_text(encoding="utf-8")
     old = 'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL \\\n'
     new = 'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL OMEGACLAW_config \\\n'
     if old not in text:
         raise RuntimeError("pinned Omega entrypoint allowlist changed")
     entrypoint.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
+def require_human_input_before_inference(loop: Path) -> None:
+    text = loop.read_text(encoding="utf-8")
+    old = (
+        '          (change-state! &lastresults "")\n'
+        '          (change-state! &loops (maxNewInputLoops))\n'
+        '          ))'
+    )
+    new = (
+        '          (change-state! &lastresults "")\n'
+        '          ; AlphaClaw embodiment gate: boot grants no inference authority.\n'
+        '          ; New human input still refills &loops through stock Omega logic below.\n'
+        '          (change-state! &loops 0)\n'
+        '          (change-state! &nextWakeAt (+ (get_time) (wakeupInterval)))\n'
+        '          ))'
+    )
+    if text.count(old) != 1:
+        raise RuntimeError("pinned Omega initLoop changed; refusing boot-gate transform")
+    transformed = text.replace(old, new, 1)
+    if transformed.count("(change-state! &loops (maxNewInputLoops))") != 1:
+        raise RuntimeError("human-input refill path changed unexpectedly")
+    loop.write_text(transformed, encoding="utf-8")
 
 
 def render_dockerfile() -> str:
@@ -86,7 +116,6 @@ def render_dockerfile() -> str:
         "COPY --chown=www-data:www-data --chmod=0600 ./proxy/* /opt/nginx/": (
             "COPY --chown=www-data:www-data --chmod=0600 OmegaClaw-Core/proxy/* /opt/nginx/\n"
             "# HF runs nginx as www-data; reopening /dev/stdout or /dev/stderr is denied.\n"
-            "# Keep the pinned proxy behavior, but write its logs to writable runtime files.\n"
             "RUN sed -i \\\n"
             "      -e 's#error_log /dev/stderr warn;#error_log /tmp/nginx-error.log warn;#' \\\n"
             "      -e 's#access_log /dev/stdout;#access_log /tmp/nginx-access.log;#' \\\n"
@@ -109,29 +138,23 @@ def render_dockerfile() -> str:
     if terminator not in text:
         raise RuntimeError("pinned Omega Dockerfile entrypoint changed")
 
-    overlay = '''# AlphaClaw bounded HF resident overlay.
+    boundary = '''# AlphaClaw HF boundary: stock Omega plus deployment bindings only.
 USER root
-RUN mkdir -p /PeTTa/repos/AlphaClaw /opt/alphaclaw-hf
-COPY --chown=65534:65534 alphaclaw.metta /PeTTa/repos/AlphaClaw/alphaclaw.metta
-COPY --chown=65534:65534 run.metta /PeTTa/repos/AlphaClaw/run.metta
+RUN mkdir -p /opt/alphaclaw-hf
 COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml
 COPY hf_entrypoint.sh /opt/alphaclaw-hf/entrypoint.sh
 COPY health.py /opt/alphaclaw-hf/health.py
 ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
-RUN cp /PeTTa/repos/AlphaClaw/run.metta /PeTTa/run.metta \
- && chown 65534:65534 /PeTTa/run.metta \
- && chmod 0444 /PeTTa/run.metta \
-              /PeTTa/repos/AlphaClaw/run.metta \
-              /PeTTa/repos/AlphaClaw/alphaclaw.metta \
-              /opt/alphaclaw-hf/alphaclaw-runtime.yaml \
+RUN chmod 0444 /opt/alphaclaw-hf/alphaclaw-runtime.yaml \
               /opt/alphaclaw-hf/health.py \
- && chmod 0555 /opt/alphaclaw-hf/entrypoint.sh
+ && chmod 0555 /opt/alphaclaw-hf/entrypoint.sh \
+ && test ! -e /PeTTa/repos/AlphaClaw
 
 EXPOSE 7860
 ENTRYPOINT ["/opt/alphaclaw-hf/entrypoint.sh"]
 CMD []
 '''
-    return text.replace(terminator, overlay, 1)
+    return text.replace(terminator, boundary, 1)
 
 
 def render_residency_dockerfile() -> str:
@@ -155,18 +178,16 @@ def stage(destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
 
     omega_destination = destination / "OmegaClaw-Core"
-    # Stage the complete pinned upstream substrate. Git metadata is deployment-irrelevant,
-    # but upstream code decides which source directories are runtime-relevant. In particular,
-    # the pinned mockchannel imports Autotests.mock.comm during normal plugin initialization.
+    # Copy the complete pinned substrate. Alpha does not select or delete Omega organs.
     shutil.copytree(
         OMEGA_ROOT,
         omega_destination,
         ignore=shutil.ignore_patterns(".git"),
         dirs_exist_ok=False,
     )
-    preserve_alpha_config_through_privilege_drop(omega_destination / "entrypoint.sh")
-    shutil.copy2(REPO_ROOT / "alphaclaw.metta", destination / "alphaclaw.metta")
-    shutil.copy2(REPO_ROOT / "run.metta", destination / "run.metta")
+    preserve_runtime_config_through_privilege_drop(omega_destination / "entrypoint.sh")
+    require_human_input_before_inference(omega_destination / "src" / "loop.metta")
+
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
     shutil.copy2(HERE / "alphaclaw-runtime.yaml", destination / "alphaclaw-runtime.yaml")
     shutil.copy2(HERE / "hf_entrypoint.sh", destination / "hf_entrypoint.sh")
@@ -181,6 +202,7 @@ def stage(destination: Path) -> None:
             omega_sha=OMEGA_SHA,
             provider=PROVIDER,
             model=MODEL,
+            boot_cycles=BOOT_CYCLES,
             life_cycles=LIFE_CYCLES,
             wake_cycles=WAKE_CYCLES,
         ),
@@ -190,7 +212,7 @@ def stage(destination: Path) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Stage the pinned AlphaClaw Omega Hugging Face runtime"
+        description="Stage the bounded pinned stock OmegaClaw Hugging Face runtime"
     )
     parser.add_argument("--destination", type=Path, required=True)
     args = parser.parse_args()
