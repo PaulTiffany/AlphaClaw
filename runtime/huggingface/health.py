@@ -3,13 +3,18 @@ from __future__ import annotations
 import json
 import os
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import urlsplit
 
 OMEGA_SHA = "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
 
 
+def route_path(target: str) -> str:
+    return urlsplit(target).path
+
+
 class Handler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
-        if self.path not in {"/", "/health"}:
+        if route_path(self.path) not in {"/", "/health"}:
             self.send_error(404)
             return
         payload = json.dumps(
