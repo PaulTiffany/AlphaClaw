@@ -75,7 +75,15 @@ def render_dockerfile() -> str:
         ),
         "COPY . .": "COPY OmegaClaw-Core .",
         "COPY --chown=www-data:www-data --chmod=0600 ./proxy/* /opt/nginx/": (
-            "COPY --chown=www-data:www-data --chmod=0600 OmegaClaw-Core/proxy/* /opt/nginx/"
+            "COPY --chown=www-data:www-data --chmod=0600 OmegaClaw-Core/proxy/* /opt/nginx/\n"
+            "# HF runs nginx as www-data; reopening /dev/stdout or /dev/stderr is denied.\n"
+            "# Keep the pinned proxy behavior, but write its logs to writable runtime files.\n"
+            "RUN sed -i \\\n"
+            "      -e 's#error_log /dev/stderr warn;#error_log /tmp/nginx-error.log warn;#' \\\n"
+            "      -e 's#access_log /dev/stdout;#access_log /tmp/nginx-access.log;#' \\\n"
+            "      /opt/nginx/nginx.conf.template \\\n"
+            " && chown www-data:www-data /opt/nginx/nginx.conf.template \\\n"
+            " && chmod 0600 /opt/nginx/nginx.conf.template"
         ),
     }
     for old, new in replacements.items():
