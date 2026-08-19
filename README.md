@@ -102,6 +102,33 @@ The ASI:One key is still necessarily present in the resident provider process. T
 is therefore to remove model-directed code execution and alternate network/tool sinks rather than
 pretend the credential is isolated from the process that must use it.
 
+## Bounded recursive self-improvement
+
+AlphaClaw does not treat recursive self-improvement as recursive authorization.
+
+A resident may reason about, propose, compare, or internally represent improvements. It may not use
+its own mutable state, self-evaluation, or recursive descendants to grant those improvements more
+inference, actions, plugins, credentials, persistence, network reach, Alpha access, or authority over
+the guardrail itself.
+
+```text
+recursive proposal != recursive authorization
+
+descendant authority <= externally granted ancestor authority
+```
+
+The forbidden closure is:
+
+```text
+propose -> self-evaluate -> self-deploy -> widen authority -> recurse
+```
+
+Any promotion that changes the authority surface must cross an external review/authorization
+boundary and preserve or reduce the authority already granted to the resident. The model's own
+judgment that a modification is safe or useful is evidence, not deployment authority.
+
+See `docs/security-minimum-authority.md` for the security decision.
+
 ## External ingress
 
 For text, `ingress/prepend.py` produces a data-only JSON envelope containing the fixed Alpha
