@@ -150,6 +150,72 @@ Chad philosophy does not protect ideas from reality.
 
 Not even Chad philosophy.
 
+## Leave room to be wrong
+
+Being bold is not the same as taking on everything at once.
+
+If one person, one model, one team, or one system tries to hold every problem, every dependency, every judgment, and every consequence in its own head, it becomes easier to lose the thread.
+
+A good system leaves slack.
+
+A good team leaves handholds for other people.
+
+A good plan can survive one person getting tired, one tool failing, one assumption being wrong, or one experiment going badly.
+
+So:
+
+**Do not bite off more than you can chew. Do not make yourself the only thing holding the work together. Take care of the operator. Leave enough room to notice and repair mistakes.**
+
+In symbols:
+
+\[
+\text{capacity margin} > 0
+\]
+
+\[
+\text{one failure} \not\Rightarrow \text{total collapse}
+\]
+
+This is not cowardice.
+
+It is how you preserve the ability to learn.
+
+If there is no slack, every mistake becomes an emergency. If every mistake becomes an emergency, people hide mistakes, rush judgment, and stop testing reality honestly.
+
+Chad philosophy therefore prefers **recoverable progress** over heroic overextension.
+
+## Capability is not permission
+
+Making something faster, cheaper, smarter, or easier to produce does not automatically answer whether more of it should be allowed to act on the world.
+
+\[
+\Delta \text{capability} > 0 \not\Rightarrow \Delta \text{authority} > 0
+\]
+
+The same applies to recursive improvement:
+
+\[
+\text{recursive proposal} \neq \text{recursive authorization}
+\]
+
+A system may discover a better method. That does not mean it has earned the right to deploy that method, widen its own permissions, or remove the gate that judged it.
+
+Where consequences matter, put a gate in the causal path before action.
+
+The gate may be a mechanical witness when the relevant condition is genuinely checkable. Where the remaining question is constitutional or semantic — who gets to decide, what is worth doing, what risk is acceptable — do not pretend that judgment disappeared just because automation became convenient.
+
+So keep these distinct:
+
+\[
+\text{certified} \neq \text{authorized} \neq \text{worth doing}
+\]
+
+A useful rule is:
+
+> **No high-consequence actuator without an independently authorized gate in its causal past that can still say no.**
+
+And the power to say no should not automatically grow merely because the actuator became more capable.
+
 ## This philosophy may also be wrong
 
 This is important.
@@ -288,6 +354,10 @@ Once several different ways of examining something lead to the same answer, it m
 
 More words are not necessarily more wisdom.
 
+Stopping also means noticing when continued effort is degrading the operator faster than it is improving the work.
+
+Rest, delegation, and asking for help are not failures of seriousness. They are ways of preserving judgment for the next branch point.
+
 <p align="center">
   <img src="assets/chad/stop.jpg" alt="Chad quietly drinking coffee after enough has been said" width="620">
 </p>
@@ -296,15 +366,18 @@ More words are not necessarily more wisdom.
 
 ## The Chad test
 
-When someone makes a claim, ask:
+When someone makes a claim or proposes an action, ask:
 
 1. **What are they actually saying?**
 2. **Is it true?**
 3. If it is true, say **yes**.
 4. If it is false, show why.
 5. If you do not know, test it.
-6. Ignore unnecessary embarrassment and status games.
-7. Continue with your life.
+6. **What can actually check this before it acts?**
+7. **Did new capability accidentally become new authority?**
+8. **Are we leaving enough slack to notice and repair a mistake?**
+9. Ignore unnecessary embarrassment and status games.
+10. Continue with your life.
 
 Or, more compactly:
 
@@ -323,6 +396,10 @@ Or, more compactly:
 There is no special step called:
 
 > **Become defensive.**
+
+There is also no special step called:
+
+> **Make yourself indispensable and hope nothing goes wrong.**
 
 ## Why call this “Chad philosophy”?
 
@@ -344,7 +421,17 @@ from
 
 **How does this make me look?**
 
+And, when action matters:
+
+**What can we do?**
+
+from
+
+**What have we actually authorized?**
+
 That little separation creates room to think.
+
+Slack creates room to recover.
 
 And sometimes that is all we need.
 
