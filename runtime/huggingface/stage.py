@@ -60,6 +60,15 @@ def validate_source() -> None:
         raise RuntimeError("OmegaClaw-Core submodule is dirty")
 
 
+def preserve_alpha_config_through_privilege_drop(entrypoint: Path) -> None:
+    text = entrypoint.read_text(encoding="utf-8")
+    old = 'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL \\\n'
+    new = 'SAFE_VARS="HOME USER PATH HOSTNAME TERM LANG LC_ALL OMEGACLAW_config \\\n'
+    if old not in text:
+        raise RuntimeError("pinned Omega entrypoint allowlist changed")
+    entrypoint.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+
 def render_dockerfile() -> str:
     text = (OMEGA_ROOT / "Dockerfile").read_text(encoding="utf-8")
     replacements = {
@@ -109,13 +118,13 @@ COPY alphaclaw-runtime.yaml /opt/alphaclaw-hf/alphaclaw-runtime.yaml
 COPY hf_entrypoint.sh /opt/alphaclaw-hf/entrypoint.sh
 COPY health.py /opt/alphaclaw-hf/health.py
 ENV OMEGACLAW_config=/opt/alphaclaw-hf/alphaclaw-runtime.yaml
-RUN cp /PeTTa/repos/AlphaClaw/run.metta /PeTTa/run.metta \\
- && chown 65534:65534 /PeTTa/run.metta \\
- && chmod 0444 /PeTTa/run.metta \\
-              /PeTTa/repos/AlphaClaw/run.metta \\
-              /PeTTa/repos/AlphaClaw/alphaclaw.metta \\
-              /opt/alphaclaw-hf/alphaclaw-runtime.yaml \\
-              /opt/alphaclaw-hf/health.py \\
+RUN cp /PeTTa/repos/AlphaClaw/run.metta /PeTTa/run.metta \
+ && chown 65534:65534 /PeTTa/run.metta \
+ && chmod 0444 /PeTTa/run.metta \
+              /PeTTa/repos/AlphaClaw/run.metta \
+              /PeTTa/repos/AlphaClaw/alphaclaw.metta \
+              /opt/alphaclaw-hf/alphaclaw-runtime.yaml \
+              /opt/alphaclaw-hf/health.py \
  && chmod 0555 /opt/alphaclaw-hf/entrypoint.sh
 
 EXPOSE 7860
@@ -152,6 +161,7 @@ def stage(destination: Path) -> None:
         ignore=shutil.ignore_patterns(".git", "Autotests"),
         dirs_exist_ok=False,
     )
+    preserve_alpha_config_through_privilege_drop(omega_destination / "entrypoint.sh")
     shutil.copy2(REPO_ROOT / "alphaclaw.metta", destination / "alphaclaw.metta")
     shutil.copy2(REPO_ROOT / "run.metta", destination / "run.metta")
     shutil.copy2(REPO_ROOT / "LICENSE", destination / "LICENSE")
