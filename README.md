@@ -73,12 +73,15 @@ own security/tool policy governs what a model call may touch.
 
 ## External ingress
 
-For text, `ingress/prepend.py` adds the fixed Alpha boundary contract before the message enters
-OmegaClaw:
+For text, `ingress/prepend.py` produces a data-only JSON envelope containing the fixed Alpha
+boundary contract and the human-mediated payload:
 
 ```bash
 python ingress/prepend.py --text "your message"
 ```
+
+The whole output is JSON data, not a MeTTa form. Even a payload that looks like MeTTa remains a JSON
+string; Alpha never imports or evaluates it.
 
 For non-text evidence, use an external one-call translator first. The existing image path is:
 
@@ -99,6 +102,15 @@ The handoff is fixed before Omega sees it.
 boundary files. The generated image contains no `/PeTTa/repos/AlphaClaw` library; the runtime
 entrypoint fails closed if one appears.
 
+Before Omega starts, the resident also verifies the boot/refill loop cardinalities, verifies that
+the stock plugin loader has not acquired the abandoned `once(...)` modification, rejects plaintext
+WebSocket endpoints, and refuses any known alternate-provider or multimodal credential in its
+environment.
+
+The controller independently scrubs those forbidden credentials from the dedicated Space before
+restart and revokes them on OFF. CI verifies that the resident workflow exposes only the intended
+ASI:One model credential plus the optional WebSocket token.
+
 The public Space surface is health/status only. Runtime provider credentials are injected at enable
 time and revoked before a failed or disabled Space is paused.
 
@@ -108,11 +120,11 @@ time and revoked before a failed or disabled Space is paused.
 AlphaClaw/
 ├── OmegaClaw-Core/                 # pristine pinned upstream submodule
 ├── ingress/
-│   ├── prepend.py                  # fixed external Alpha directions
+│   ├── prepend.py                  # fixed data-only Alpha envelope
 │   └── openrouter_image.py         # optional one-call image translation
 ├── runtime/huggingface/
 │   ├── alphaclaw-runtime.yaml      # Omega-native 8 / 0 dials
-│   ├── hf_entrypoint.sh            # runtime bindings + absence guard
+│   ├── hf_entrypoint.sh            # runtime bindings + fail-closed guards
 │   ├── health.py                   # deployment witness
 │   └── stage.py                    # deterministic HF embodiment
 ├── qualification/                  # bounded resident qualification
