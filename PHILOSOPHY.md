@@ -216,6 +216,70 @@ A useful rule is:
 
 And the power to say no should not automatically grow merely because the actuator became more capable.
 
+## Intelligence has a Jevons problem
+
+In resource economics, there is an old observation associated with William Stanley Jevons: when using something becomes much more efficient, people may respond by using much more of it.
+
+The same pressure can apply to intelligence.
+
+If the cost of useful cognition falls, we should not assume society will simply do today's thinking more cheaply. We may instead apply intelligence to many more things.
+
+Let
+
+\[
+c_I = \text{cost of a unit of useful intelligence}
+\]
+
+and
+
+\[
+N_I = \text{number of tasks we can afford to apply intelligence to}.
+\]
+
+Then a falling cost can produce a rising task count:
+
+\[
+c_I \downarrow \quad \Rightarrow \quad N_I \uparrow
+\]
+
+so total deployed cognition can grow even while each individual inference becomes cheaper.
+
+This matters because cheap intelligence does not only make answers cheap.
+
+It makes **questions, hypotheses, plans, patches, contracts, messages, experiments, strategies, and proposed actions** cheap to produce too.
+
+Many of those outputs still need someone or something to decide:
+
+- Is this true?
+- Is this safe enough?
+- Is this worth doing?
+- Who is allowed to authorize it?
+- What happens if we are wrong?
+
+So making intelligence abundant can create a second scarcity: **attention and judgment about what all that intelligence produces.**
+
+The danger is especially sharp when intelligence helps produce more intelligence. Capability can improve the machinery that generates further capability.
+
+That does **not** mean authority should recurse with it.
+
+\[
+\text{recursive capability} \not\Rightarrow \text{recursive authority}
+\]
+
+A million agents making a million proposals do not become a million legitimate decision-makers merely because proposal became cheap.
+
+Mechanical checks should become cheap wherever we can make them cheap. Provenance should become cheap. Reproducibility should become cheap. Tests should become cheap.
+
+But where a real judgment remains — about values, acceptable risk, legitimacy, or irreversible action — do not hide that judgment inside the machinery merely because the machinery is fast.
+
+The practical lesson is:
+
+> **Make intelligence abundant without making authority automatic.**
+
+Intelligence may scale rapidly.
+
+Wisdom, trust, and authority still need room to spread, disagree, abstain, and say no.
+
 ## This philosophy may also be wrong
 
 This is important.
