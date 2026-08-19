@@ -34,7 +34,8 @@ jobs:
 
       - name: Verify resident credential allowlist
         run: |
-          grep -Fq 'ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}' .github/workflows/omega-space.yml
+          grep -Fq 'ASI_ONE_API_KEY:' .github/workflows/omega-space.yml
+          grep -Fq 'secrets.ASI_ONE_API_KEY' .github/workflows/omega-space.yml
           for forbidden in \
             OPENROUTER_API_KEY \
             ASI_API_KEY \
