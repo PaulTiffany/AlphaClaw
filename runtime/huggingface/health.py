@@ -18,6 +18,12 @@ class Handler(BaseHTTPRequestHandler):
                 "resident": "alphaclaw-omega",
                 "provider": "ASIOne",
                 "model": "asi1-mini",
+                "cycles_per_new_human_input": int(
+                    os.environ.get("ALPHACLAW_MAX_NEW_INPUT_LOOPS", "8")
+                ),
+                "scheduled_wake_cycles": int(
+                    os.environ.get("ALPHACLAW_MAX_WAKE_LOOPS", "0")
+                ),
                 "omega_source_sha": OMEGA_SHA,
                 "alpha_source_sha": os.environ.get("ALPHACLAW_SOURCE_SHA", ""),
             },
