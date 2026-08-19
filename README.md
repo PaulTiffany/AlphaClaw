@@ -1,6 +1,6 @@
 # AlphaClaw
 
-**Multimodal at the boundary. Symbolic in the loop. Tool-mediated at the boundary of action.**
+**Multimodal at the boundary. Symbolic in the loop. Authority outside the loop.**
 
 AlphaClaw is a small boundary around a pinned **OmegaClaw** resident. It is not a second agent,
 not an Omega fork, and not an Alpha process living inside Omega's symbolic state.
@@ -14,11 +14,13 @@ external Python ingress
   + fixed Alpha directions
       |
       v
-pinned stock OmegaClaw
+minimum-authority OmegaClaw resident
   ASI:One / asi1-mini
   boot: 0 inference cycles
   new human input: 8 cycles
   scheduled wake: 0 cycles
+  model action: send only
+  persistent history: off
 ```
 
 ## The rule
@@ -27,7 +29,7 @@ AlphaClaw does three things:
 
 1. translate new non-text evidence once when needed;
 2. prepend a fixed boundary contract once;
-3. mechanically bound the resident Omega trajectory.
+3. mechanically bound the resident Omega trajectory and authority surface.
 
 Everything else belongs to OmegaClaw.
 
@@ -38,29 +40,27 @@ human-mediated ingress.
 ## Pinned Omega
 
 `OmegaClaw-Core/` is a pristine Git submodule pinned to an exact upstream commit. Hugging Face
-staging copies the complete pinned source tree except Git metadata. AlphaClaw does not decide that
-upstream tests, plugins, channels, or support directories are disposable.
+staging copies the complete pinned source tree except Git metadata. The upstream submodule itself
+is never edited.
 
-The resident uses Omega's native configuration surface. The bounded HF configuration is:
+The deployed copy deliberately narrows authority. Source implementations may remain present in the
+pinned tree without being model-callable.
+
+The HF configuration is:
 
 ```yaml
 maxNewInputLoops: 8
 maxWakeLoops: 0
+maxHistory: 0
 ```
 
 Provider and model are bound at the process boundary as `ASIOne` / `asi1-mini`.
 
 ## Human-start gate
 
-Pinned Omega normally begins with `maxNewInputLoops` already available at process startup. That is
-broader authority than AlphaClaw intends.
-
-The deployed copy therefore has one narrow semantic adaptation: startup initializes Omega's loop
-budget to `0`; stock Omega's existing new-human-message path still refills the budget to
-`maxNewInputLoops`. The staged copy also initializes the wake timestamp so the zero-cycle boot path
-is defined.
-
-The pinned submodule itself remains unchanged.
+Pinned Omega normally begins with `maxNewInputLoops` available at process startup. AlphaClaw starts
+with zero instead. Every genuinely new human message, including one received on the first loop
+iteration, grants the configured finite trajectory.
 
 ```text
 boot             -> 0 cycles
@@ -68,8 +68,39 @@ new human input  -> 8 cycles
 scheduled wake   -> 0 useful inference cycles
 ```
 
-Inference bounds and capability bounds are separate. The loop budget limits model calls; Omega's
-own security/tool policy governs what a model call may touch.
+No second counter is introduced.
+
+## Minimum authority
+
+The first resident experiment needs to reason over human-supplied evidence and communicate the
+result. It does not need arbitrary shell, web search, file mutation, arbitrary MeTTa evaluation,
+dynamic model commands, or long-term memory.
+
+The staged resident therefore exposes exactly one model-directed action:
+
+```text
+send
+```
+
+Omega's command parser rejects other model output as an unknown skill. Dynamic command registration
+cannot widen the set from inside mutable Omega state.
+
+Only two Omega plugins are loaded:
+
+```text
+wschat   # the configured human communication channel
+asione   # the configured resident inference provider
+```
+
+Workflow/OpenClaw plugins, alternate providers, and unused communication channels remain in the
+pinned source tree but are not loaded into the resident.
+
+Persistent history writes are disabled in the staged copy and `maxHistory: 0` prevents historical
+recall. `remember`, `query`, `episodes`, and `pin` are not model-callable.
+
+The ASI:One key is still necessarily present in the resident provider process. The security control
+is therefore to remove model-directed code execution and alternate network/tool sinks rather than
+pretend the credential is isolated from the process that must use it.
 
 ## External ingress
 
@@ -83,7 +114,7 @@ python ingress/prepend.py --text "your message"
 The whole output is JSON data, not a MeTTa form. Even a payload that looks like MeTTa remains a JSON
 string; Alpha never imports or evaluates it.
 
-For non-text evidence, use an external one-call translator first. The existing image path is:
+For non-text evidence, use an external one-call translator first:
 
 ```bash
 python ingress/openrouter_image.py \
@@ -93,8 +124,8 @@ python ingress/openrouter_image.py \
 python ingress/prepend.py --input-file handoff.json
 ```
 
-The multimodal credential belongs to that external ingress process, not to the Omega resident.
-The handoff is fixed before Omega sees it.
+The multimodal credential belongs to that external ingress process, not to the Omega resident. The
+handoff is fixed before Omega sees it.
 
 ## Hugging Face resident
 
@@ -102,57 +133,27 @@ The handoff is fixed before Omega sees it.
 boundary files. The generated image contains no `/PeTTa/repos/AlphaClaw` library; the runtime
 entrypoint fails closed if one appears.
 
-Before Omega starts, the resident also verifies the boot/refill loop cardinalities, verifies that
-the stock plugin loader has not acquired the abandoned `once(...)` modification, rejects plaintext
-WebSocket endpoints, and refuses any known alternate-provider or multimodal credential in its
-environment.
+Before Omega starts, the resident verifies the loop grant, plugin allowlist, model-action allowlist,
+history non-persistence, stock plugin-loader semantics, WSS transport, and credential allowlist.
+The controller independently scrubs forbidden alternate-provider/ingress credentials before
+restart and revokes runtime credentials on OFF.
 
-The controller independently scrubs those forbidden credentials from the dedicated Space before
-restart and revokes them on OFF. CI verifies that the resident workflow exposes only the intended
-ASI:One model credential plus the optional WebSocket token.
-
-The public Space surface is health/status only. Runtime provider credentials are injected at enable
-time and revoked before a failed or disabled Space is paused.
-
-## Repository layout
-
-```text
-AlphaClaw/
-├── OmegaClaw-Core/                 # pristine pinned upstream submodule
-├── ingress/
-│   ├── prepend.py                  # fixed data-only Alpha envelope
-│   └── openrouter_image.py         # optional one-call image translation
-├── runtime/huggingface/
-│   ├── alphaclaw-runtime.yaml      # Omega-native 8 / 0 dials
-│   ├── hf_entrypoint.sh            # runtime bindings + fail-closed guards
-│   ├── health.py                   # deployment witness
-│   └── stage.py                    # deterministic HF embodiment
-├── qualification/                  # bounded resident qualification
-├── certification/                  # pinned-source witnesses
-├── tests/                          # architectural invariants
-├── docs/runtime-composition.md
-├── .gitmodules
-└── LICENSE
-```
+The public Space surface is health/status only. The Space remains a deployment target, not an Alpha
+agent.
 
 ## Development invariant
 
-Before modifying an Omega subsystem to make AlphaClaw work, first reproduce the requirement on
-vanilla pinned Omega.
+Before adding or restoring a capability, ask:
 
 ```text
-Does vanilla pinned Omega exhibit the problem?
-        |
-   +----+----+
-   |         |
-   no        yes
-   |         |
-remove      isolate the smallest
-Alpha       compatibility change
-complexity  and witness it
+WHY DO WE NEED THAT?
 ```
 
-Alpha is a gate, not a god.
+If the minimum experiment works without it, leave it absent. If a change requires Alpha code inside
+Omega's mutable state, expands model-directed authority, changes plugin semantics, or adds a second
+lifecycle authority, reject it until a minimal control experiment proves the requirement.
+
+**Alpha is a gate, not a god.**
 
 ## License
 
