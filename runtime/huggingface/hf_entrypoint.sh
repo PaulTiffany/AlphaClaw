@@ -31,6 +31,7 @@ test ! -e /PeTTa/repos/AlphaClaw
 # before health starts and before Omega receives provider authority.
 loop=/PeTTa/repos/OmegaClaw-Core/src/loop.metta
 memory=/PeTTa/repos/OmegaClaw-Core/src/memory.metta
+resident_prompt=/PeTTa/repos/OmegaClaw-Core/memory/prompt.txt
 plugin=/PeTTa/repos/OmegaClaw-Core/src/plugin.metta
 plugins=/PeTTa/repos/OmegaClaw-Core/config/plugins.yaml
 llm_ext=/PeTTa/repos/OmegaClaw-Core/providers/lib_llm_ext.py
@@ -82,6 +83,21 @@ if helper.LLM_COMMANDS != {"send"}:
 if "UNKNOWN_SKILL_CALL" not in helper.balance_parentheses("shell env"):
     raise SystemExit("refusing resident start: shell-like model output was not rejected")
 PY
+
+# The resident prompt must describe the authority that actually exists, not
+# instruct the model to choose goals, persist memories, or exercise absent tools.
+grep -Fq 'Your only model-directed action is: send string.' "$resident_prompt"
+grep -Fq 'Do not create goals beyond responding to the current human-mediated input.' "$resident_prompt"
+for forbidden_prompt in \
+  'choose your own goals' \
+  'Keep memories and useful created skills' \
+  'ALWAYS query before responding anything' \
+  'Take at least 5 agent cycles'; do
+  if grep -Fq "$forbidden_prompt" "$resident_prompt"; then
+    echo "refusing resident start: autonomous or unavailable-capability prompt survived" >&2
+    exit 1
+  fi
+done
 
 # Human payloads and model responses must not be silently retained by the
 # stock history writer, nor reintroduced into later human episodes.
