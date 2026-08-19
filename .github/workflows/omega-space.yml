@@ -50,7 +50,6 @@ jobs:
         if: inputs.state != 'on'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_OMEGA_SPACE_ID: ${{ vars.HF_OMEGA_SPACE_ID }}
           HF_OMEGA_SPACE_PRIVATE: ${{ vars.HF_OMEGA_SPACE_PRIVATE }}
         run: python runtime/huggingface/manage_space.py "${{ inputs.state }}"
 
@@ -58,7 +57,6 @@ jobs:
         if: inputs.state == 'on'
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          HF_OMEGA_SPACE_ID: ${{ vars.HF_OMEGA_SPACE_ID }}
           HF_OMEGA_SPACE_PRIVATE: ${{ vars.HF_OMEGA_SPACE_PRIVATE }}
           ASI_ONE_API_KEY: ${{ secrets.ASI_ONE_API_KEY }}
           OMEGA_WS_URL: ${{ vars.OMEGA_WS_URL }}

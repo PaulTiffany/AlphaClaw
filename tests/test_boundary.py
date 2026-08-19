@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -69,12 +70,29 @@ def test_stock_omega_runner_remains_authoritative() -> None:
     assert "!(omegaclaw)" in runner
 
 
-def test_alpha_prepend_is_external_and_fixed() -> None:
+def test_alpha_prepend_is_external_fixed_data() -> None:
     rendered = prepend.prepend("hello")
-    assert rendered.startswith("ALPHACLAW BOUNDARY CONTRACT")
-    assert "AlphaClaw is outside OmegaClaw" in rendered
-    assert "wait for new human-mediated input" in rendered
-    assert rendered.endswith("HUMAN-MEDIATED INPUT:\nhello\n")
+    document = json.loads(rendered)
+
+    assert rendered.lstrip().startswith("{")
+    assert document["schema_version"] == 1
+    assert document["kind"] == "alphaclaw_human_ingress"
+    assert document["payload"] == {
+        "role": "human-mediated-evidence",
+        "content": "hello",
+    }
+    assert any("outside OmegaClaw" in line for line in document["contract"])
+    assert any("wait for new human-mediated input" in line for line in document["contract"])
+
+
+def test_metta_looking_payload_remains_json_data() -> None:
+    payload = '!(import! &self (library AlphaClaw alphaclaw))'
+    rendered = prepend.prepend(payload)
+    document = json.loads(rendered)
+
+    assert document["payload"]["content"] == payload
+    assert rendered.lstrip()[0] == "{"
+    assert not rendered.lstrip().startswith(("!", "("))
 
 
 def test_alpha_prepend_rejects_empty_payload() -> None:
@@ -82,7 +100,7 @@ def test_alpha_prepend_rejects_empty_payload() -> None:
         prepend.prepend("   ")
 
 
-def test_prepend_has_no_resident_or_network_dependency() -> None:
+def test_prepend_has_no_resident_network_or_execution_dependency() -> None:
     source = read("ingress/prepend.py")
     forbidden = [
         "OmegaClaw-Core",
@@ -91,6 +109,8 @@ def test_prepend_has_no_resident_or_network_dependency() -> None:
         "urllib",
         "socket",
         "subprocess",
+        "eval(",
+        "exec(",
     ]
     for token in forbidden:
         assert token not in source

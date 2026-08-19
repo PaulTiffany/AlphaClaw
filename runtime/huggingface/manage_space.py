@@ -3,7 +3,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import sys
 import tempfile
 from pathlib import Path
@@ -13,12 +12,20 @@ try:
 except ImportError:
     from stage import MODEL, OMEGA_SHA, PROVIDER, stage
 
-SPACE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]*/[A-Za-z0-9][A-Za-z0-9_.-]*$")
-DEFAULT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
+RESIDENT_SPACE_ID = "PaulTiffany/alphaclaw-omega"
 ASI_SECRET = "ASI_ONE_API_KEY"
 WS_SECRET = "OMEGA_WS_TOKEN"
 WS_VARIABLE = "OMEGA_WS_URL"
 ALPHA_VARIABLE = "ALPHACLAW_SOURCE_SHA"
+FORBIDDEN_RESIDENT_SECRET_KEYS = frozenset(
+    {
+        "OPENROUTER_API_KEY",
+        "ASI_API_KEY",
+        "OPENAI_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "MINIMAX_API_KEY",
+    }
+)
 
 
 def as_bool(value: str | None, default: bool = True) -> bool:
@@ -43,16 +50,22 @@ def existing_secret_keys(api, repo_id: str) -> set[str]:
     return set(api.get_space_secrets(repo_id=repo_id))
 
 
+def forbidden_resident_secrets(secret_keys: set[str]) -> set[str]:
+    return secret_keys & FORBIDDEN_RESIDENT_SECRET_KEYS
+
+
 def safe_runtime(runtime, secret_keys: set[str]) -> dict[str, object]:
     return {
         "stage": str(runtime.stage),
         "hardware": runtime.hardware,
         "requested_hardware": runtime.requested_hardware,
+        "space_id": RESIDENT_SPACE_ID,
         "provider": PROVIDER,
         "model": MODEL,
         "omega_source_sha": OMEGA_SHA,
         "asi_secret_present": ASI_SECRET in secret_keys,
         "ws_secret_present": WS_SECRET in secret_keys,
+        "forbidden_resident_secrets": sorted(forbidden_resident_secrets(secret_keys)),
     }
 
 
@@ -68,10 +81,21 @@ def delete_secret_if_present(api, repo_id: str, key: str) -> None:
         api.delete_space_secret(repo_id=repo_id, key=key)
 
 
+def scrub_forbidden_resident_secrets(api, repo_id: str) -> None:
+    present = forbidden_resident_secrets(existing_secret_keys(api, repo_id))
+    for key in sorted(present):
+        api.delete_space_secret(repo_id=repo_id, key=key)
+    remaining = forbidden_resident_secrets(existing_secret_keys(api, repo_id))
+    if remaining:
+        raise RuntimeError(
+            "forbidden resident credentials remain after scrub: " + ", ".join(sorted(remaining))
+        )
+
+
 def revoke_runtime_authority(api, repo_id: str) -> None:
-    # Revoke credentials before removing compute authority.
-    delete_secret_if_present(api, repo_id, ASI_SECRET)
-    delete_secret_if_present(api, repo_id, WS_SECRET)
+    # Revoke every resident credential before removing compute authority.
+    for key in sorted({ASI_SECRET, WS_SECRET} | FORBIDDEN_RESIDENT_SECRET_KEYS):
+        delete_secret_if_present(api, repo_id, key)
     api.pause_space(repo_id=repo_id)
 
 
@@ -148,13 +172,20 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
     ws_url = os.environ.get("OMEGA_WS_URL", "").strip()
     ws_token = os.environ.get("OMEGA_WS_TOKEN", "").strip()
 
+    if repo_id != RESIDENT_SPACE_ID:
+        raise RuntimeError(f"resident Space is fixed to {RESIDENT_SPACE_ID}")
+
     # Validate all caller-controlled configuration before mutating external state.
-    if ws_url and not ws_url.startswith(("ws://", "wss://")):
-        raise RuntimeError("OMEGA_WS_URL must start with ws:// or wss://")
+    if ws_url and not ws_url.startswith("wss://"):
+        raise RuntimeError("OMEGA_WS_URL must start with wss://")
 
     synchronize(api, repo_id, private)
 
     try:
+        # The dedicated Omega resident may hold its own model key and optional
+        # channel token, but never Alpha ingress or alternate-provider keys.
+        scrub_forbidden_resident_secrets(api, repo_id)
+
         api.add_space_secret(
             repo_id=repo_id,
             key=ASI_SECRET,
@@ -188,6 +219,14 @@ def turn_on(api, repo_id: str, private: bool) -> dict[str, object]:
                 description="Bearer token for the outbound bounded Omega WebSocket gateway.",
             )
 
+        secret_keys = existing_secret_keys(api, repo_id)
+        forbidden = forbidden_resident_secrets(secret_keys)
+        if forbidden:
+            raise RuntimeError(
+                "refusing activation with forbidden resident credentials: "
+                + ", ".join(sorted(forbidden))
+            )
+
         api.restart_space(repo_id=repo_id)
         runtime = api.wait_for_space(repo_id=repo_id, timeout=1800, poll_interval=5)
         runtime_stage = str(runtime.stage)
@@ -219,10 +258,8 @@ def main() -> None:
     parser.add_argument("state", choices=("status", "on", "off"))
     args = parser.parse_args()
 
-    repo_id = os.environ.get("HF_OMEGA_SPACE_ID", "").strip() or DEFAULT_SPACE_ID
+    repo_id = RESIDENT_SPACE_ID
     token = require_env("HF_TOKEN")
-    if not SPACE_ID.fullmatch(repo_id):
-        raise RuntimeError("HF_OMEGA_SPACE_ID must have owner/name form")
     private = as_bool(os.environ.get("HF_OMEGA_SPACE_PRIVATE"), default=True)
 
     from huggingface_hub import HfApi
