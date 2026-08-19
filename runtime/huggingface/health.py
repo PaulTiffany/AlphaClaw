@@ -38,6 +38,9 @@ class Handler(BaseHTTPRequestHandler):
                 "persistent_history": bool(
                     int(os.environ.get("ALPHACLAW_PERSIST_HISTORY", "0"))
                 ),
+                "conversation_content_logging": bool(
+                    int(os.environ.get("ALPHACLAW_LOG_CONVERSATION_CONTENT", "0"))
+                ),
                 "model_actions": [
                     item
                     for item in os.environ.get("ALPHACLAW_MODEL_ACTIONS", "send").split(",")
