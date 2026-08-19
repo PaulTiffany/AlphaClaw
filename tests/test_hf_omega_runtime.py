@@ -23,7 +23,7 @@ stage = _load("stage", ROOT / "runtime" / "huggingface" / "stage.py")
 manage = _load("omega_hf_manage", ROOT / "runtime" / "huggingface" / "manage_space.py")
 
 
-def test_hf_runtime_constants_match_bounded_residency() -> None:
+def test_hf_runtime_constants_match_minimum_authority_residency() -> None:
     assert stage.OMEGA_SHA == "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
     assert stage.CHROMADB_SHA == "218484875d5d1bfb217a9a03d3983dc1ed9d406c"
     assert stage.PROVIDER == "ASIOne"
@@ -31,6 +31,9 @@ def test_hf_runtime_constants_match_bounded_residency() -> None:
     assert stage.BOOT_CYCLES == 0
     assert stage.LIFE_CYCLES == 8
     assert stage.WAKE_CYCLES == 0
+    assert stage.HISTORY_CHARS == 0
+    assert stage.MODEL_ACTIONS == ("send",)
+    assert stage.RESIDENT_PLUGINS == ("wschat", "asione")
     assert manage.RESIDENT_SPACE_ID == "PaulTiffany/alphaclaw-omega"
 
 
@@ -71,13 +74,14 @@ def test_staged_omega_entrypoint_preserves_runtime_config(tmp_path: Path) -> Non
     assert "LC_ALL OMEGACLAW_config" in text
 
 
-def test_boot_gate_changes_only_initial_authority(tmp_path: Path) -> None:
+def test_human_gate_starts_zero_and_refills_on_first_new_message(tmp_path: Path) -> None:
     upstream = ROOT / "OmegaClaw-Core" / "src" / "loop.metta"
     loop = tmp_path / "loop.metta"
     shutil.copy2(upstream, loop)
 
     original = upstream.read_text(encoding="utf-8")
     assert original.count("(change-state! &loops (maxNewInputLoops))") == 2
+    assert "(if (and (> $k 1) $msgnew)" in original
 
     stage.require_human_input_before_inference(loop)
     transformed = loop.read_text(encoding="utf-8")
@@ -86,10 +90,66 @@ def test_boot_gate_changes_only_initial_authority(tmp_path: Path) -> None:
     assert transformed.count("(change-state! &loops 0)") == 1
     assert "(change-state! &nextWakeAt (+ (get_time) (wakeupInterval)))" in transformed
     assert transformed.count("(change-state! &loops (maxNewInputLoops))") == 1
+    assert "(if (and (> $k 1) $msgnew)" not in transformed
+    assert "(if $msgnew" in transformed
     assert upstream.read_text(encoding="utf-8") == original
 
 
-def test_default_resident_is_asi_one_mini_with_human_only_life_cap() -> None:
+def test_staged_plugin_allowlist_contains_only_channel_and_provider(tmp_path: Path) -> None:
+    upstream = ROOT / "OmegaClaw-Core" / "config" / "plugins.yaml"
+    plugins = tmp_path / "plugins.yaml"
+    shutil.copy2(upstream, plugins)
+
+    original = upstream.read_text(encoding="utf-8")
+    assert "- name: workflow" in original
+    assert "- name: openclaw" in original
+    assert "- name: openrouter" in original
+
+    stage.restrict_resident_plugins(plugins)
+    staged = plugins.read_text(encoding="utf-8")
+    names = [
+        line.removeprefix("- name: ").strip()
+        for line in staged.splitlines()
+        if line.startswith("- name: ")
+    ]
+    assert names == ["wschat", "asione"]
+    assert "workflow" not in staged
+    assert "openclaw" not in staged
+    assert "openrouter" not in staged
+    assert upstream.read_text(encoding="utf-8") == original
+
+
+def test_staged_model_action_surface_is_send_only(tmp_path: Path) -> None:
+    upstream_helper = ROOT / "OmegaClaw-Core" / "src" / "helper.py"
+    upstream_skills = ROOT / "OmegaClaw-Core" / "src" / "skills.metta"
+    helper = tmp_path / "helper.py"
+    skills = tmp_path / "skills.metta"
+    shutil.copy2(upstream_helper, helper)
+    shutil.copy2(upstream_skills, skills)
+
+    original_helper = upstream_helper.read_text(encoding="utf-8")
+    original_skills = upstream_skills.read_text(encoding="utf-8")
+    assert '"shell"' in original_helper
+    assert '"metta"' in original_helper
+    assert "Execute shell command" in original_skills
+
+    stage.restrict_model_action_surface(helper, skills)
+    staged_helper = helper.read_text(encoding="utf-8")
+    staged_skills = skills.read_text(encoding="utf-8")
+
+    assert 'STATIC_LLM_COMMANDS = {"send"}' in staged_helper
+    assert "LLM_COMMANDS.add" not in staged_helper
+    assert "return str(command) in STATIC_LLM_COMMANDS" in staged_helper
+    assert '(= (getSkills)\n   (getStaticSkills))' in staged_skills
+    assert '"- Send message to user: send string"' in staged_skills
+    assert "Execute shell command" not in staged_skills
+    assert "Search the web" not in staged_skills
+    assert "Execute MeTTa expression" not in staged_skills
+    assert upstream_helper.read_text(encoding="utf-8") == original_helper
+    assert upstream_skills.read_text(encoding="utf-8") == original_skills
+
+
+def test_default_resident_is_asi_one_mini_with_minimum_authority() -> None:
     entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
     runtime_config = (ROOT / "runtime" / "huggingface" / "alphaclaw-runtime.yaml").read_text()
 
@@ -101,8 +161,12 @@ def test_default_resident_is_asi_one_mini_with_human_only_life_cap() -> None:
     assert "readonly ALPHACLAW_BOOT_LOOPS=0" in entrypoint
     assert "readonly ALPHACLAW_MAX_NEW_INPUT_LOOPS=8" in entrypoint
     assert "readonly ALPHACLAW_MAX_WAKE_LOOPS=0" in entrypoint
+    assert "readonly ALPHACLAW_MAX_HISTORY_CHARS=0" in entrypoint
+    assert "readonly ALPHACLAW_MODEL_ACTIONS=send" in entrypoint
+    assert "readonly ALPHACLAW_RESIDENT_PLUGINS=wschat,asione" in entrypoint
     assert "maxNewInputLoops: 8" in runtime_config
     assert "maxWakeLoops: 0" in runtime_config
+    assert "maxHistory: 0" in runtime_config
     assert "provider=ASICloud" not in entrypoint
     assert "minimax/minimax-m3" not in entrypoint
     assert "commchannel=websocket" in entrypoint
@@ -121,8 +185,14 @@ def test_hf_entrypoint_guards_boundary_before_health() -> None:
         "MINIMAX_API_KEY",
         "grep -Fc '(change-state! &loops 0)'",
         "grep -Fc '(change-state! &loops (maxNewInputLoops))'",
+        "first-iteration human input would not refill authority",
         "collapse (eval (loadOmegaClawPlugin))",
         "once (eval (loadOmegaClawPlugin))",
+        'names != ["wschat", "asione"]',
+        'helper.STATIC_LLM_COMMANDS != {"send"}',
+        'helper.add_llm_command("shell")',
+        'helper.balance_parentheses("shell env")',
+        "grep -Fq 'maxHistory: 0'",
         "OMEGA_WS_URL must use wss://",
     ]
     for token in required_before_health:
