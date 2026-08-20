@@ -216,6 +216,40 @@ A useful rule is:
 
 And the power to say no should not automatically grow merely because the actuator became more capable.
 
+## Keep the stop path outside the failure
+
+A system is not under meaningful control merely because a stop button exists somewhere.
+
+Control also requires the operator to see what the system is doing, decide whether intervention is needed, and successfully intervene before the situation outruns them.
+
+A flood of logs can still make a system hard to observe. A control panel can still become sluggish. A shutdown command can still depend on the same process, interface, network, or compute path that is failing.
+
+So:
+
+**A stop button is only real if you can still reach it when things go wrong.**
+
+In symbols:
+
+\[
+\text{control} = \text{observe} + \text{decide} + \text{intervene}
+\]
+
+\[
+\text{failure of actuator} \not\Rightarrow \text{failure of stop path}
+\]
+
+Observability is therefore not decoration.
+
+Operator latency is part of the system.
+
+More telemetry is not necessarily more control if it arrives too quickly, too noisily, or through an interface too degraded to understand.
+
+Where failure matters, keep monitoring and shutdown authority as independent as practical from the thing they govern.
+
+> **Do not put the brake on the same failure path as the engine.**
+
+If capability can improve itself faster than the operator can observe and interrupt it, then nominal permission controls may become practically meaningless.
+
 ## Intelligence has a Jevons problem
 
 In resource economics, there is an old observation associated with William Stanley Jevons: when using something becomes much more efficient, people may respond by using much more of it.
@@ -439,9 +473,10 @@ When someone makes a claim or proposes an action, ask:
 5. If you do not know, test it.
 6. **What can actually check this before it acts?**
 7. **Did new capability accidentally become new authority?**
-8. **Are we leaving enough slack to notice and repair a mistake?**
-9. Ignore unnecessary embarrassment and status games.
-10. Continue with your life.
+8. **Can we still observe it and stop it if something goes wrong?**
+9. **Are we leaving enough slack to notice and repair a mistake?**
+10. Ignore unnecessary embarrassment and status games.
+11. Continue with your life.
 
 Or, more compactly:
 
@@ -464,6 +499,10 @@ There is no special step called:
 There is also no special step called:
 
 > **Make yourself indispensable and hope nothing goes wrong.**
+
+And there is no special step called:
+
+> **Assume the stop button works because it exists.**
 
 ## Why call this “Chad philosophy”?
 
@@ -496,6 +535,8 @@ from
 That little separation creates room to think.
 
 Slack creates room to recover.
+
+An independent control path creates room to stop.
 
 And sometimes that is all we need.
 
