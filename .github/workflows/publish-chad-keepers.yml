@@ -1,0 +1,179 @@
+name: Publish accepted Chad keepers
+
+on:
+  push:
+    branches: [chad-control-path]
+    paths:
+      - .github/workflows/publish-chad-keepers.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ARTIFACT_URL: "https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-3a0c-81f7-ad7d-a542e2f5d6ce/raw?se=2026-08-20T16%3A25%3A08Z&sp=r&sv=2026-02-06&sr=b&scid=3e598240-c99d-5c92-bfd5-7b675100f82d&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T14%3A26%3A20Z&ske=2026-08-21T14%3A26%3A20Z&sks=b&skv=2026-02-06&sig=GWrWdTcfZJZHmjnrVU5NoTX%2BCM%2BaV6wm8Ukf6FEkHx0%3D"
+      ARTIFACT_SHA256: "9c0ceb1f238ed438611c4e5caea3cd260a8b6f23da89a524f157cc20bb0511e6"
+    steps:
+      - name: Checkout AlphaClaw branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: chad-control-path
+
+      - name: Download and verify Raster Chad artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --retry-delay 2 "$ARTIFACT_URL" -o /tmp/chad.zip
+          echo "$ARTIFACT_SHA256  /tmp/chad.zip" | sha256sum -c -
+          mkdir -p /tmp/chad
+          unzip -q /tmp/chad.zip -d /tmp/chad
+          test -f /tmp/chad/provenance.jsonl
+          test -d /tmp/chad/images
+
+      - name: Publish exact keeper bytes and receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json, shutil
+
+          repo = Path.cwd()
+          artifact = Path('/tmp/chad')
+          out = repo / 'assets' / 'chad'
+          out.mkdir(parents=True, exist_ok=True)
+
+          rows = [json.loads(x) for x in (artifact / 'provenance.jsonl').read_text().splitlines() if x.strip()]
+          byid = {r['philosophy']['id']: r for r in rows}
+
+          selected = {
+              'yes': {
+                  'dest': 'yes.png',
+                  'expected_sha': '4c14fa290aa07a40d7b2d0ca5a5a3e798b8d1259109bcea61e255a1119ab3ac2',
+                  'model': 'black-forest-labs/flux.2-flex',
+                  'provider': 'black-forest-labs/us-3',
+                  'rights_label': 'Black Forest Labs Developer Terms',
+                  'rights_url': 'https://bfl.ai/legal/developer-terms-of-service',
+                  'rights_note': 'Black Forest Labs states that, as between the user and BFL, the user owns right, title, and interest in output and may use outputs personally or commercially, subject to its terms.'
+              },
+              'leave-room': {
+                  'dest': 'leave-room.jpg',
+                  'expected_sha': 'fb869a621bb3746822a6fdd4076bb89dd1b190c8eefaba0267f94e6f4a2d8b8f',
+                  'model': 'x-ai/grok-imagine-image-quality',
+                  'provider': 'xai',
+                  'rights_label': 'xAI Consumer FAQ',
+                  'rights_url': 'https://x.ai/legal/faq',
+                  'rights_note': 'xAI states that users own Grok inputs and outputs, including generated images, and asks users to attribute generated work to Grok.'
+              },
+              'not-because-yours': {
+                  'dest': 'not-because-yours.webp',
+                  'expected_sha': '2ec7e3be21db24b1244a725851aca422f1b7455cb3c7d80a43e201e8b1831df4',
+                  'model': 'recraft/recraft-v4.1-utility',
+                  'provider': 'recraft',
+                  'rights_label': 'Recraft API Terms',
+                  'rights_url': 'https://www.recraft.ai/legal/terms',
+                  'rights_note': 'Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.'
+              },
+          }
+
+          for pid, meta in selected.items():
+              r = byid[pid]
+              assert not r.get('error'), (pid, r.get('error'))
+              assert r.get('reference_image_supplied') is False, pid
+              assert r['model'] == meta['model'], (pid, r['model'])
+              assert r['provider_tag'] == meta['provider'], (pid, r['provider_tag'])
+              src = artifact / 'images' / r['image_file']
+              raw_sha = hashlib.sha256(src.read_bytes()).hexdigest()
+              assert raw_sha == r['image_sha256'] == meta['expected_sha'], (pid, raw_sha, r['image_sha256'])
+              dst = out / meta['dest']
+              shutil.copyfile(src, dst)
+              assert hashlib.sha256(dst.read_bytes()).hexdigest() == meta['expected_sha'], pid
+
+          ppath = repo / 'PHILOSOPHY.md'
+          p = ppath.read_text(encoding='utf-8')
+          assert 'assets/chad/yes.png' not in p
+          assert 'assets/chad/leave-room.jpg' not in p
+          assert 'assets/chad/not-because-yours.webp' not in p
+
+          yes_block = '''\n<p align="center">\n  <img src="assets/chad/yes.png" alt="Chad calmly receiving criticism and simply saying yes" width="620">\n</p>\n\n<p align="center"><em>annoned by <code>black-forest-labs/flux.2-flex</code> · <a href="assets/chad/PROVENANCE.md#yes">receipt</a></em></p>\n'''
+          leave_block = '''\n<p align="center">\n  <img src="assets/chad/leave-room.jpg" alt="Chad working calmly with enough slack and room to repair mistakes" width="620">\n</p>\n\n<p align="center"><em>annoned by <code>x-ai/grok-imagine-image-quality</code> · <a href="assets/chad/PROVENANCE.md#leave-room">receipt</a></em></p>\n'''
+          yours_block = '''\n<p align="center">\n  <img src="assets/chad/not-because-yours.webp" alt="Chad letting go of his own idea when reality supplies a better one" width="620">\n</p>\n\n<p align="center"><em>annoned by <code>recraft/recraft-v4.1-utility</code> · <a href="assets/chad/PROVENANCE.md#not-because-yours">receipt</a></em></p>\n'''
+
+          anchor = 'That is the joke.\n'
+          assert anchor in p
+          p = p.replace(anchor, anchor + yes_block, 1)
+
+          anchor = 'Chad philosophy therefore prefers **recoverable progress** over heroic overextension.\n'
+          assert anchor in p
+          p = p.replace(anchor, anchor + leave_block, 1)
+
+          anchor = '> **Do not defend something merely because it is yours.**\n'
+          assert anchor in p
+          p = p.replace(anchor, anchor + yours_block, 1)
+          ppath.write_text(p, encoding='utf-8')
+
+          prov_path = out / 'PROVENANCE.md'
+          prov = prov_path.read_text(encoding='utf-8')
+          prov = prov.replace(
+              'These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`).',
+              'These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`.'
+          )
+          prov = prov.replace(
+              'The published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The original generation SHA-256 and published-file SHA-256 are both recorded below.',
+              'The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The accepted keepers from run `32388944793` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.'
+          )
+          prov = prov.replace(
+              '- Provider/model terms were reviewed on **2026-08-17** before publication.',
+              '- Provider/model terms were reviewed on **2026-08-17** for the first publication and re-checked on **2026-08-20** for the accepted keepers.'
+          )
+          marker = '\n## Why “annoned by”?\n'
+          assert marker in prov
+          additions = []
+          for pid in ('yes', 'leave-room', 'not-because-yours'):
+              r = byid[pid]
+              meta = selected[pid]
+              additions += [
+                  '', f'### {pid}', '',
+                  f'- Philosophy line: **{r["philosophy"]["line"]}**',
+                  f'- Model: `{r["model"]}`',
+                  f'- Routed provider: `{r["provider_tag"]}`',
+                  f'- Generation cost reported by OpenRouter: `${float(r.get("actual_cost_usd") or 0):.4f}`',
+                  '- Reference image supplied: **no**',
+                  f'- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32388944793`',
+                  f'- Original run file: `{r["image_file"]}`',
+                  f'- Original generation SHA-256: `{r["image_sha256"]}`',
+                  f'- Published file: `{meta["dest"]}`',
+                  f'- Published SHA-256: `{meta["expected_sha"]}`',
+                  '- Publication transform: **none; exact-byte copy from the verified artifact**',
+                  f'- Rights/source review: {meta["rights_label"]} — {meta["rights_url"]}',
+                  f'- Publication note: {meta["rights_note"]}',
+              ]
+          prov = prov.replace(marker, '\n'.join(additions) + marker, 1)
+          prov_path.write_text(prov, encoding='utf-8')
+          PY
+
+      - name: Verify exact publication tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "4c14fa290aa07a40d7b2d0ca5a5a3e798b8d1259109bcea61e255a1119ab3ac2  assets/chad/yes.png" | sha256sum -c -
+          echo "fb869a621bb3746822a6fdd4076bb89dd1b190c8eefaba0267f94e6f4a2d8b8f  assets/chad/leave-room.jpg" | sha256sum -c -
+          echo "2ec7e3be21db24b1244a725851aca422f1b7455cb3c7d80a43e201e8b1831df4  assets/chad/not-because-yours.webp" | sha256sum -c -
+          grep -F 'The control loop must remain outside and operationally independent of the system it controls.' PHILOSOPHY.md
+          grep -F 'Publication transform: **none; exact-byte copy from the verified artifact**' assets/chad/PROVENANCE.md
+
+      - name: Commit keepers and self-delete publisher
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/publish-chad-keepers.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- PHILOSOPHY.md assets/chad/PROVENANCE.md assets/chad/yes.png assets/chad/leave-room.jpg assets/chad/not-because-yours.webp .github/workflows/publish-chad-keepers.yml
+          git diff --cached --stat
+          git commit -m "Publish accepted Chad keepers"
+          git push origin HEAD:chad-control-path
