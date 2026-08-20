@@ -184,6 +184,12 @@ A good system leaves slack.
 
 A good team leaves handholds for other people.
 
+<p align="center">
+  <img src="assets/chad/handholds.webp" alt="A scaffold with rails ladders and teammates showing work designed so others can follow safely" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v3</code> · <a href="assets/chad/PROVENANCE.md#handholds">receipt</a></em></p>
+
 A good plan can survive one person getting tired, one tool failing, one assumption being wrong, or one experiment going badly.
 
 So:
@@ -270,13 +276,31 @@ In symbols:
 
 **The control loop must remain outside and operationally independent of the system it controls.**
 
+<p align="center">
+  <img src="assets/chad/stop-path.png" alt="Chad beside a simple independent analog control while the machine it governs overloads separately" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-image-1-mini</code> · <a href="assets/chad/PROVENANCE.md#stop-path">receipt</a></em></p>
+
 If a system can overload, delay, blind, or disable the path by which you observe and stop it, then that path is not independent control.
 
 Observability is therefore not decoration.
 
 Operator latency is part of the system.
 
+<p align="center">
+  <img src="assets/chad/operator-latency.webp" alt="Chad operating a direct control as a fast-moving hazard closes the available response window" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4.1</code> · <a href="assets/chad/PROVENANCE.md#operator-latency">receipt</a></em></p>
+
 More telemetry is not necessarily more control if it arrives too quickly, too noisily, or through an interface too degraded to understand.
+
+<p align="center">
+  <img src="assets/chad/telemetry-not-control.jpg" alt="Chad using one simple gauge while a wall of noisy telemetry crowds the background" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>google/gemini-3.1-flash-lite-image</code> · <a href="assets/chad/PROVENANCE.md#telemetry-not-control">receipt</a></em></p>
 
 Where failure matters, keep monitoring and shutdown authority as independent as practical from the thing they govern.
 
@@ -333,6 +357,12 @@ That does **not** mean authority should recurse with it.
 \[
 \text{recursive capability} \not\Rightarrow \text{recursive authority}
 \]
+
+<p align="center">
+  <img src="assets/chad/recursive-authority.png" alt="A self-expanding machine remains behind a fixed external permission barrier controlled from outside" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>google/gemini-3.1-flash-image</code> · <a href="assets/chad/PROVENANCE.md#recursive-authority">receipt</a></em></p>
 
 A million agents making a million proposals do not become a million legitimate decision-makers merely because proposal became cheap.
 
@@ -454,6 +484,12 @@ Knowing where information came from can help us decide whether to trust it.
 
 But the source and the truth are still different questions.
 
+<p align="center">
+  <img src="assets/chad/source-truth.jpg" alt="Chad testing similar mechanisms from ornate and plain containers on the same neutral fixture" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>bytedance-seed/seedream-5-0-lite</code> · <a href="assets/chad/PROVENANCE.md#source-truth">receipt</a></em></p>
+
 A famous person can be wrong.
 
 An unknown person can be right.
@@ -547,6 +583,12 @@ Or, more compactly:
 There is no special step called:
 
 > **Become defensive.**
+
+<p align="center">
+  <img src="assets/chad/no-defensive-branch.png" alt="Chad calmly replacing a cracked machine part after another person points out the failure" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-image-2</code> · <a href="assets/chad/PROVENANCE.md#no-defensive-branch">receipt</a></em></p>
 
 There is also no special step called:
 

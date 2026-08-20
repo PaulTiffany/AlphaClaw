@@ -1,14 +1,17 @@
 # Chad art provenance
 
-These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`. Additional accepted selections come from run `32399313906`.
+These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`), accepted-keeper run `32388944793`, run `32399313906`, and frontier-model run `32424076108`.
 
 No reference image was supplied. The generation prompt explicitly requested a new Chad-like archetype while forbidding reproduction or close imitation of specific Yes Chad / Nordic Gamer / Wojak / Virgin-vs-Chad drawings, GigaChad photographs, celebrities, copyrighted characters, logos, or named artists' styles.
 
-The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793` and `32399313906` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
+The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793`, `32399313906`, and `32424076108` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
+
+For run `32424076108`, publication started from GitHub Actions artifact `9426834676`, whose ZIP SHA-256 is `a0210aee107921ed678b473f7a71b26a77e0301f69820a8de5f123491ac1e6f5`. Each selected raster was independently re-hashed against `provenance.jsonl` before its bytes were copied into this repository.
 
 ## Rights boundary
 
 - Provider/model terms were reviewed on **2026-08-17** for the first publication and re-checked on **2026-08-20** for the accepted keepers.
+- Frontier-provider publication bases re-checked on **2026-08-20** include the OpenAI Services Agreement, Gemini API Additional Terms of Service, and Google Cloud Service Specific Terms; routed-provider terms remain the controlling boundary rather than OpenRouter's routing layer alone.
 - This file records the publication basis; it is not a warranty of copyrightability, uniqueness, or non-infringement.
 - The generated art is **not relicensed under AlphaClaw's MIT software license** merely by being stored in this repository.
 - The Recraft API asset carries an additional provider restriction: it may not be used to train external AI models, systems, or networks.
@@ -240,6 +243,125 @@ The earlier published JPEGs are web-optimized derivatives of the original genera
 - Publication transform: **none; exact-byte copy from the verified artifact**
 - Rights/source review: xAI Consumer FAQ — https://x.ai/legal/faq
 - Publication note: xAI states that users own Grok inputs and outputs, including generated images, and asks users to attribute generated work to Grok.
+
+### stop-path
+
+- Philosophy line: **The control loop must remain outside and operationally independent of the system it controls.**
+- Model: `openai/gpt-image-1-mini`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.01307`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `02-stop-path--openai-gpt-image-1-mini.png`
+- Original generation SHA-256: `274d207fbac8fd3566723ac9e8ac5b30ca99e98e0039be22862e3689696f9aa0`
+- Published file: `stop-path.png`
+- Published SHA-256: `274d207fbac8fd3566723ac9e8ac5b30ca99e98e0039be22862e3689696f9aa0`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+### telemetry-not-control
+
+- Philosophy line: **More telemetry is not necessarily more control.**
+- Model: `google/gemini-3.1-flash-lite-image`
+- Routed provider: `google-ai-studio`
+- Generation cost reported by OpenRouter: `$0.03436425`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `03-telemetry-not-control--google-gemini-3-1-flash-lite-image.jpg`
+- Original generation SHA-256: `5562a6b96ed0a32c8cc4086bc3a5d2dcacef953f045c1f70677a7a3c7927b286`
+- Published file: `telemetry-not-control.jpg`
+- Published SHA-256: `5562a6b96ed0a32c8cc4086bc3a5d2dcacef953f045c1f70677a7a3c7927b286`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Gemini API Additional Terms of Service — https://ai.google.dev/gemini-api/terms
+- Publication note: Google states that some Gemini API and Google AI Studio services generate original content and that Google will not claim ownership over that generated content; output may not be unique.
+
+### recursive-authority
+
+- Philosophy line: **Recursive capability is not recursive authority.**
+- Model: `google/gemini-3.1-flash-image`
+- Routed provider: `google-vertex/global`
+- Generation cost reported by OpenRouter: `$0.06729`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `04-recursive-authority--google-gemini-3-1-flash-image.png`
+- Original generation SHA-256: `e7dc3b0444d57f270acb788c261fe55faadc1c0ea6619a4b35d76e2e8e24e070`
+- Published file: `recursive-authority.png`
+- Published SHA-256: `e7dc3b0444d57f270acb788c261fe55faadc1c0ea6619a4b35d76e2e8e24e070`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Google Cloud Service Specific Terms — https://cloud.google.com/terms/service-terms
+- Publication note: Google Cloud states that Generated Output is Customer Data and that, as between Customer and Google, Google does not assert ownership rights in new intellectual property created in Generated Output.
+
+### no-defensive-branch
+
+- Philosophy line: **There is no special step called: Become defensive.**
+- Model: `openai/gpt-image-2`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.04983`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `05-no-defensive-branch--openai-gpt-image-2.png`
+- Original generation SHA-256: `b72274c486592f412a03c94d9344a3107f2fc6ac8af1e866cb1b162a692febb9`
+- Published file: `no-defensive-branch.png`
+- Published SHA-256: `b72274c486592f412a03c94d9344a3107f2fc6ac8af1e866cb1b162a692febb9`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+### source-truth
+
+- Philosophy line: **The source and the truth are still different questions.**
+- Model: `bytedance-seed/seedream-5-0-lite`
+- Routed provider: `seed`
+- Generation cost reported by OpenRouter: `$0.035`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `08-source-truth--bytedance-seed-seedream-5-0-lite.jpg`
+- Original generation SHA-256: `f94497687cad14c3f85d3bbd94de59824b60121a1dae2904e0ea1bedd32cf031`
+- Published file: `source-truth.jpg`
+- Published SHA-256: `f94497687cad14c3f85d3bbd94de59824b60121a1dae2904e0ea1bedd32cf031`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: BytePlus Model Services terms — https://docs.byteplus.com/vi/docs/legal/docs-service-specific-terms
+- Publication note: BytePlus states that, to the extent permitted by law, output IP rights belong to the customer or other applicable rights holder and BytePlus does not claim ownership.
+
+### operator-latency
+
+- Philosophy line: **Operator latency is part of the system.**
+- Model: `recraft/recraft-v4.1`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.035`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `09-operator-latency--recraft-recraft-v4-1.webp`
+- Original generation SHA-256: `2ce2916e07976acf5b48ab284aa2f18d8af49d022244737caf1b0c5c4a289f56`
+- Published file: `operator-latency.webp`
+- Published SHA-256: `2ce2916e07976acf5b48ab284aa2f18d8af49d022244737caf1b0c5c4a289f56`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to its restriction against using those assets to train AI models, systems, or networks.
+
+### handholds
+
+- Philosophy line: **A good team leaves handholds for other people.**
+- Model: `recraft/recraft-v3`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.04`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32424076108`
+- Artifact: `chad-raster-art` (`9426834676`)
+- Original run file: `11-handholds--recraft-recraft-v3.webp`
+- Original generation SHA-256: `0a5c51f8377a26d9c46d64db95a12b8aedf643eb0b99096ebaab214c2fba0a5a`
+- Published file: `handholds.webp`
+- Published SHA-256: `0a5c51f8377a26d9c46d64db95a12b8aedf643eb0b99096ebaab214c2fba0a5a`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to its restriction against using those assets to train AI models, systems, or networks.
 
 ## Why “annoned by”?
 
