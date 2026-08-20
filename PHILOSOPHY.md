@@ -238,6 +238,10 @@ In symbols:
 \text{failure of actuator} \not\Rightarrow \text{failure of stop path}
 \]
 
+**The control loop must remain outside and operationally independent of the system it controls.**
+
+If a system can overload, delay, blind, or disable the path by which you observe and stop it, then that path is not independent control.
+
 Observability is therefore not decoration.
 
 Operator latency is part of the system.
