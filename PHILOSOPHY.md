@@ -18,6 +18,12 @@ Chad says:
 
 That is the joke.
 
+<p align="center">
+  <img src="assets/chad/yes.png" alt="Chad calmly receiving criticism and simply saying yes" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>black-forest-labs/flux.2-flex</code> · <a href="assets/chad/PROVENANCE.md#yes">receipt</a></em></p>
+
 He does not necessarily deny the criticism.
 
 He simply refuses to let embarrassment decide what is true or what he should do.
@@ -184,6 +190,12 @@ If there is no slack, every mistake becomes an emergency. If every mistake becom
 
 Chad philosophy therefore prefers **recoverable progress** over heroic overextension.
 
+<p align="center">
+  <img src="assets/chad/leave-room.jpg" alt="Chad working calmly with enough slack and room to repair mistakes" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>x-ai/grok-imagine-image-quality</code> · <a href="assets/chad/PROVENANCE.md#leave-room">receipt</a></em></p>
+
 ## Capability is not permission
 
 Making something faster, cheaper, smarter, or easier to produce does not automatically answer whether more of it should be allowed to act on the world.
@@ -333,6 +345,12 @@ If the word “Chad” eventually becomes more confusing than useful, throw the 
 The philosophy must obey its own rule:
 
 > **Do not defend something merely because it is yours.**
+
+<p align="center">
+  <img src="assets/chad/not-because-yours.webp" alt="Chad letting go of his own idea when reality supplies a better one" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4.1-utility</code> · <a href="assets/chad/PROVENANCE.md#not-because-yours">receipt</a></em></p>
 
 ## Do not invent villains
 

@@ -1,14 +1,14 @@
 # Chad art provenance
 
-These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`).
+These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`.
 
 No reference image was supplied. The generation prompt explicitly requested a new Chad-like archetype while forbidding reproduction or close imitation of specific Yes Chad / Nordic Gamer / Wojak / Virgin-vs-Chad drawings, GigaChad photographs, celebrities, copyrighted characters, logos, or named artists' styles.
 
-The published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The original generation SHA-256 and published-file SHA-256 are both recorded below.
+The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The accepted keepers from run `32388944793` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
 
 ## Rights boundary
 
-- Provider/model terms were reviewed on **2026-08-17** before publication.
+- Provider/model terms were reviewed on **2026-08-17** for the first publication and re-checked on **2026-08-20** for the accepted keepers.
 - This file records the publication basis; it is not a warranty of copyrightability, uniqueness, or non-infringement.
 - The generated art is **not relicensed under AlphaClaw's MIT software license** merely by being stored in this repository.
 - The Recraft API asset carries an additional provider restriction: it may not be used to train external AI models, systems, or networks.
@@ -114,6 +114,53 @@ The published JPEGs are web-optimized derivatives of the original generated rast
 - Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
 - Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
 
+### yes
+
+- Philosophy line: **Yes.**
+- Model: `black-forest-labs/flux.2-flex`
+- Routed provider: `black-forest-labs/us-3`
+- Generation cost reported by OpenRouter: `$0.0500`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32388944793`
+- Original run file: `01-yes--black-forest-labs-flux-2-flex.png`
+- Original generation SHA-256: `4c14fa290aa07a40d7b2d0ca5a5a3e798b8d1259109bcea61e255a1119ab3ac2`
+- Published file: `yes.png`
+- Published SHA-256: `4c14fa290aa07a40d7b2d0ca5a5a3e798b8d1259109bcea61e255a1119ab3ac2`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Black Forest Labs Developer Terms — https://bfl.ai/legal/developer-terms-of-service
+- Publication note: Black Forest Labs states that, as between the user and BFL, the user owns right, title, and interest in output and may use outputs personally or commercially, subject to its terms.
+
+### leave-room
+
+- Philosophy line: **Leave room to be wrong.**
+- Model: `x-ai/grok-imagine-image-quality`
+- Routed provider: `xai`
+- Generation cost reported by OpenRouter: `$0.0500`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32388944793`
+- Original run file: `03-leave-room--x-ai-grok-imagine-image-quality.jpg`
+- Original generation SHA-256: `fb869a621bb3746822a6fdd4076bb89dd1b190c8eefaba0267f94e6f4a2d8b8f`
+- Published file: `leave-room.jpg`
+- Published SHA-256: `fb869a621bb3746822a6fdd4076bb89dd1b190c8eefaba0267f94e6f4a2d8b8f`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: xAI Consumer FAQ — https://x.ai/legal/faq
+- Publication note: xAI states that users own Grok inputs and outputs, including generated images, and asks users to attribute generated work to Grok.
+
+### not-because-yours
+
+- Philosophy line: **Do not defend something merely because it is yours.**
+- Model: `recraft/recraft-v4.1-utility`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.0350`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32388944793`
+- Original run file: `07-not-because-yours--recraft-recraft-v4-1-utility.webp`
+- Original generation SHA-256: `2ec7e3be21db24b1244a725851aca422f1b7455cb3c7d80a43e201e8b1831df4`
+- Published file: `not-because-yours.webp`
+- Published SHA-256: `2ec7e3be21db24b1244a725851aca422f1b7455cb3c7d80a43e201e8b1831df4`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
 ## Why “annoned by”?
 
 `annoned by <model>` is a playful provenance caption, not a claim that a model is a legal person or copyright author. It means: **this exact model produced the source raster for this illustration, and the receipt is preserved here.**
