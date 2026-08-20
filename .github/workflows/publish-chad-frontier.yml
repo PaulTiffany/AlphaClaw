@@ -1,0 +1,60 @@
+name: Publish Chad frontier keepers
+
+on:
+  push:
+    branches: [chad-frontier-keepers]
+    paths:
+      - '.github/workflows/publish-chad-frontier.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: ${{ github.actor == github.repository_owner }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: chad-frontier-keepers
+
+      - name: Download verified source artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 \
+            -H 'Accept: application/vnd.github+json' \
+            -H 'X-GitHub-Api-Version: 2026-03-10' \
+            -o chad-raster-art.zip \
+            'https://api.github.com/repos/PaulTiffany/letGPTsustakethewheel/actions/artifacts/9426834676/zip'
+
+      - name: Verify receipts and copy exact raster bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/publish_chad_frontier.py
+          python3 .github/scripts/publish_chad_frontier.py
+
+      - name: Commit publication and self-delete helper
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f chad-raster-art.zip
+          rm -rf .chad-artifact __pycache__ .github/scripts/__pycache__
+          rm .github/scripts/publish_chad_frontier.py
+          rm .github/workflows/publish-chad-frontier.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- PHILOSOPHY.md assets/chad/PROVENANCE.md \
+            assets/chad/stop-path.png \
+            assets/chad/telemetry-not-control.jpg \
+            assets/chad/recursive-authority.png \
+            assets/chad/no-defensive-branch.png \
+            assets/chad/source-truth.jpg \
+            assets/chad/operator-latency.webp \
+            assets/chad/handholds.webp \
+            .github/scripts/publish_chad_frontier.py \
+            .github/workflows/publish-chad-frontier.yml
+          git commit -m 'Publish seven Chad frontier keepers'
+          git push origin HEAD:chad-frontier-keepers
