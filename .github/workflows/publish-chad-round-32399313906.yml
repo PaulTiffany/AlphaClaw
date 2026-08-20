@@ -1,0 +1,189 @@
+name: Publish Chad round 32399313906
+
+on:
+  push:
+    branches: [chad-keepers-32399313906]
+    paths:
+      - .github/workflows/publish-chad-round-32399313906.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ARTIFACT_URL: 'https://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-bc00-81f7-829c-3b208ceba772/raw?se=2026-08-20T18%3A00%3A50Z&sp=r&sv=2026-02-06&sr=b&scid=c535b4b4-a8de-53ed-944f-4ca331afb2ec&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T14%3A34%3A30Z&ske=2026-08-21T14%3A34%3A30Z&sks=b&skv=2026-02-06&sig=6MCBDa%2BeuDM0ElhqI5vKZotIiwRmiGzi%2B%2BqrbMymJNQ%3D'
+      ARTIFACT_SHA256: '6ba63d51f080efdaac7e0835ff0ebd7694a79bb06b8892087e1d2b8538faf4c7'
+    steps:
+      - name: Checkout AlphaClaw
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify Raster Chad artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --retry-delay 2 "$ARTIFACT_URL" -o /tmp/chad.zip
+          echo "$ARTIFACT_SHA256  /tmp/chad.zip" | sha256sum -c -
+          mkdir -p /tmp/chad
+          unzip -q /tmp/chad.zip -d /tmp/chad
+          test -f /tmp/chad/provenance.jsonl
+          test -d /tmp/chad/images
+
+      - name: Assemble accepted exact-byte keepers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from shutil import copyfile
+          import hashlib, json
+
+          repo = Path.cwd()
+          artifact = Path('/tmp/chad')
+          out = repo / 'assets' / 'chad'
+          out.mkdir(parents=True, exist_ok=True)
+
+          rows = [json.loads(x) for x in (artifact / 'provenance.jsonl').read_text(encoding='utf-8').splitlines() if x.strip()]
+          byid = {r['philosophy']['id']: r for r in rows}
+
+          selected = {
+              'allowed-to-fail': {
+                  'published': 'allowed-to-fail.webp',
+                  'alt': 'Chad calmly observing a real test specimen fail and learning from the result',
+                  'rights_label': 'Recraft API Terms',
+                  'rights_url': 'https://www.recraft.ai/legal/terms',
+                  'rights_note': 'Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.',
+              },
+              'jevons-intelligence': {
+                  'published': 'jevons-intelligence.webp',
+                  'alt': 'Chad observing abundant machine proposals funnel toward a narrow external authorization gate',
+                  'rights_label': 'Recraft API Terms',
+                  'rights_url': 'https://www.recraft.ai/legal/terms',
+                  'rights_note': 'Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.',
+              },
+              'tools-say-no': {
+                  'published': 'tools-say-no.webp',
+                  'alt': 'Chad calmly accepting a precision fixture rejecting a component that does not fit',
+                  'rights_label': 'Recraft API Terms',
+                  'rights_url': 'https://www.recraft.ai/legal/terms',
+                  'rights_note': 'Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.',
+              },
+              'working-demo': {
+                  'published': 'working-demo.png',
+                  'alt': 'Chad quietly running a working machine while a confident speaker gestures beside an inert prototype',
+                  'rights_label': 'Qwen-Image official license',
+                  'rights_url': 'https://github.com/QwenLM/Qwen-Image/blob/main/LICENSE',
+                  'rights_note': 'Qwen-Image is published under Apache-2.0. This receipt does not claim that a model license itself creates copyright in an output.',
+              },
+              'counterexample': {
+                  'published': 'counterexample.jpg',
+                  'alt': 'Chad focusing on the one specimen that fails despite many apparently successful examples',
+                  'rights_label': 'xAI Consumer FAQ',
+                  'rights_url': 'https://x.ai/legal/faq',
+                  'rights_note': 'xAI states that users own Grok inputs and outputs, including generated images, and asks users to attribute generated work to Grok.',
+              },
+          }
+
+          published_hashes = {}
+          for pid, meta in selected.items():
+              r = byid[pid]
+              assert not r.get('error'), (pid, r.get('error'))
+              assert r.get('reference_image_supplied') is False
+              src = artifact / 'images' / r['image_file']
+              raw = src.read_bytes()
+              got = hashlib.sha256(raw).hexdigest()
+              assert got == r['image_sha256'], (pid, got, r['image_sha256'])
+              dst = out / meta['published']
+              assert not dst.exists(), dst
+              copyfile(src, dst)
+              published = hashlib.sha256(dst.read_bytes()).hexdigest()
+              assert published == got, (pid, published, got)
+              published_hashes[pid] = published
+
+          ppath = repo / 'PHILOSOPHY.md'
+          p = ppath.read_text(encoding='utf-8')
+          for meta in selected.values():
+              assert f"assets/chad/{meta['published']}" not in p
+
+          def block(pid: str) -> str:
+              r = byid[pid]
+              meta = selected[pid]
+              return (
+                  '\n<p align="center">\n'
+                  f'  <img src="assets/chad/{meta["published"]}" alt="{meta["alt"]}" width="620">\n'
+                  '</p>\n\n'
+                  f'<p align="center"><em>annoned by <code>{r["model"]}</code> · '
+                  f'<a href="assets/chad/PROVENANCE.md#{pid}">receipt</a></em></p>\n'
+              )
+
+          insertions = [
+              ('A working demonstration is better than a confident speech.\n', 'working-demo'),
+              ('A counterexample is better than a hundred people agreeing.\n', 'counterexample'),
+              ('Not even Chad philosophy.\n', 'allowed-to-fail'),
+              ('> **Make intelligence abundant without making authority automatic.**\n', 'jevons-intelligence'),
+              ('If everything around you is designed to agree with you, you have built a very comfortable way to become wrong.\n', 'tools-say-no'),
+          ]
+          for anchor, pid in insertions:
+              assert p.count(anchor) == 1, (pid, p.count(anchor))
+              p = p.replace(anchor, anchor + block(pid), 1)
+          ppath.write_text(p, encoding='utf-8')
+
+          rpath = out / 'PROVENANCE.md'
+          receipt = rpath.read_text(encoding='utf-8')
+          old_intro = 'These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`.'
+          new_intro = old_intro + ' Additional accepted selections come from run `32399313906`.'
+          assert old_intro in receipt and 'run `32399313906`' not in receipt
+          receipt = receipt.replace(old_intro, new_intro, 1)
+
+          old_exact = 'The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The accepted keepers from run `32388944793` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.'
+          new_exact = 'The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793` and `32399313906` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.'
+          assert old_exact in receipt
+          receipt = receipt.replace(old_exact, new_exact, 1)
+
+          marker = '## Why “annoned by”?'
+          assert receipt.count(marker) == 1
+          additions = []
+          for pid in selected:
+              r = byid[pid]
+              meta = selected[pid]
+              additions += [
+                  f'### {pid}', '',
+                  f'- Philosophy line: **{r["philosophy"]["line"]}**',
+                  f'- Model: `{r["model"]}`',
+                  f'- Routed provider: `{r["provider_tag"]}`',
+                  f'- Generation cost reported by OpenRouter: `${float(r.get("actual_cost_usd") or 0):.4f}`',
+                  '- Reference image supplied: **no**',
+                  '- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`',
+                  f'- Original run file: `{r["image_file"]}`',
+                  f'- Original generation SHA-256: `{r["image_sha256"]}`',
+                  f'- Published file: `{meta["published"]}`',
+                  f'- Published SHA-256: `{published_hashes[pid]}`',
+                  '- Publication transform: **none; exact-byte copy from the verified artifact**',
+                  f'- Rights/source review: {meta["rights_label"]} — {meta["rights_url"]}',
+                  f'- Publication note: {meta["rights_note"]}', '',
+              ]
+          receipt = receipt.replace(marker, '\n'.join(additions) + '\n' + marker, 1)
+          rpath.write_text(receipt, encoding='utf-8')
+          PY
+
+      - name: Commit exact publication tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm .github/workflows/publish-chad-round-32399313906.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- PHILOSOPHY.md assets/chad/PROVENANCE.md \
+            assets/chad/allowed-to-fail.webp \
+            assets/chad/jevons-intelligence.webp \
+            assets/chad/tools-say-no.webp \
+            assets/chad/working-demo.png \
+            assets/chad/counterexample.jpg \
+            .github/workflows/publish-chad-round-32399313906.yml
+          git diff --cached --stat
+          git commit -m "Publish five Chad philosophy keepers"
+          git push origin HEAD:chad-keepers-32399313906
