@@ -1,10 +1,10 @@
 # Chad art provenance
 
-These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`.
+These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`) and the accepted-keeper run `32388944793`. Additional accepted selections come from run `32399313906`.
 
 No reference image was supplied. The generation prompt explicitly requested a new Chad-like archetype while forbidding reproduction or close imitation of specific Yes Chad / Nordic Gamer / Wojak / Virgin-vs-Chad drawings, GigaChad photographs, celebrities, copyrighted characters, logos, or named artists' styles.
 
-The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. The accepted keepers from run `32388944793` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
+The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793` and `32399313906` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
 
 ## Rights boundary
 
@@ -161,6 +161,86 @@ The earlier published JPEGs are web-optimized derivatives of the original genera
 - Publication transform: **none; exact-byte copy from the verified artifact**
 - Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
 - Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
+### allowed-to-fail
+
+- Philosophy line: **A good idea must be allowed to fail.**
+- Model: `recraft/recraft-v4-pro`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.2500`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`
+- Original run file: `01-allowed-to-fail--recraft-recraft-v4-pro.webp`
+- Original generation SHA-256: `da1f6ba2d7d8904f4c36db746dbe263b9a4032c54bfbecbe2b6d593fe5ae3a1a`
+- Published file: `allowed-to-fail.webp`
+- Published SHA-256: `da1f6ba2d7d8904f4c36db746dbe263b9a4032c54bfbecbe2b6d593fe5ae3a1a`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
+
+### jevons-intelligence
+
+- Philosophy line: **Make intelligence abundant without making authority automatic.**
+- Model: `recraft/recraft-v4.1-pro`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.2100`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`
+- Original run file: `05-jevons-intelligence--recraft-recraft-v4-1-pro.webp`
+- Original generation SHA-256: `ff28980cfeef7ffd0892f1889e4807e1f3e13c915ea30a23a07ba782862df8a4`
+- Published file: `jevons-intelligence.webp`
+- Published SHA-256: `ff28980cfeef7ffd0892f1889e4807e1f3e13c915ea30a23a07ba782862df8a4`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
+
+### tools-say-no
+
+- Philosophy line: **Build tools that can say no to you.**
+- Model: `recraft/recraft-v4.1-utility-pro`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.2100`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`
+- Original run file: `07-tools-say-no--recraft-recraft-v4-1-utility-pro.webp`
+- Original generation SHA-256: `3f38b9ce25b7fc0212c80146c311d33d67034dc83674997a55299d083c6f6ab2`
+- Published file: `tools-say-no.webp`
+- Published SHA-256: `3f38b9ce25b7fc0212c80146c311d33d67034dc83674997a55299d083c6f6ab2`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
+
+### working-demo
+
+- Philosophy line: **A working demonstration is better than a confident speech.**
+- Model: `qwen/qwen-image-3-pro`
+- Routed provider: `alibaba`
+- Generation cost reported by OpenRouter: `$0.0400`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`
+- Original run file: `09-working-demo--qwen-qwen-image-3-pro.png`
+- Original generation SHA-256: `805e3618cd34a4986842ee14fbe1afc5e6675294315c5bb7d8a5ee4a74661ce2`
+- Published file: `working-demo.png`
+- Published SHA-256: `805e3618cd34a4986842ee14fbe1afc5e6675294315c5bb7d8a5ee4a74661ce2`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Qwen-Image official license — https://github.com/QwenLM/Qwen-Image/blob/main/LICENSE
+- Publication note: Qwen-Image is published under Apache-2.0. This receipt does not claim that a model license itself creates copyright in an output.
+
+### counterexample
+
+- Philosophy line: **A counterexample is better than a hundred people agreeing.**
+- Model: `x-ai/grok-imagine-image-2.0`
+- Routed provider: `xai`
+- Generation cost reported by OpenRouter: `$0.0600`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32399313906`
+- Original run file: `10-counterexample--x-ai-grok-imagine-image-2-0.jpg`
+- Original generation SHA-256: `731cebd6f86292975eaeb52eb92901cff9d30208a98b31295afa7617c642269f`
+- Published file: `counterexample.jpg`
+- Published SHA-256: `731cebd6f86292975eaeb52eb92901cff9d30208a98b31295afa7617c642269f`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: xAI Consumer FAQ — https://x.ai/legal/faq
+- Publication note: xAI states that users own Grok inputs and outputs, including generated images, and asks users to attribute generated work to Grok.
+
 ## Why “annoned by”?
 
 `annoned by <model>` is a playful provenance caption, not a claim that a model is a legal person or copyright author. It means: **this exact model produced the source raster for this illustration, and the receipt is preserved here.**

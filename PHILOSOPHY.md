@@ -128,9 +128,21 @@ That means preferring things that can be checked.
 
 A working demonstration is better than a confident speech.
 
+<p align="center">
+  <img src="assets/chad/working-demo.png" alt="Chad quietly running a working machine while a confident speaker gestures beside an inert prototype" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>qwen/qwen-image-3-pro</code> · <a href="assets/chad/PROVENANCE.md#working-demo">receipt</a></em></p>
+
 A test is better than an assurance.
 
 A counterexample is better than a hundred people agreeing.
+
+<p align="center">
+  <img src="assets/chad/counterexample.jpg" alt="Chad focusing on the one specimen that fails despite many apparently successful examples" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>x-ai/grok-imagine-image-2.0</code> · <a href="assets/chad/PROVENANCE.md#counterexample">receipt</a></em></p>
 
 If the world proves you wrong, change your mind.
 
@@ -155,6 +167,12 @@ If the answer is “nothing,” the idea is protected from reality.
 Chad philosophy does not protect ideas from reality.
 
 Not even Chad philosophy.
+
+<p align="center">
+  <img src="assets/chad/allowed-to-fail.webp" alt="Chad calmly observing a real test specimen fail and learning from the result" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4-pro</code> · <a href="assets/chad/PROVENANCE.md#allowed-to-fail">receipt</a></em></p>
 
 ## Leave room to be wrong
 
@@ -326,6 +344,12 @@ The practical lesson is:
 
 > **Make intelligence abundant without making authority automatic.**
 
+<p align="center">
+  <img src="assets/chad/jevons-intelligence.webp" alt="Chad observing abundant machine proposals funnel toward a narrow external authorization gate" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4.1-pro</code> · <a href="assets/chad/PROVENANCE.md#jevons-intelligence">receipt</a></em></p>
+
 Intelligence may scale rapidly.
 
 Wisdom, trust, and authority still need room to spread, disagree, abstain, and say no.
@@ -409,6 +433,12 @@ A good computer system should sometimes tell its creator:
 > “No.”
 
 If everything around you is designed to agree with you, you have built a very comfortable way to become wrong.
+
+<p align="center">
+  <img src="assets/chad/tools-say-no.webp" alt="Chad calmly accepting a precision fixture rejecting a component that does not fit" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4.1-utility-pro</code> · <a href="assets/chad/PROVENANCE.md#tools-say-no">receipt</a></em></p>
 
 ## Keep track of where things came from
 
