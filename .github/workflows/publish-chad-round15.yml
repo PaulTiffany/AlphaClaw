@@ -1,0 +1,65 @@
+name: Publish Chad round 15 keepers
+
+on:
+  push:
+    branches: [chad-round15-keepers-32431592545]
+    paths:
+      - '.github/workflows/publish-chad-round15.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: ${{ github.actor == github.repository_owner }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout publication branch
+        uses: actions/checkout@v4
+        with:
+          ref: chad-round15-keepers-32431592545
+
+      - name: Download exact source artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 \
+            -o chad-raster-art.zip \
+            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-291c-81f5-b47f-02c8fe0a545c/raw?se=2026-08-21T00%3A34%3A23Z&sp=r&sv=2026-02-06&sr=b&scid=78a61b9a-89ae-58c3-ae06-b036d768eca3&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T20%3A37%3A41Z&ske=2026-08-21T20%3A37%3A41Z&sks=b&skv=2026-02-06&sig=ts8VpO1GqJfz9nrdD0sXtUOuildMOtW9uTUyFNzywlg%3D'
+          printf 'zip_sha256=' && sha256sum chad-raster-art.zip
+
+      - name: Verify receipts, patch Markdown, copy exact raster bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/publish_chad_round15.py
+          python3 .github/scripts/publish_chad_round15.py
+
+      - name: Commit only intended publication delta and self-delete
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f chad-raster-art.zip
+          rm -rf .chad-round15-artifact __pycache__ .github/scripts/__pycache__
+          rm .github/scripts/publish_chad_round15.py
+          rm .github/workflows/publish-chad-round15.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- PHILOSOPHY.md assets/chad/PROVENANCE.md \
+            assets/chad/capability-not-permission.png \
+            assets/chad/test-not-assurance.png \
+            assets/chad/change-mind.jpg \
+            assets/chad/mechanical-checks.png \
+            assets/chad/rest-delegation.png \
+            assets/chad/truth-not-winning.png \
+            assets/chad/ideas-meet-reality.png \
+            assets/chad/recoverable-progress.jpg \
+            assets/chad/authorized-gate.png \
+            assets/chad/brake-engine-path.png \
+            assets/chad/strongest-criticism.png \
+            .github/scripts/publish_chad_round15.py \
+            .github/workflows/publish-chad-round15.yml
+          echo '--- intended staged delta ---'
+          git diff --cached --name-status
+          git commit -m 'Publish eleven Chad round 15 keepers'
+          git push origin HEAD:chad-round15-keepers-32431592545
