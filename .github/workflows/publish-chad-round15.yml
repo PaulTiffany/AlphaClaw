@@ -24,10 +24,8 @@ jobs:
         run: |
           set -euo pipefail
           curl --fail --location --retry 2 \
-            -H 'Accept: application/vnd.github+json' \
-            -H 'X-GitHub-Api-Version: 2026-03-10' \
             -o chad-raster-art.zip \
-            'https://api.github.com/repos/PaulTiffany/letGPTsustakethewheel/actions/artifacts/9429338299/zip'
+            'https://sdmntprcacentral.oaiusercontent.com/files/00000000-c184-820d-9467-dd6e47f14de2/raw?se=2026-08-21T00%3A46%3A15Z&sp=r&sv=2026-02-06&sr=b&scid=4276089d-fa44-5049-adfc-7497d48630c7&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T21%3A58%3A58Z&ske=2026-08-21T21%3A58%3A58Z&sks=b&skv=2026-02-06&sig=FmjIrGIL7kxWMrTDAfEv7gTE92MsMoX/0%2B3/ByyAg/s%3D'
 
       - name: Verify receipts and copy exact raster bytes
         shell: bash
