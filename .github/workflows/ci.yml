@@ -154,3 +154,60 @@ jobs:
           assert helper.LLM_COMMANDS == {"send"}
           assert "UNKNOWN_SKILL_CALL" in helper.balance_parentheses("shell env")
           PY
+
+  publish_chad_round15:
+    if: ${{ github.event_name == 'push' }}
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main for exact-byte publication
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Download verified source artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 2 \
+            -o chad-raster-art.zip \
+            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-0dc0-81f5-93f6-832165425a3f/raw?se=2026-08-21T00%3A56%3A18Z&sp=r&sv=2026-02-06&sr=b&scid=2d356b0c-8cee-5cc2-b132-ed0615ea0c8d&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T22%3A00%3A52Z&ske=2026-08-21T22%3A00%3A52Z&sks=b&skv=2026-02-06&sig=1WsVARjRvE0yowS3lOufUAbeSU55skMwvj84wGrmOEA%3D'
+          printf 'zip_sha256=' && sha256sum chad-raster-art.zip
+
+      - name: Verify receipts and copy exact raster bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/publish_chad_frontier.py
+          python3 .github/scripts/publish_chad_frontier.py
+
+      - name: Commit keepers and restore CI
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f chad-raster-art.zip
+          rm -rf .chad-round15-artifact __pycache__ .github/scripts/__pycache__
+          git show 852166907d93564c4f071d2b774c4a5001c991b8:.github/workflows/ci.yml > .github/workflows/ci.yml
+          rm .github/scripts/publish_chad_frontier.py
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- PHILOSOPHY.md assets/chad/PROVENANCE.md \
+            assets/chad/capability-not-permission.png \
+            assets/chad/test-not-assurance.png \
+            assets/chad/change-mind.jpg \
+            assets/chad/mechanical-checks.png \
+            assets/chad/rest-delegation.png \
+            assets/chad/truth-not-winning.png \
+            assets/chad/ideas-meet-reality.png \
+            assets/chad/recoverable-progress.jpg \
+            assets/chad/authorized-gate.png \
+            assets/chad/brake-engine-path.png \
+            assets/chad/strongest-criticism.png \
+            .github/workflows/ci.yml \
+            .github/scripts/publish_chad_frontier.py
+          echo '--- intended staged delta ---'
+          git diff --cached --name-status
+          git commit -m 'Publish eleven Chad round 15 keepers'
+          git push origin HEAD:main
