@@ -1,3 +1,4 @@
+# server-side PR merge trigger; publication logic below is unchanged
 name: Publish Chad frontier keepers
 
 on:
