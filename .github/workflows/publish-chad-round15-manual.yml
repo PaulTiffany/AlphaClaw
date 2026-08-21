@@ -23,7 +23,7 @@ jobs:
           set -euo pipefail
           curl --fail --location --retry 2 \
             -o chad-raster-art.zip \
-            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-0dc0-81f5-93f6-832165425a3f/raw?se=2026-08-21T00%3A56%3A18Z&sp=r&sv=2026-02-06&sr=b&scid=2d356b0c-8cee-5cc2-b132-ed0615ea0c8d&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T22%3A00%3A52Z&ske=2026-08-21T22%3A00%3A52Z&sks=b&skv=2026-02-06&sig=1WsVARjRvE0yowS3lOufUAbeSU55skMwvj84wGrmOEA%3D'
+            'https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-9604-81fb-a47d-b13bc91bd2ea/raw?se=2026-08-21T02%3A59%3A47Z&sp=r&sv=2026-02-06&sr=b&scid=ae1f5ff7-0d17-5742-9978-07256f1cbff0&skoid=c953efd6-2ae8-41b4-a6d6-34b1475ac07c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T20%3A20%3A33Z&ske=2026-08-21T20%3A20%3A33Z&sks=b&skv=2026-02-06&sig=G5lMvckHfYGw0jK1IOgqvq%2BnbUcQRG9rED3bEeESclk%3D'
           printf 'zip_sha256=' && sha256sum chad-raster-art.zip
           test "$(sha256sum chad-raster-art.zip | awk '{print $1}')" = "683b0b091184311ddf466f0db5e308763fd76bebe59313de3699695fc3625c01"
 
