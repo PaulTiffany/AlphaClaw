@@ -1,0 +1,1 @@
+Mechanical trigger only. The publisher remains .github/workflows/publish-chad-frontier.yml on chad-frontier-keepers; this file exists only to create a server-side PR merge push and is removed before publication reaches main.
