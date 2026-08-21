@@ -1,6 +1,6 @@
 name: Publish Chad round 15 keepers
 
-# Second push activates the newly registered side-branch workflow.
+# Low-level ref-update trigger for the registered side-branch workflow.
 on:
   push:
     branches: [chad-round15-keepers-32431592545]
@@ -26,7 +26,7 @@ jobs:
           set -euo pipefail
           curl --fail --location --retry 2 \
             -o chad-raster-art.zip \
-            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-2088-81f5-b699-334c569aa252/raw?se=2026-08-21T00%3A36%3A12Z&sp=r&sv=2026-02-06&sr=b&scid=e393f550-7076-53bc-a9af-511a71de3931&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T22%3A15%3A55Z&ske=2026-08-21T22%3A15%3A55Z&sks=b&skv=2026-02-06&sig=rBJOsWs9L7GZh%2BAP4KARFGM3ysFRFB1cQM3tH9qJPEc%3D'
+            'https://sdmntprcentralus.oaiusercontent.com/files/00000000-a510-81f5-b59b-636c474b077f/raw?se=2026-08-21T00%3A37%3A12Z&sp=r&sv=2026-02-06&sr=b&scid=59fd98a8-99b2-5b94-b7ea-8356b858525f&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-20T22%3A06%3A23Z&ske=2026-08-21T22%3A06%3A23Z&sks=b&skv=2026-02-06&sig=rWDMfzkVRMuWoUg7M0aaUf8ehLaxu6fvvxo493RihbY%3D'
           printf 'zip_sha256=' && sha256sum chad-raster-art.zip
 
       - name: Verify receipts, patch Markdown, copy exact raster bytes
