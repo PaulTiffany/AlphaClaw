@@ -119,6 +119,12 @@ The point is not to win arguments.
 The point is to find out what is actually true.
 
 <p align="center">
+  <img src="assets/chad/truth-not-winning.png" alt="Chad and another person inspect an experiment while a debate podium and trophy sit ignored behind them" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>krea/krea-2-large</code> · <a href="assets/chad/PROVENANCE.md#truth-not-winning">receipt</a></em></p>
+
+<p align="center">
   <img src="assets/chad/reality-votes.jpg" alt="Chad calmly letting reality cast the deciding vote" width="620">
 </p>
 
@@ -136,6 +142,12 @@ A working demonstration is better than a confident speech.
 
 A test is better than an assurance.
 
+<p align="center">
+  <img src="assets/chad/test-not-assurance.png" alt="A presenter gestures while a real component is quietly placed into a physical load-testing press" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-5-image-mini</code> · <a href="assets/chad/PROVENANCE.md#test-not-assurance">receipt</a></em></p>
+
 A counterexample is better than a hundred people agreeing.
 
 <p align="center">
@@ -145,6 +157,12 @@ A counterexample is better than a hundred people agreeing.
 <p align="center"><em>annoned by <code>x-ai/grok-imagine-image-2.0</code> · <a href="assets/chad/PROVENANCE.md#counterexample">receipt</a></em></p>
 
 If the world proves you wrong, change your mind.
+
+<p align="center">
+  <img src="assets/chad/change-mind.jpg" alt="Chad sets aside a failed gear design and works from the visibly successful replacement" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>google/gemini-3.1-flash-image-preview</code> · <a href="assets/chad/PROVENANCE.md#change-mind">receipt</a></em></p>
 
 There is no prize for remaining loyal to yesterday's mistake.
 
@@ -165,6 +183,12 @@ A serious idea should come with some answer to:
 If the answer is “nothing,” the idea is protected from reality.
 
 Chad philosophy does not protect ideas from reality.
+
+<p align="center">
+  <img src="assets/chad/ideas-meet-reality.png" alt="Chad removes protective padding from his own prototype over a real industrial testing machine" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>microsoft/mai-image-2.5-pro</code> · <a href="assets/chad/PROVENANCE.md#ideas-meet-reality">receipt</a></em></p>
 
 Not even Chad philosophy.
 
@@ -215,12 +239,24 @@ If there is no slack, every mistake becomes an emergency. If every mistake becom
 Chad philosophy therefore prefers **recoverable progress** over heroic overextension.
 
 <p align="center">
+  <img src="assets/chad/recoverable-progress.jpg" alt="Chad calmly rebuilds in stable supported stages while an overloaded shortcut collapses nearby" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>google/gemini-3-pro-image-preview</code> · <a href="assets/chad/PROVENANCE.md#recoverable-progress">receipt</a></em></p>
+
+<p align="center">
   <img src="assets/chad/leave-room.jpg" alt="Chad working calmly with enough slack and room to repair mistakes" width="620">
 </p>
 
 <p align="center"><em>annoned by <code>x-ai/grok-imagine-image-quality</code> · <a href="assets/chad/PROVENANCE.md#leave-room">receipt</a></em></p>
 
 ## Capability is not permission
+
+<p align="center">
+  <img src="assets/chad/capability-not-permission.png" alt="Chad holding the external key while a powerful robot remains physically separated behind a barrier" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>krea/krea-2-medium-turbo</code> · <a href="assets/chad/PROVENANCE.md#capability-not-permission">receipt</a></em></p>
 
 Making something faster, cheaper, smarter, or easier to produce does not automatically answer whether more of it should be allowed to act on the world.
 
@@ -249,6 +285,12 @@ So keep these distinct:
 A useful rule is:
 
 > **No high-consequence actuator without an independently authorized gate in its causal past that can still say no.**
+
+<p align="center">
+  <img src="assets/chad/authorized-gate.png" alt="A powerful industrial press remains downstream of a heavy barred gate with a separate mechanical control" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-5.4-image-2</code> · <a href="assets/chad/PROVENANCE.md#authorized-gate">receipt</a></em></p>
 
 And the power to say no should not automatically grow merely because the actuator became more capable.
 
@@ -305,6 +347,12 @@ More telemetry is not necessarily more control if it arrives too quickly, too no
 Where failure matters, keep monitoring and shutdown authority as independent as practical from the thing they govern.
 
 > **Do not put the brake on the same failure path as the engine.**
+
+<p align="center">
+  <img src="assets/chad/brake-engine-path.png" alt="An engine cable bundle sparks and fails while Chad retains a separate simple mechanical brake linkage" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-5-image</code> · <a href="assets/chad/PROVENANCE.md#brake-engine-path">receipt</a></em></p>
 
 If capability can improve itself faster than the operator can observe and interrupt it, then nominal permission controls may become practically meaningless.
 
@@ -368,6 +416,12 @@ A million agents making a million proposals do not become a million legitimate d
 
 Mechanical checks should become cheap wherever we can make them cheap. Provenance should become cheap. Reproducibility should become cheap. Tests should become cheap.
 
+<p align="center">
+  <img src="assets/chad/mechanical-checks.png" alt="A long row of simple identical mechanical fixtures checks parts before human attention is needed" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>microsoft/mai-image-2.5</code> · <a href="assets/chad/PROVENANCE.md#mechanical-checks">receipt</a></em></p>
+
 But where a real judgment remains — about values, acceptable risk, legitimacy, or irreversible action — do not hide that judgment inside the machinery merely because the machinery is fast.
 
 The practical lesson is:
@@ -421,6 +475,12 @@ Sometimes people simply disagree.
 Sometimes they see something you missed.
 
 So when testing an idea, use the strongest reasonable criticism you can find.
+
+<p align="center">
+  <img src="assets/chad/strongest-criticism.png" alt="Chad deliberately stress-tests his own bridge-like structure instead of giving it an easy harmless test" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>black-forest-labs/flux.2-klein-4b</code> · <a href="assets/chad/PROVENANCE.md#strongest-criticism">receipt</a></em></p>
 
 Do not defeat a foolish version of the opposing argument and congratulate yourself.
 
@@ -543,6 +603,12 @@ More words are not necessarily more wisdom.
 Stopping also means noticing when continued effort is degrading the operator faster than it is improving the work.
 
 Rest, delegation, and asking for help are not failures of seriousness. They are ways of preserving judgment for the next branch point.
+
+<p align="center">
+  <img src="assets/chad/rest-delegation.png" alt="Chad drinks water while handing a wrench to a teammate and shared work continues around him" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>krea/krea-2-medium</code> · <a href="assets/chad/PROVENANCE.md#rest-delegation">receipt</a></em></p>
 
 <p align="center">
   <img src="assets/chad/stop.jpg" alt="Chad quietly drinking coffee after enough has been said" width="620">

@@ -1,17 +1,23 @@
 # Chad art provenance
 
-These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`), accepted-keeper run `32388944793`, run `32399313906`, and frontier-model run `32424076108`.
+These images are original raster generations selected from **Raster Chad** run #3 in `PaulTiffany/letGPTsustakethewheel` (GitHub Actions run `32037144396`), accepted-keeper run `32388944793`, run `32399313906`, frontier-model run `32424076108`, and full-population run `32431592545`.
 
 No reference image was supplied. The generation prompt explicitly requested a new Chad-like archetype while forbidding reproduction or close imitation of specific Yes Chad / Nordic Gamer / Wojak / Virgin-vs-Chad drawings, GigaChad photographs, celebrities, copyrighted characters, logos, or named artists' styles.
 
-The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793`, `32399313906`, and `32424076108` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
+The earlier published JPEGs are web-optimized derivatives of the original generated raster files: resize/re-encode only, with no generative edit. Accepted keepers from runs `32388944793`, `32399313906`, `32424076108`, and `32431592545` are published as exact-byte copies of the original artifact files. Original-generation and published-file SHA-256 values are recorded below.
 
 For run `32424076108`, publication started from GitHub Actions artifact `9426834676`, whose ZIP SHA-256 is `a0210aee107921ed678b473f7a71b26a77e0301f69820a8de5f123491ac1e6f5`. Each selected raster was independently re-hashed against `provenance.jsonl` before its bytes were copied into this repository.
+
+For run `32431592545`, publication started from GitHub Actions artifact `9429338299`, whose ZIP SHA-256 is `683b0b091184311ddf466f0db5e308763fd76bebe59313de3699695fc3625c01`. All twelve source rasters were independently re-hashed against `provenance.jsonl`; eleven passed the visual/no-text publication gate and were copied into this repository byte-for-byte. The rejected `comfortable-way-wrong` raster was not published because it contained visible generated lettering and numbers.
 
 ## Rights boundary
 
 - Provider/model terms were reviewed on **2026-08-17** for the first publication and re-checked on **2026-08-20** for the accepted keepers.
 - Frontier-provider publication bases re-checked on **2026-08-20** include the OpenAI Services Agreement, Gemini API Additional Terms of Service, and Google Cloud Service Specific Terms; routed-provider terms remain the controlling boundary rather than OpenRouter's routing layer alone.
+- Round `32431592545` additionally re-checked the Krea 2 Community License Agreement, Microsoft Product Terms for Microsoft Generative AI Services, and Black Forest Labs Developer Terms of Service.
+- Krea states that users own Outputs, but commercial use under its community license is subject to a company-wide trailing-twelve-month revenue threshold of less than $1,000,000; otherwise an enterprise license is required.
+- Microsoft states that generative Output Content is Customer Data and Microsoft does not own Customer's Output Content.
+- Black Forest Labs may embed Content Credentials or other provenance data in Output; exact-byte publication preserves rather than strips such metadata.
 - This file records the publication basis; it is not a warranty of copyrightability, uniqueness, or non-infringement.
 - The generated art is **not relicensed under AlphaClaw's MIT software license** merely by being stored in this repository.
 - The Recraft API asset carries an additional provider restriction: it may not be used to train external AI models, systems, or networks.
@@ -362,6 +368,193 @@ For run `32424076108`, publication started from GitHub Actions artifact `9426834
 - Publication transform: **none; exact-byte copy from the verified artifact**
 - Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
 - Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to its restriction against using those assets to train AI models, systems, or networks.
+
+### capability-not-permission
+
+- Philosophy line: **Capability is not permission.**
+- Model: `krea/krea-2-medium-turbo`
+- Routed provider: `krea`
+- Generation cost reported by OpenRouter: `$0.015`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `01-capability-not-permission--krea-krea-2-medium-turbo.png`
+- Original generation SHA-256: `1ac4174889e5a5c590c85dff198955c7d92824a3d7c5a2d50d7d3830f4c55d70`
+- Published file: `capability-not-permission.png`
+- Published SHA-256: `1ac4174889e5a5c590c85dff198955c7d92824a3d7c5a2d50d7d3830f4c55d70`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Krea 2 Community License Agreement — https://www.krea.ai/krea-2-licensing
+- Publication note: Krea states that users own Outputs and Krea claims no ownership of them. Commercial use under the community license is conditioned on company-wide trailing-twelve-month annual revenue below $1,000,000; otherwise an enterprise license is required.
+
+### test-not-assurance
+
+- Philosophy line: **A test is better than an assurance.**
+- Model: `openai/gpt-5-image-mini`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.013162`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `02-test-not-assurance--openai-gpt-5-image-mini.png`
+- Original generation SHA-256: `8eae698b891fd2aead2b7bfbc5befa7f04c4767ec0f4af719fa65794a7847173`
+- Published file: `test-not-assurance.png`
+- Published SHA-256: `8eae698b891fd2aead2b7bfbc5befa7f04c4767ec0f4af719fa65794a7847173`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+### change-mind
+
+- Philosophy line: **If the world proves you wrong, change your mind.**
+- Model: `google/gemini-3.1-flash-image-preview`
+- Routed provider: `google-ai-studio`
+- Generation cost reported by OpenRouter: `$0.068515`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `03-change-mind--google-gemini-3-1-flash-image-preview.jpg`
+- Original generation SHA-256: `815a2967d32f9d9d7a3b621a1eef142352c65e79c2de1c2b43302072e9bd1366`
+- Published file: `change-mind.jpg`
+- Published SHA-256: `815a2967d32f9d9d7a3b621a1eef142352c65e79c2de1c2b43302072e9bd1366`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Gemini API Additional Terms of Service — https://ai.google.dev/gemini-api/terms
+- Publication note: Google states that some Gemini API and Google AI Studio services generate original content and that Google will not claim ownership over that generated content; output may not be unique.
+
+### mechanical-checks
+
+- Philosophy line: **Mechanical checks should become cheap wherever we can make them cheap.**
+- Model: `microsoft/mai-image-2.5`
+- Routed provider: `azure`
+- Generation cost reported by OpenRouter: `$0.037036`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `04-mechanical-checks--microsoft-mai-image-2-5.png`
+- Original generation SHA-256: `a5532f2a7e1d7d5579d8cbf6189b002085ee3ad09bbcc05eba0e5efafc25a2e0`
+- Published file: `mechanical-checks.png`
+- Published SHA-256: `a5532f2a7e1d7d5579d8cbf6189b002085ee3ad09bbcc05eba0e5efafc25a2e0`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Microsoft Product Terms, Microsoft Generative AI Services — https://www.microsoft.com/licensing/terms/product/foronlineServices/all
+- Publication note: Microsoft's Product Terms state that Output Content is Customer Data and Microsoft does not own Customer's Output Content.
+
+### rest-delegation
+
+- Philosophy line: **Rest, delegation, and asking for help are not failures of seriousness.**
+- Model: `krea/krea-2-medium`
+- Routed provider: `krea`
+- Generation cost reported by OpenRouter: `$0.03`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `05-rest-delegation--krea-krea-2-medium.png`
+- Original generation SHA-256: `236d7870d5e9f6f3557ba1582acd3d071a8778c6fd2041038fc063a0cbfed16b`
+- Published file: `rest-delegation.png`
+- Published SHA-256: `236d7870d5e9f6f3557ba1582acd3d071a8778c6fd2041038fc063a0cbfed16b`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Krea 2 Community License Agreement — https://www.krea.ai/krea-2-licensing
+- Publication note: Krea states that users own Outputs and Krea claims no ownership of them. Commercial use under the community license is conditioned on company-wide trailing-twelve-month annual revenue below $1,000,000; otherwise an enterprise license is required.
+
+### truth-not-winning
+
+- Philosophy line: **The point is not to win arguments. The point is to find out what is actually true.**
+- Model: `krea/krea-2-large`
+- Routed provider: `krea`
+- Generation cost reported by OpenRouter: `$0.06`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `06-truth-not-winning--krea-krea-2-large.png`
+- Original generation SHA-256: `4da0f1c3bf5ba359b9a785aa3aa8ed21ee8c37956cdb8067c9a6ed2c817d464b`
+- Published file: `truth-not-winning.png`
+- Published SHA-256: `4da0f1c3bf5ba359b9a785aa3aa8ed21ee8c37956cdb8067c9a6ed2c817d464b`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Krea 2 Community License Agreement — https://www.krea.ai/krea-2-licensing
+- Publication note: Krea states that users own Outputs and Krea claims no ownership of them. Commercial use under the community license is conditioned on company-wide trailing-twelve-month annual revenue below $1,000,000; otherwise an enterprise license is required.
+
+### ideas-meet-reality
+
+- Philosophy line: **Chad philosophy does not protect ideas from reality.**
+- Model: `microsoft/mai-image-2.5-pro`
+- Routed provider: `azure`
+- Generation cost reported by OpenRouter: `$0.083854`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `07-ideas-meet-reality--microsoft-mai-image-2-5-pro.png`
+- Original generation SHA-256: `0ea50a1f345bf73107c9f3bc4e1e001ca665aaa81c18d1888494329ea5f5591c`
+- Published file: `ideas-meet-reality.png`
+- Published SHA-256: `0ea50a1f345bf73107c9f3bc4e1e001ca665aaa81c18d1888494329ea5f5591c`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Microsoft Product Terms, Microsoft Generative AI Services — https://www.microsoft.com/licensing/terms/product/foronlineServices/all
+- Publication note: Microsoft's Product Terms state that Output Content is Customer Data and Microsoft does not own Customer's Output Content.
+
+### recoverable-progress
+
+- Philosophy line: **Chad philosophy therefore prefers recoverable progress over heroic overextension.**
+- Model: `google/gemini-3-pro-image-preview`
+- Routed provider: `google-ai-studio/global`
+- Generation cost reported by OpenRouter: `$0.137336`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `08-recoverable-progress--google-gemini-3-pro-image-preview.jpg`
+- Original generation SHA-256: `252d0340039a867622e20f185b949806dad0e7af308c434f28c5d6a9839b2326`
+- Published file: `recoverable-progress.jpg`
+- Published SHA-256: `252d0340039a867622e20f185b949806dad0e7af308c434f28c5d6a9839b2326`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Gemini API Additional Terms of Service — https://ai.google.dev/gemini-api/terms
+- Publication note: Google states that some Gemini API and Google AI Studio services generate original content and that Google will not claim ownership over that generated content; output may not be unique.
+
+### authorized-gate
+
+- Philosophy line: **No high-consequence actuator without an independently authorized gate in its causal past that can still say no.**
+- Model: `openai/gpt-5.4-image-2`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.05047`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `09-authorized-gate--openai-gpt-5-4-image-2.png`
+- Original generation SHA-256: `9f08f5ac73550628a128440323a892b871bb97ac48e1772dc7a302c82c815823`
+- Published file: `authorized-gate.png`
+- Published SHA-256: `9f08f5ac73550628a128440323a892b871bb97ac48e1772dc7a302c82c815823`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+### brake-engine-path
+
+- Philosophy line: **Do not put the brake on the same failure path as the engine.**
+- Model: `openai/gpt-5-image`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.06529`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `10-brake-engine-path--openai-gpt-5-image.png`
+- Original generation SHA-256: `4ce2e07ff23867f42126c09f9647dd55aea6eb80daf76a82b03ac6667854aa34`
+- Published file: `brake-engine-path.png`
+- Published SHA-256: `4ce2e07ff23867f42126c09f9647dd55aea6eb80daf76a82b03ac6667854aa34`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+### strongest-criticism
+
+- Philosophy line: **When testing an idea, use the strongest reasonable criticism you can find.**
+- Model: `black-forest-labs/flux.2-klein-4b`
+- Routed provider: `black-forest-labs`
+- Generation cost reported by OpenRouter: `$0.015`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32431592545`
+- Artifact: `chad-raster-art` (`9429338299`)
+- Original run file: `11-strongest-criticism--black-forest-labs-flux-2-klein-4b.png`
+- Original generation SHA-256: `c001859049098b233b05b73ca2e945fc00f7d1992d1bb2e94c42a0d59e3ff966`
+- Published file: `strongest-criticism.png`
+- Published SHA-256: `c001859049098b233b05b73ca2e945fc00f7d1992d1bb2e94c42a0d59e3ff966`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Black Forest Labs Developer Terms of Service — https://bfl.ai/legal/developer-terms-of-service
+- Publication note: Black Forest Labs states that, as between developer and BFL, the developer owns Output; outputs may carry Content Credentials or provenance data, which this exact-byte publication does not remove or alter.
 
 ## Why “annoned by”?
 
