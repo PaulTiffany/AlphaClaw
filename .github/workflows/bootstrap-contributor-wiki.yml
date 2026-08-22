@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/bootstrap-contributor-wiki.yml"
+      - "contributor/wiki-templates/**"
   gollum:
   workflow_dispatch:
 
@@ -20,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
 
@@ -53,11 +54,11 @@ jobs:
             cat > "$wiki/Contributor-Workspace.md" <<'EOF'
           # AlphaClaw Contributor Workspace
 
-          This is the low-friction human contribution surface for AlphaClaw and Docent.
+          This is a low-friction human development path. It is separate from AlphaClaw sensory ingress and from OmegaClaw runtime authority.
 
           You do not need command-line Git. Choose the page that best matches what you want to contribute:
 
-          - [[Domain Rule|Domain-Rule]] — a principle or boundary you think the system should respect.
+          - [[Domain Rule|Domain-Rule]] — a principle or boundary you think the project should respect.
           - [[Edge-Case Evaluation|Edge-Case-Evaluation]] — something surprising, confusing, fragile, or worth reproducing.
           - [[Provenance Log|Provenance-Log]] — a check of where a claim, result, or artifact came from.
 
@@ -69,7 +70,7 @@ jobs:
           4. Change it to `yes` only when the page says what you mean.
           5. Choose **Save Page**.
 
-          A ready save is compiled into a review-only pull request. It does not silently change `main`.
+          A ready save is compiled into a review-only pull request. It does not silently change `main`, run OmegaClaw, or grant agent authority.
 
           Each ready save is recorded separately by its exact Wiki commit and Markdown hash, so the three working pages may be reused later without erasing earlier contributions.
 
@@ -84,7 +85,7 @@ jobs:
           <!-- alphaclaw-contributor-workspace:v1 -->
           ## Contributor workspace
 
-          For the low-friction AlphaClaw / Docent contribution path, start at [[Contributor Workspace|Contributor-Workspace]].
+          For the low-friction human contribution path, start at [[Contributor Workspace|Contributor-Workspace]].
           EOF
           fi
 

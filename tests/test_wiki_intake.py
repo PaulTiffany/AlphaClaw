@@ -9,7 +9,9 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).parents[1]
-SPEC = importlib.util.spec_from_file_location("wiki_intake", ROOT / "ingress" / "wiki_intake.py")
+SPEC = importlib.util.spec_from_file_location(
+    "wiki_intake", ROOT / "contributor" / "wiki_intake.py"
+)
 assert SPEC is not None and SPEC.loader is not None
 wiki_intake = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = wiki_intake
@@ -51,6 +53,11 @@ def _init_wiki(path: Path) -> None:
     _git("init", cwd=path)
     _git("config", "user.name", "Sheila Example", cwd=path)
     _git("config", "user.email", "sheila@example.invalid", cwd=path)
+
+
+def test_wiki_intake_is_not_sensory_ingress() -> None:
+    assert not (ROOT / "ingress" / "wiki_intake.py").exists()
+    assert (ROOT / "contributor" / "wiki_intake.py").is_file()
 
 
 def test_parse_ready_domain_rule() -> None:

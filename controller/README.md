@@ -1,8 +1,8 @@
-# Omega controller utilities
+# Local Omega profile utilities
 
-This directory is **not AlphaClaw**.
+This directory is **not AlphaClaw** and not OmegaClaw.
 
-AlphaClaw is the sensory/prepend boundary in `ingress/`. These utilities are a separately auditable control-plane experiment for preparing an OmegaClaw working tree with reduced authority.
+AlphaClaw is the sensory/prepend boundary in `ingress/`. OmegaClaw itself is the pinned upstream `OmegaClaw-Core/` submodule. These utilities are a separately auditable experiment for preparing a disposable OmegaClaw working tree with reduced authority.
 
 ```text
 world / human
@@ -12,11 +12,11 @@ AlphaClaw sensory boundary
 media -> symbolic/text handoff
     |
     v
-OmegaClaw text inference
+upstream OmegaClaw text inference
 
 SEPARATE AUTHORITY PLANE:
 controller/omega_profile.py
-exact Omega source -> deterministic reduced-authority copy
+exact pinned Omega source -> deterministic reduced-authority copy
 ```
 
 The separation is intentional:
@@ -24,6 +24,18 @@ The separation is intentional:
 ```text
 perception != authority != inference
 ```
+
+## Upstream ownership boundary
+
+This repository does not document or claim ownership of OmegaClaw's normal internals.
+
+For OmegaClaw installation, operation, channels, providers, tools, architecture, and intended upstream behavior, use the documentation and source in `OmegaClaw-Core/` / `asi-alliance/OmegaClaw-Core`.
+
+This controller only owns its own narrow claim:
+
+> given the exact pinned upstream source shape we inspected, apply these explicit reductions or fail closed.
+
+If upstream Omega changes such that an expected source fragment no longer matches, the correct controller behavior is refusal and human review—not silent adaptation.
 
 ## Inspect upstream state
 
@@ -59,7 +71,7 @@ autonomous goal prompt:        removed
 conversation bodies in logs:   removed
 ```
 
-The controller refuses to transform an unexpected or dirty Omega source tree. It also uses exact-source substitutions so upstream mechanical drift becomes a failure requiring human review rather than a silent adaptation.
+The controller refuses to transform an unexpected or dirty Omega source tree. It uses exact-source substitutions so upstream mechanical drift becomes a visible failure.
 
 A real provider or WebSocket channel is an explicit controller invocation, for example:
 
@@ -78,11 +90,12 @@ That choice belongs to the outer controller/operator. AlphaClaw does not select 
 The intended testing order is:
 
 ```text
-1. inspect exact upstream source
-2. create disposable profiled copy
-3. mechanically test the copy locally without credentials
-4. only then add one explicitly chosen real inference provider if needed
-5. destroy the disposable run after the experiment
+1. read upstream Omega documentation for upstream behavior
+2. inspect the exact pinned source state we depend on
+3. create a disposable profiled copy
+4. mechanically test the copy locally without credentials
+5. only then add one explicitly chosen real inference provider if needed
+6. destroy the disposable run after the experiment
 ```
 
 There is no standing resident, cloud lifecycle controller, upstream watcher, automatic promotion path, or remote kill-switch protocol in this architecture.
