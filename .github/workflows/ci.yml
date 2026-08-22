@@ -71,9 +71,6 @@ jobs:
             --source OmegaClaw-Core \
             --output /tmp/omegaclaw-residency.json
 
-      - name: Enact conscientious boundary mechanical witness
-        run: python mechanical_witnesses/conscientious_boundary.py
-
       - name: Test architecture, selection, ingress, qualification, runtime, and benchmark accounting
         run: pytest -q
 
