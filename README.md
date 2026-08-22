@@ -1,39 +1,40 @@
 # AlphaClaw
 
-**Multimodal at the boundary. Text inference in the loop. Authority somewhere else.**
+**Multimodal at the boundary. Text inference in the loop. Human authority around both.**
 
 AlphaClaw is a small sensory tool for a text-only reasoning process.
 
-It does not own the reasoning loop, lifecycle, memory, permissions, deployment, model selection, or recursive authorization. Its job is narrower:
+The repository also contains two deliberately separate supporting surfaces: a pedagogical human-development path and a local authority-reduction experiment for one exact pinned OmegaClaw source tree. They should not be confused with AlphaClaw itself.
 
 ```text
+1. PERCEPTION
 human / world
-    |
-    v
-AlphaClaw sensory boundary
-optional one multimodal inference
-observation + interpretation + uncertainty + provenance
-    |
-    v
-fixed inert text/data prepend
-    |
-    v
-OmegaClaw text inference
+    -> AlphaClaw sensory boundary
+    -> inert text/data handoff
+
+2. INFERENCE
+text handoff
+    -> upstream OmegaClaw
+
+3. HUMAN DEVELOPMENT
+contributor Wiki
+    -> structured review proposal
+    -> human review
 ```
 
-For already-textual input, AlphaClaw preserves the evidence and wraps it in a fixed data-only boundary envelope. For non-text evidence, one external sensory inference first translates the evidence into a symbolic/text handoff. Omega then receives text.
+The first is AlphaClaw proper. The second is an upstream dependency. The third is a pedagogical on-ramp for people who may not yet use command-line Git.
 
-## The boundary
+## 1. AlphaClaw: sensory boundary
 
-`ingress/prepend.py` is the core interface:
+`ingress/` contains the AlphaClaw runtime idea.
+
+For already-textual input, `ingress/prepend.py` preserves the evidence and wraps it in a fixed data-only boundary envelope:
 
 ```bash
 python ingress/prepend.py --text "your message"
 ```
 
-It returns JSON data. Payloads that look like MeTTa, shell, code, prompts, or commands remain strings. AlphaClaw does not import or evaluate them.
-
-For an image, a sensory adapter may run once before the prepend:
+For non-text evidence, one external sensory inference may translate the evidence before that prepend:
 
 ```bash
 python ingress/openrouter_image.py \
@@ -43,59 +44,71 @@ python ingress/openrouter_image.py \
 python ingress/prepend.py --input-file handoff.json
 ```
 
-The sensory handoff separates:
+The sensory handoff separates observation, interpretation, uncertainty, unresolved evidence, entities/relations, and provenance.
 
-```text
-observation
-interpretation
-uncertainty
-unresolved evidence
-entities / relations
-provenance
-```
+The multimodal model is a perceptual translator, not an agent and not an authority source.
 
-The multimodal model is therefore a perceptual translator, not an agent and not an authority source.
+AlphaClaw does not own the reasoning loop, lifecycle, memory, permissions, deployment, model selection, or recursive authorization.
 
-## What AlphaClaw does not do
+## 2. OmegaClaw: pinned upstream dependency
 
-AlphaClaw does not:
+This repository does **not** implement OmegaClaw.
 
-- run a resident agent;
-- decide how many inference cycles Omega receives;
-- choose or widen Omega tools;
-- persist Omega memory;
-- wake Omega autonomously;
-- manage cloud deployments;
-- inspect upstream releases on a schedule;
-- select providers for Omega;
-- certify Omega as safe;
-- let model judgment authorize deployment or authority growth.
+`OmegaClaw-Core/` is a pristine Git submodule pinned to one exact revision of the upstream `asi-alliance/OmegaClaw-Core` project. AlphaClaw does not silently fork it, rebrand its internals, or treat its implementation as AlphaClaw code.
 
-Those concerns must remain outside the sensory boundary.
+For OmegaClaw installation, operation, internal architecture, channels, providers, tools, and normal behavior, refer to the upstream OmegaClaw documentation and source. Questions or defects intrinsic to OmegaClaw belong upstream.
 
-## Separate Omega controller experiment
+What this repository owns is narrower:
 
-`controller/` contains a separately auditable deterministic utility for inspecting one exact OmegaClaw tree and producing a reduced-authority local working copy.
+- the exact upstream revision it chooses to test against;
+- the sensory interface presented to a text-reasoning process;
+- a separate deterministic experiment for reducing authority in a disposable local Omega working copy.
 
-It is deliberately **not AlphaClaw**.
+That last experiment lives in `controller/`. It is deliberately **not AlphaClaw**. It is also not an upstream OmegaClaw implementation; it is our local transformation utility. See `controller/README.md`.
 
 ```text
 perception != authority != inference
 ```
 
-The controller defaults to a credential-free mock profile and fails closed if the pinned upstream mechanics drift. See `controller/README.md`.
+## 3. Contributor Wiki: human developmental on-ramp
 
-The repository keeps `OmegaClaw-Core/` as a pristine Git submodule so the sensory interface and any controller experiment can be tested against an exact upstream source without silently folding Alpha code into Omega.
+`contributor/` and the two contributor-Wiki workflows are intentionally separate from both AlphaClaw perception and OmegaClaw inference.
 
-## Local-first testing
-
-Testing should be disposable and local wherever possible:
+Their purpose is pedagogical: let a person contribute useful judgment and evidence before they know command-line Git, branches, or pull requests.
 
 ```text
-exact pinned source
+edit or dictate into a Wiki template
+          |
+          v
+Ready for review: yes
+          |
+          v
+mechanical validation + exact provenance
+          |
+          v
+review-only branch / pull request
+          |
+          v
+human decides whether to merge
+```
+
+A Wiki edit does **not** grant agent authority, run OmegaClaw, select tools, change inference budgets, or modify `main` directly.
+
+The contributor supplies the judgment and evidence. Automation carries syntax, provenance, and review plumbing.
+
+Start at `contributor/README.md`.
+
+## Local-first controller experiments
+
+`controller/` contains separately auditable utilities for inspecting the exact pinned Omega source and producing a reduced-authority local copy. The default profile is credential-free and fail-closed against unexpected source drift.
+
+Testing should remain disposable and local wherever possible:
+
+```text
+exact pinned upstream source
       |
       v
-optional deterministic controller profile
+optional deterministic profile
       |
       v
 local bounded experiment
@@ -104,7 +117,7 @@ local bounded experiment
 process/container destroyed
 ```
 
-CI should test deterministic source properties and transformations without provider secrets. Live-provider experiments belong at the human-operated edge, not in standing repository automation.
+Live-provider experiments belong at the human-operated edge, not in standing repository automation.
 
 ## Development invariant
 
@@ -112,16 +125,16 @@ Before adding a mechanism, capability, workflow, resident process, or controller
 
 > **WHY DO WE NEED THAT?**
 
-If the research question can be answered without it, leave it absent.
+The question applies differently to the three surfaces. A contributor workflow may be justified because it reduces the human learning barrier even though AlphaClaw runtime does not need it. A runtime capability must justify the authority it adds.
 
-**Alpha senses. Omega reasons. Authority stays outside both.**
+**Alpha senses. Omega reasons. Humans develop and authorize.**
 
 ## Philosophy
 
-`PHILOSOPHY.md` is the normative human-facing companion to the mechanical boundary. It includes the repository's broader commitments around fallibility, recoverability, provenance, operator slack, capability versus permission, and bounded recursive improvement.
+`PHILOSOPHY.md` is the normative human-facing companion to these boundaries. It includes commitments around fallibility, recoverability, provenance, operator slack, capability versus permission, and bounded recursive improvement.
 
-## License
+## License and attribution
 
 AlphaClaw original code: MIT © 2026 Paul Carver Tiffany III.
 
-`OmegaClaw-Core` remains an upstream dependency and retains its own upstream license and notices.
+`OmegaClaw-Core` is upstream work and retains its own upstream license, authorship, documentation, and notices.

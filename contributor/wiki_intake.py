@@ -1,3 +1,9 @@
+"""Compile explicitly ready contributor-Wiki pages into review records.
+
+This is pedagogical development plumbing. It is not AlphaClaw sensory ingress,
+not an OmegaClaw tool, and not a runtime authority path.
+"""
+
 from __future__ import annotations
 
 import argparse
@@ -207,7 +213,9 @@ def compile_wiki(wiki_dir: Path, output_dir: Path, *, repository: str) -> list[P
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Compile ready AlphaClaw Wiki pages into review records")
+    parser = argparse.ArgumentParser(
+        description="Compile ready contributor Wiki pages into review records"
+    )
     parser.add_argument("--wiki-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--repository", required=True)
