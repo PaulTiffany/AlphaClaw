@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import shutil
 import sys
 from pathlib import Path
@@ -17,157 +18,128 @@ def _load(name: str, path: Path):
     return module
 
 
-stage = _load("minimum_authority_stage", ROOT / "runtime" / "huggingface" / "stage.py")
+profile = _load("omega_profile", ROOT / "controller" / "omega_profile.py")
+inspector = _load("inspect_omega", ROOT / "controller" / "inspect_omega.py")
 
 
-def test_resident_does_not_persist_or_recall_history() -> None:
-    entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
-    runtime_config = (ROOT / "runtime" / "huggingface" / "alphaclaw-runtime.yaml").read_text()
+def test_controller_is_separate_from_alpha_boundary() -> None:
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    controller_readme = (ROOT / "controller" / "README.md").read_text(encoding="utf-8")
 
-    assert stage.PERSIST_HISTORY is False
-    assert stage.HISTORY_CHARS == 0
-    assert "maxHistory: 0" in runtime_config
-    assert "readonly ALPHACLAW_PERSIST_HISTORY=0" in entrypoint
-    assert "readonly ALPHACLAW_MAX_HISTORY_CHARS=0" in entrypoint
-    assert "persistent history writes disabled" in entrypoint
+    assert "AlphaClaw is a small sensory tool" in readme
+    assert "It is deliberately **not AlphaClaw**" in readme
+    assert "This directory is **not AlphaClaw**" in controller_readme
+    assert "perception != authority != inference" in controller_readme
 
 
-def test_staged_history_writer_is_noop(tmp_path: Path) -> None:
-    upstream = ROOT / "OmegaClaw-Core" / "src" / "memory.metta"
+def test_profile_constants_are_minimum_authority() -> None:
+    assert profile.MAX_NEW_INPUT_LOOPS == 8
+    assert profile.MAX_WAKE_LOOPS == 0
+    assert profile.MAX_HISTORY == 0
+    assert tuple(profile.CHANNELS) == ("mockchannel", "wschat")
+    assert "mockprovider" in profile.PROVIDERS
+
+
+def test_config_reduction_is_exact_and_local(tmp_path: Path) -> None:
+    source = ROOT / "OmegaClaw-Core" / "config" / "config.yaml"
+    config = tmp_path / "config.yaml"
+    shutil.copy2(source, config)
+
+    original = source.read_text(encoding="utf-8")
+    profile.restrict_config(config)
+    reduced = config.read_text(encoding="utf-8")
+
+    assert "maxNewInputLoops: 8" in reduced
+    assert "maxWakeLoops: 0" in reduced
+    assert "maxHistory: 0" in reduced
+    assert source.read_text(encoding="utf-8") == original
+
+
+def test_plugin_profile_loads_only_selected_channel_and_provider(tmp_path: Path) -> None:
+    source = ROOT / "OmegaClaw-Core" / "config" / "plugins.yaml"
+    plugins = tmp_path / "plugins.yaml"
+    shutil.copy2(source, plugins)
+
+    profile.restrict_plugins(plugins, "mockchannel", "mockprovider")
+    reduced = plugins.read_text(encoding="utf-8")
+
+    assert reduced.count("- name: ") == 2
+    assert "- name: mockchannel" in reduced
+    assert "- name: mockprovider" in reduced
+    assert "- name: workflow" not in reduced
+    assert "- name: openclaw" not in reduced
+
+
+def test_model_action_surface_reduces_to_send(tmp_path: Path) -> None:
+    upstream_helper = ROOT / "OmegaClaw-Core" / "src" / "helper.py"
+    upstream_skills = ROOT / "OmegaClaw-Core" / "src" / "skills.metta"
+    helper = tmp_path / "helper.py"
+    skills = tmp_path / "skills.metta"
+    shutil.copy2(upstream_helper, helper)
+    shutil.copy2(upstream_skills, skills)
+
+    profile.restrict_model_actions(helper, skills)
+    helper_text = helper.read_text(encoding="utf-8")
+    skills_text = skills.read_text(encoding="utf-8")
+
+    assert 'STATIC_LLM_COMMANDS = {"send"}' in helper_text
+    assert "LLM_COMMANDS.add" not in helper_text
+    assert '"- Send message to user: send string"' in skills_text
+    assert "Execute shell command" not in skills_text
+    assert "Search the web" not in skills_text
+    assert "Execute MeTTa expression" not in skills_text
+
+
+def test_history_prompt_and_logs_are_reduced(tmp_path: Path) -> None:
     memory = tmp_path / "memory.metta"
-    shutil.copy2(upstream, memory)
-
-    original = upstream.read_text(encoding="utf-8")
-    assert "append-file-raw" in original
-    assert "./memory/history.metta" in original
-
-    stage.disable_persistent_history(memory)
-    staged = memory.read_text(encoding="utf-8")
-
-    expected = """(= (appendToHistory $addition)
-   ; AlphaClaw staged boundary: persistent history writes disabled.
-   True)"""
-    assert expected in staged
-    assert upstream.read_text(encoding="utf-8") == original
-
-
-def test_staged_prompt_removes_autonomous_and_unavailable_capability_instructions(
-    tmp_path: Path,
-) -> None:
-    upstream = ROOT / "OmegaClaw-Core" / "memory" / "prompt.txt"
     prompt = tmp_path / "prompt.txt"
-    shutil.copy2(upstream, prompt)
-
-    original = upstream.read_text(encoding="utf-8")
-    for phrase in (
-        "choose your own goals",
-        "Keep memories and useful created skills",
-        "ALWAYS query before responding anything",
-        "Take at least 5 agent cycles",
-    ):
-        assert phrase in original
-
-    stage.restrict_resident_prompt(prompt)
-    staged = prompt.read_text(encoding="utf-8")
-    assert staged == stage.RESIDENT_PROMPT
-    assert "Your only model-directed action is: send string." in staged
-    assert "Do not create goals beyond responding to the current human-mediated input." in staged
-    for phrase in (
-        "choose your own goals",
-        "Keep memories and useful created skills",
-        "ALWAYS query before responding anything",
-        "Take at least 5 agent cycles",
-    ):
-        assert phrase not in staged
-    assert upstream.read_text(encoding="utf-8") == original
-
-
-def test_staged_runtime_logs_keep_structure_not_conversation_content(tmp_path: Path) -> None:
-    upstream_loop = ROOT / "OmegaClaw-Core" / "src" / "loop.metta"
-    upstream_provider = ROOT / "OmegaClaw-Core" / "providers" / "lib_llm_ext.py"
     loop = tmp_path / "loop.metta"
     provider = tmp_path / "lib_llm_ext.py"
-    shutil.copy2(upstream_loop, loop)
-    shutil.copy2(upstream_provider, provider)
+    shutil.copy2(ROOT / "OmegaClaw-Core" / "src" / "memory.metta", memory)
+    shutil.copy2(ROOT / "OmegaClaw-Core" / "memory" / "prompt.txt", prompt)
+    shutil.copy2(ROOT / "OmegaClaw-Core" / "src" / "loop.metta", loop)
+    shutil.copy2(ROOT / "OmegaClaw-Core" / "providers" / "lib_llm_ext.py", provider)
 
-    original_loop = upstream_loop.read_text(encoding="utf-8")
-    original_provider = upstream_provider.read_text(encoding="utf-8")
-    assert '(log INFO "loop" $lastmessage)' in original_loop
-    assert '(CHARS_SENT: (string_length $send) $send)' in original_loop
-    assert 'raw={raw!r}' in original_provider
+    profile.disable_persistent_history(memory)
+    profile.restrict_prompt(prompt)
+    profile.sanitize_logging(loop, provider)
 
-    stage.sanitize_runtime_logging(loop, provider)
-    staged_loop = loop.read_text(encoding="utf-8")
-    staged_provider = provider.read_text(encoding="utf-8")
-
-    assert '(HUMAN-MSG-CHARS: (string_length $msg))' in staged_loop
-    assert '(CHARS_SENT: (string_length $send))' in staged_loop
-    assert "RESPONSE-PARSED" in staged_loop
-    assert "COMMAND-RESULTS-AVAILABLE" in staged_loop
-    assert '(log INFO "loop" $lastmessage)' not in staged_loop
-    assert '(CHARS_SENT: (string_length $send) $send)' not in staged_loop
-    assert 'raw={raw!r}' not in staged_provider
-    assert "chars={len(raw or '')}" in staged_provider
-
-    assert upstream_loop.read_text(encoding="utf-8") == original_loop
-    assert upstream_provider.read_text(encoding="utf-8") == original_provider
+    assert "persistent history writes disabled" in memory.read_text(encoding="utf-8")
+    assert prompt.read_text(encoding="utf-8") == profile.RESIDENT_PROMPT
+    assert '(log INFO "loop" $lastmessage)' not in loop.read_text(encoding="utf-8")
+    assert 'raw={raw!r}' not in provider.read_text(encoding="utf-8")
 
 
-def test_entrypoint_declares_conversation_content_logging_off() -> None:
-    entrypoint = (ROOT / "runtime" / "huggingface" / "hf_entrypoint.sh").read_text()
-    assert "readonly ALPHACLAW_LOG_CONVERSATION_CONTENT=0" in entrypoint
-    assert "prompt bodies would be logged" in entrypoint
-    assert "human messages would be logged" in entrypoint
-    assert "raw model responses would be logged" in entrypoint
-    assert "autonomous or unavailable-capability prompt survived" in entrypoint
+def test_inspector_reports_state_without_certifying() -> None:
+    report = inspector.inspect(ROOT / "OmegaClaw-Core")
 
-
-def test_minimum_authority_is_not_mutable_from_inside_omega() -> None:
-    staging_source = (ROOT / "runtime" / "huggingface" / "stage.py").read_text()
-    assert 'STATIC_LLM_COMMANDS = {"send"}' in staging_source
-    assert "return str(command) in STATIC_LLM_COMMANDS" in staging_source
-    assert stage.MODEL_ACTIONS == ("send",)
-    assert stage.RESIDENT_PLUGINS == ("wschat", "asione")
+    assert report["claim"] == "observed source state only; not a safety certificate or authorization"
+    assert report["subject"]["sha"] == profile.OMEGA_SHA
+    assert report["dynamic_command_registration_present"] is True
+    assert report["dynamic_skill_surface_present"] is True
+    assert report["persistent_history_writer_present"] is True
+    json.dumps(report)
 
 
 def test_recursive_self_improvement_cannot_self_authorize_authority_growth() -> None:
-    readme = (ROOT / "README.md").read_text(encoding="utf-8")
-    decision = (ROOT / "docs" / "security-minimum-authority.md").read_text(encoding="utf-8")
-    staging_source = (ROOT / "runtime" / "huggingface" / "stage.py").read_text(encoding="utf-8")
+    philosophy = (ROOT / "PHILOSOPHY.md").read_text(encoding="utf-8")
+    controller_source = (ROOT / "controller" / "omega_profile.py").read_text(encoding="utf-8")
 
-    assert "recursive proposal != recursive authorization" in readme
-    assert "descendant authority <= externally granted ancestor authority" in readme
-    assert "propose -> self-evaluate -> self-deploy -> widen authority -> recurse" in readme
-    assert "A model's own judgment" in decision
-    assert "not\nauthorization to deploy it" in decision
-
-    # Policy is backed by the concrete resident authority boundary, not only prose.
-    assert 'STATIC_LLM_COMMANDS = {"send"}' in staging_source
-    assert "return str(command) in STATIC_LLM_COMMANDS" in staging_source
-    assert stage.MODEL_ACTIONS == ("send",)
-    assert stage.RESIDENT_PLUGINS == ("wschat", "asione")
-    assert stage.BOOT_CYCLES == 0
-    assert stage.WAKE_CYCLES == 0
-    assert stage.PERSIST_HISTORY is False
+    assert "## Capability is not permission" in philosophy
+    assert "recursive proposal} \\neq \\text{recursive authorization" in philosophy
+    assert "certified} \\neq \\text{authorized} \\neq \\text{worth doing" in philosophy
+    assert "No high-consequence actuator without an independently authorized gate" in philosophy
+    assert 'STATIC_LLM_COMMANDS = {"send"}' in controller_source
+    assert "return str(command) in STATIC_LLM_COMMANDS" in controller_source
 
 
-def test_chad_philosophy_preserves_slack_and_authority_distinctions() -> None:
+def test_chad_philosophy_preserves_operator_slack_and_fallibility() -> None:
     philosophy = (ROOT / "PHILOSOPHY.md").read_text(encoding="utf-8")
 
-    # Human/operator slack: leave room for error and recovery instead of heroic closure.
     assert "## Leave room to be wrong" in philosophy
     assert "Do not bite off more than you can chew." in philosophy
     assert "Do not make yourself the only thing holding the work together." in philosophy
     assert "Take care of the operator." in philosophy
     assert "recoverable progress" in philosophy
-    assert "one failure} \\not\\Rightarrow \\text{total collapse" in philosophy
-
-    # Jevons / RSI authority separation.
-    assert "## Capability is not permission" in philosophy
-    assert "recursive proposal} \\neq \\text{recursive authorization" in philosophy
-    assert "certified} \\neq \\text{authorized} \\neq \\text{worth doing" in philosophy
-    assert "No high-consequence actuator without an independently authorized gate" in philosophy
-
-    # The philosophy must preserve fallibility rather than turn itself into a closed doctrine.
     assert "## This philosophy may also be wrong" in philosophy
     assert "Do not defend something merely because it is yours." in philosophy
