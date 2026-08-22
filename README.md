@@ -1,147 +1,39 @@
 # AlphaClaw
 
-**Multimodal at the boundary. Symbolic in the loop. Authority outside the loop.**
+**Multimodal at the boundary. Text inference in the loop. Authority somewhere else.**
 
-AlphaClaw is a small boundary around a pinned **OmegaClaw** resident. It is not a second agent,
-not an Omega fork, and not an Alpha process living inside Omega's symbolic state.
+AlphaClaw is a small sensory tool for a text-only reasoning process.
 
-```text
-human / media
-      |
-      v
-external Python ingress
-  optional one multimodal translation
-  + fixed Alpha directions
-      |
-      v
-minimum-authority OmegaClaw resident
-  ASI:One / asi1-mini
-  boot: 0 inference cycles
-  new human input: 8 cycles
-  scheduled wake: 0 cycles
-  model action: send only
-  persistent history: off
-```
-
-## The rule
-
-AlphaClaw does three things:
-
-1. translate new non-text evidence once when needed;
-2. prepend a fixed boundary contract once;
-3. mechanically bound the resident Omega trajectory and authority surface.
-
-Everything else belongs to OmegaClaw.
-
-There is no `alphaclaw.metta`, no custom Alpha `run.metta`, no Alpha library inside PeTTa, and no
-Alpha callback that Omega can invoke. If the resident needs more evidence, it waits for another
-human-mediated ingress.
-
-## Pinned Omega
-
-`OmegaClaw-Core/` is a pristine Git submodule pinned to an exact upstream commit. Hugging Face
-staging copies the complete pinned source tree except Git metadata. The upstream submodule itself
-is never edited.
-
-The deployed copy deliberately narrows authority. Source implementations may remain present in the
-pinned tree without being model-callable.
-
-The HF configuration is:
-
-```yaml
-maxNewInputLoops: 8
-maxWakeLoops: 0
-maxHistory: 0
-```
-
-Provider and model are bound at the process boundary as `ASIOne` / `asi1-mini`.
-
-## Human-start gate
-
-Pinned Omega normally begins with `maxNewInputLoops` available at process startup. AlphaClaw starts
-with zero instead. Every genuinely new human message, including one received on the first loop
-iteration, grants the configured finite trajectory.
+It does not own the reasoning loop, lifecycle, memory, permissions, deployment, model selection, or recursive authorization. Its job is narrower:
 
 ```text
-boot             -> 0 cycles
-new human input  -> 8 cycles
-scheduled wake   -> 0 useful inference cycles
+human / world
+    |
+    v
+AlphaClaw sensory boundary
+optional one multimodal inference
+observation + interpretation + uncertainty + provenance
+    |
+    v
+fixed inert text/data prepend
+    |
+    v
+OmegaClaw text inference
 ```
 
-No second counter is introduced.
+For already-textual input, AlphaClaw preserves the evidence and wraps it in a fixed data-only boundary envelope. For non-text evidence, one external sensory inference first translates the evidence into a symbolic/text handoff. Omega then receives text.
 
-## Minimum authority
+## The boundary
 
-The first resident experiment needs to reason over human-supplied evidence and communicate the
-result. It does not need arbitrary shell, web search, file mutation, arbitrary MeTTa evaluation,
-dynamic model commands, or long-term memory.
-
-The staged resident therefore exposes exactly one model-directed action:
-
-```text
-send
-```
-
-Omega's command parser rejects other model output as an unknown skill. Dynamic command registration
-cannot widen the set from inside mutable Omega state.
-
-Only two Omega plugins are loaded:
-
-```text
-wschat   # the configured human communication channel
-asione   # the configured resident inference provider
-```
-
-Workflow/OpenClaw plugins, alternate providers, and unused communication channels remain in the
-pinned source tree but are not loaded into the resident.
-
-Persistent history writes are disabled in the staged copy and `maxHistory: 0` prevents historical
-recall. `remember`, `query`, `episodes`, and `pin` are not model-callable.
-
-The ASI:One key is still necessarily present in the resident provider process. The security control
-is therefore to remove model-directed code execution and alternate network/tool sinks rather than
-pretend the credential is isolated from the process that must use it.
-
-## Bounded recursive self-improvement
-
-AlphaClaw does not treat recursive self-improvement as recursive authorization.
-
-A resident may reason about, propose, compare, or internally represent improvements. It may not use
-its own mutable state, self-evaluation, or recursive descendants to grant those improvements more
-inference, actions, plugins, credentials, persistence, network reach, Alpha access, or authority over
-the guardrail itself.
-
-```text
-recursive proposal != recursive authorization
-
-descendant authority <= externally granted ancestor authority
-```
-
-The forbidden closure is:
-
-```text
-propose -> self-evaluate -> self-deploy -> widen authority -> recurse
-```
-
-Any promotion that changes the authority surface must cross an external review/authorization
-boundary and preserve or reduce the authority already granted to the resident. The model's own
-judgment that a modification is safe or useful is evidence, not deployment authority.
-
-See `docs/security-minimum-authority.md` for the security decision.
-
-## External ingress
-
-For text, `ingress/prepend.py` produces a data-only JSON envelope containing the fixed Alpha
-boundary contract and the human-mediated payload:
+`ingress/prepend.py` is the core interface:
 
 ```bash
 python ingress/prepend.py --text "your message"
 ```
 
-The whole output is JSON data, not a MeTTa form. Even a payload that looks like MeTTa remains a JSON
-string; Alpha never imports or evaluates it.
+It returns JSON data. Payloads that look like MeTTa, shell, code, prompts, or commands remain strings. AlphaClaw does not import or evaluate them.
 
-For non-text evidence, use an external one-call translator first:
+For an image, a sensory adapter may run once before the prepend:
 
 ```bash
 python ingress/openrouter_image.py \
@@ -151,36 +43,82 @@ python ingress/openrouter_image.py \
 python ingress/prepend.py --input-file handoff.json
 ```
 
-The multimodal credential belongs to that external ingress process, not to the Omega resident. The
-handoff is fixed before Omega sees it.
+The sensory handoff separates:
 
-## Hugging Face resident
+```text
+observation
+interpretation
+uncertainty
+unresolved evidence
+entities / relations
+provenance
+```
 
-`runtime/huggingface/stage.py` deterministically stages the pinned Omega source and the small HF
-boundary files. The generated image contains no `/PeTTa/repos/AlphaClaw` library; the runtime
-entrypoint fails closed if one appears.
+The multimodal model is therefore a perceptual translator, not an agent and not an authority source.
 
-Before Omega starts, the resident verifies the loop grant, plugin allowlist, model-action allowlist,
-history non-persistence, stock plugin-loader semantics, WSS transport, and credential allowlist.
-The controller independently scrubs forbidden alternate-provider/ingress credentials before
-restart and revokes runtime credentials on OFF.
+## What AlphaClaw does not do
 
-The public Space surface is health/status only. The Space remains a deployment target, not an Alpha
-agent.
+AlphaClaw does not:
+
+- run a resident agent;
+- decide how many inference cycles Omega receives;
+- choose or widen Omega tools;
+- persist Omega memory;
+- wake Omega autonomously;
+- manage cloud deployments;
+- inspect upstream releases on a schedule;
+- select providers for Omega;
+- certify Omega as safe;
+- let model judgment authorize deployment or authority growth.
+
+Those concerns must remain outside the sensory boundary.
+
+## Separate Omega controller experiment
+
+`controller/` contains a separately auditable deterministic utility for inspecting one exact OmegaClaw tree and producing a reduced-authority local working copy.
+
+It is deliberately **not AlphaClaw**.
+
+```text
+perception != authority != inference
+```
+
+The controller defaults to a credential-free mock profile and fails closed if the pinned upstream mechanics drift. See `controller/README.md`.
+
+The repository keeps `OmegaClaw-Core/` as a pristine Git submodule so the sensory interface and any controller experiment can be tested against an exact upstream source without silently folding Alpha code into Omega.
+
+## Local-first testing
+
+Testing should be disposable and local wherever possible:
+
+```text
+exact pinned source
+      |
+      v
+optional deterministic controller profile
+      |
+      v
+local bounded experiment
+      |
+      v
+process/container destroyed
+```
+
+CI should test deterministic source properties and transformations without provider secrets. Live-provider experiments belong at the human-operated edge, not in standing repository automation.
 
 ## Development invariant
 
-Before adding or restoring a capability, ask:
+Before adding a mechanism, capability, workflow, resident process, or controller layer, ask:
 
-```text
-WHY DO WE NEED THAT?
-```
+> **WHY DO WE NEED THAT?**
 
-If the minimum experiment works without it, leave it absent. If a change requires Alpha code inside
-Omega's mutable state, expands model-directed authority, changes plugin semantics, or adds a second
-lifecycle authority, reject it until a minimal control experiment proves the requirement.
+If the research question can be answered without it, leave it absent.
 
-**Alpha is a gate, not a god.**
+**Alpha senses. Omega reasons. Authority stays outside both.**
+
+## Philosophy
+
+`PHILOSOPHY.md` is the normative human-facing companion to the mechanical boundary. It includes the repository's broader commitments around fallibility, recoverability, provenance, operator slack, capability versus permission, and bounded recursive improvement.
 
 ## License
 

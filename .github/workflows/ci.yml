@@ -10,127 +10,43 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           submodules: recursive
-          fetch-depth: 0
+          fetch-depth: 1
           persist-credentials: false
 
       - name: Verify pinned upstream OmegaClaw
         run: |
-          test -f OmegaClaw-Core/run.metta
-          test -f OmegaClaw-Core/lib_omegaclaw.metta
-          git submodule status --recursive
+          test "$(git -C OmegaClaw-Core rev-parse HEAD)" = \
+            "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
-      - name: Verify Alpha stays outside Omega
-        run: |
-          test ! -e alphaclaw.metta
-          test ! -e run.metta
-          test ! -e docker/Dockerfile.overlay
-          test ! -e scripts/install-into-petta.sh
-          test -f ingress/prepend.py
-
-      - name: Validate shell bootstrap
-        run: bash -n runtime/huggingface/hf_entrypoint.sh
-
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
         with:
           python-version: "3.11"
 
-      - name: Install test tooling
-        run: python -m pip install pytest ruff
+      - name: Install local test tooling
+        run: python -m pip install pytest==9.1.1 ruff==0.16.4
 
-      - name: Lint AlphaClaw, certification, selection, ingress, qualification, runtime, and benchmark lab
-        run: ruff check tests certification selection ingress qualification runtime benchmarks
+      - name: Lint sensory boundary and separate controller
+        run: ruff check ingress controller tests
 
-      - name: Certify pinned OmegaClaw residency contract
-        run: |
-          python certification/certify.py \
-            --source OmegaClaw-Core \
-            --output /tmp/omegaclaw-residency.json
-
-      - name: Test architecture, selection, ingress, qualification, runtime, and benchmark accounting
+      - name: Run deterministic tests
         run: pytest -q
 
-      - name: Dry-stage Hugging Face benchmark Space
+      - name: Dry-profile Omega locally with no credentials
         run: |
-          tmp="$(mktemp -d)"
-          python - <<'PY' "$tmp"
-          import importlib.util
-          import sys
-          from pathlib import Path
-
-          destination = Path(sys.argv[1])
-          source = Path("benchmarks/huggingface/sync_space.py")
-          spec = importlib.util.spec_from_file_location("sync_space", source)
-          module = importlib.util.module_from_spec(spec)
-          assert spec.loader is not None
-          spec.loader.exec_module(module)
-          module.stage(destination)
-          for required in ("Dockerfile", "app.py", "analyze.py", "requirements.txt", "README.md", "LICENSE"):
-              assert (destination / required).is_file(), required
-          PY
-
-      - name: Dry-stage minimum-authority Omega resident Space
-        run: |
-          tmp="$(mktemp -d)"
-          python runtime/huggingface/stage.py --destination "$tmp"
-          for required in \
-            Dockerfile \
-            Dockerfile.residency \
-            README.md \
-            LICENSE \
-            alphaclaw-runtime.yaml \
-            hf_entrypoint.sh \
-            health.py; do
-            test -f "$tmp/$required"
-          done
-          test ! -e "$tmp/alphaclaw.metta"
-          test ! -e "$tmp/run.metta"
-          test ! -e "$tmp/ingress"
-          test ! -e "$tmp/OmegaClaw-Core/.git"
-          test ! -e "$tmp/AlphaClaw"
-          test -f "$tmp/OmegaClaw-Core/run.metta"
-          test -f "$tmp/OmegaClaw-Core/Autotests/mock/comm.py"
-
-          loop="$tmp/OmegaClaw-Core/src/loop.metta"
-          helper="$tmp/OmegaClaw-Core/src/helper.py"
-          skills="$tmp/OmegaClaw-Core/src/skills.metta"
-          plugins="$tmp/OmegaClaw-Core/config/plugins.yaml"
-
-          test "$(grep -Fc '(change-state! &loops 0)' "$loop")" = 1
-          test "$(grep -Fc '(change-state! &loops (maxNewInputLoops))' "$loop")" = 1
-          ! grep -Fq '(and (> $k 1) $msgnew)' "$loop"
-          grep -Fq 'collapse (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"
-          if grep -Fq 'once (eval (loadOmegaClawPlugin))' "$tmp/OmegaClaw-Core/src/plugin.metta"; then
-            echo "staged Omega plugin loader was modified" >&2
-            exit 1
-          fi
-
-          test "$(grep -c '^- name:' "$plugins")" = 2
-          grep -Fq -- '- name: wschat' "$plugins"
-          grep -Fq -- '- name: asione' "$plugins"
-          ! grep -Fq -- '- name: workflow' "$plugins"
-          ! grep -Fq -- '- name: openclaw' "$plugins"
-          ! grep -Fq -- '- name: openrouter' "$plugins"
-
-          grep -Fq 'STATIC_LLM_COMMANDS = {"send"}' "$helper"
-          ! grep -Fq 'LLM_COMMANDS.add' "$helper"
-          grep -Fq '(= (getSkills)' "$skills"
-          grep -Fq '"- Send message to user: send string"' "$skills"
-          ! grep -Fq 'Execute shell command' "$skills"
-          ! grep -Fq 'Search the web' "$skills"
-          ! grep -Fq 'Execute MeTTa expression' "$skills"
-          grep -Fq 'maxHistory: 0' "$tmp/alphaclaw-runtime.yaml"
-
-          PYTHONPATH="$tmp/OmegaClaw-Core" python - <<'PY' "$tmp"
-          from src import helper
-
-          assert helper.STATIC_LLM_COMMANDS == {"send"}
-          assert helper.LLM_COMMANDS == {"send"}
-          assert helper.add_llm_command("shell") is False
-          assert helper.LLM_COMMANDS == {"send"}
-          assert "UNKNOWN_SKILL_CALL" in helper.balance_parentheses("shell env")
-          PY
+          destination="$(mktemp -d)/omegaclaw-profiled"
+          python controller/omega_profile.py \
+            --source OmegaClaw-Core \
+            --destination "$destination"
+          grep -Fq 'maxNewInputLoops: 8' "$destination/config/config.yaml"
+          grep -Fq 'maxWakeLoops: 0' "$destination/config/config.yaml"
+          grep -Fq 'maxHistory: 0' "$destination/config/config.yaml"
+          grep -Fq 'STATIC_LLM_COMMANDS = {"send"}' "$destination/src/helper.py"
+          test "$(grep -c '^- name:' "$destination/config/plugins.yaml")" = 2
+          grep -Fq -- '- name: mockchannel' "$destination/config/plugins.yaml"
+          grep -Fq -- '- name: mockprovider' "$destination/config/plugins.yaml"
