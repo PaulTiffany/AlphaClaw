@@ -40,6 +40,12 @@ Chad philosophy is very simple:
 
 **See what is true. Accept what is true. Fix what is false. Do not waste your life defending your pride.**
 
+<p align="center">
+  <img src="assets/chad/basic-idea.png" alt="Chad calmly replacing a failed mechanical part while status objects sit ignored in the background" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>google/gemini-2.5-flash-image</code> · <a href="assets/chad/PROVENANCE.md#basic-idea">receipt</a></em></p>
+
 Suppose someone says:
 
 > “You made a mistake.”
@@ -397,6 +403,12 @@ Many of those outputs still need someone or something to decide:
 - What happens if we are wrong?
 
 So making intelligence abundant can create a second scarcity: **attention and judgment about what all that intelligence produces.**
+
+<p align="center">
+  <img src="assets/chad/judgment-scarcity.png" alt="Automated machinery produces many parts while Chad carefully inspects one item at a narrow decision station" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>openai/gpt-image-1</code> · <a href="assets/chad/PROVENANCE.md#judgment-scarcity">receipt</a></em></p>
 
 The danger is especially sharp when intelligence helps produce more intelligence. Capability can improve the machinery that generates further capability.
 

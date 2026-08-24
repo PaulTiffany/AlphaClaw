@@ -563,3 +563,43 @@ For run `32431592545`, publication started from GitHub Actions artifact `9429338
 ## Blob → goo
 
 A small implementation rule from the publication process: **treat a blob as a blob.** Binary image bytes, Git blobs, Markdown text, and generation receipts are different objects with different invariants. Forgetting the distinction is how structured artifacts turn into output goo.
+
+## Publication round `32745090551`
+
+This publication started from `PaulTiffany/letGPTsustakethewheel` Actions run `32745090551`, artifact `chad-raster-art` (`9526742320`), ZIP SHA-256 `9d4dedbdad5f6cb0b4e93973b0d46f134f2f85b8b5f3caddb4d1e63427d81049`.
+
+Three rasters were generated. Two passed human visual review and are published below as exact-byte copies. `room-to-think` (`03-room-to-think--google-gemini-3-pro-image.png`, SHA-256 `acd3bfe542d926db53c3e829eb9d73ff3724d2fa69a0bc0745d180dcda6fc0c5`) was not published: visible alphanumeric labels and a question-mark symbol violated the no-visible-text/symbol generation constraint.
+
+### basic-idea
+
+- Philosophy line: **See what is true. Accept what is true. Fix what is false. Do not waste your life defending your pride.**
+- Model: `google/gemini-2.5-flash-image`
+- Routed provider: `google-ai-studio`
+- Generation cost reported by OpenRouter: `$0.0387914`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32745090551`
+- Artifact: `chad-raster-art` (`9526742320`)
+- Original run file: `01-basic-idea--google-gemini-2-5-flash-image.png`
+- Original generation SHA-256: `3d456301bf6777f0b94ae8662aa4555f4d1fc262521861555819f29f5b901c91`
+- Published file: `basic-idea.png`
+- Published SHA-256: `3d456301bf6777f0b94ae8662aa4555f4d1fc262521861555819f29f5b901c91`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Gemini API Additional Terms of Service — https://ai.google.dev/gemini-api/terms
+- Publication note: Google states that some Gemini API and Google AI Studio services generate original content and that Google will not claim ownership over that generated content; output may not be unique.
+
+### judgment-scarcity
+
+- Philosophy line: **So making intelligence abundant can create a second scarcity: attention and judgment about what all that intelligence produces.**
+- Model: `openai/gpt-image-1`
+- Routed provider: `openai`
+- Generation cost reported by OpenRouter: `$0.064315`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32745090551`
+- Artifact: `chad-raster-art` (`9526742320`)
+- Original run file: `02-judgment-scarcity--openai-gpt-image-1.png`
+- Original generation SHA-256: `cb02439f99a68034e44f9afa66612041127aa0b6aceb5a99459c338c484912a9`
+- Published file: `judgment-scarcity.png`
+- Published SHA-256: `cb02439f99a68034e44f9afa66612041127aa0b6aceb5a99459c338c484912a9`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
+- Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
