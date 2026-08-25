@@ -603,3 +603,50 @@ Three rasters were generated. Two passed human visual review and are published b
 - Publication transform: **none; exact-byte copy from the verified artifact**
 - Rights/source review: OpenAI Services Agreement — https://openai.com/policies/services-agreement/
 - Publication note: OpenAI states that, as between Customer and OpenAI and to the extent permitted by law, Customer owns Output and OpenAI assigns any right, title, and interest it may have in Output.
+
+## Publication round `32797015558`
+
+This publication started from `PaulTiffany/letGPTsustakethewheel` Actions run `32797015558`, artifact `chad-raster-art` (`9545294372`), ZIP SHA-256 `283f30685d81d37be598f9411b3a84d0c4fc1933505fbeb9796cf59256365261`.
+
+Five model calls were attempted. Four produced valid raster bytes. Two passed human visual review and are published below as exact-byte copies. Two successful generations were rejected at the visual publication gate, and one model call produced no raster because the provider response timed out.
+
+Non-publication outcomes:
+
+- `ridiculous-experiment` — **visual rejection**: visible hallucinated lettering violated the explicit no-visible-text generation constraint. Source file `03-ridiculous-experiment--black-forest-labs-flux-2-klein-4b.png`, SHA-256 `d06eb3eb73ebd781a48ee1d7062fc7aa431c4c65513896790cdde53b4417b2f2`.
+- `indispensable-single-point` — **visual rejection**: the composition rhetorically celebrated the indispensable central operator rather than showing the single-point-of-failure warning. Source file `04-indispensable-single-point--recraft-recraft-v3.webp`, SHA-256 `dd9e651ff76371b905b81369054fceec48f0099b6fd854d68868081dcf5730e4`.
+- `embarrassing-truth-standing` — **generation failure**: provider response read timed out; no raster was produced and no generation cost was reported.
+
+### plan-survives-failure
+
+- Philosophy line: **A good plan can survive one person getting tired, one tool failing, one assumption being wrong, or one experiment going badly.**
+- Model: `bytedance-seed/seedream-5-0-lite`
+- Routed provider: `seed`
+- Generation cost reported by OpenRouter: `$0.035`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32797015558`
+- Artifact: `chad-raster-art` (`9545294372`)
+- Original run file: `01-plan-survives-failure--bytedance-seed-seedream-5-0-lite.jpg`
+- Original generation SHA-256: `9cc0befb2ab7a464fbdf69d35a4b2d2ca7dee62cdfb11e2bf478c5e186ace8a7`
+- Published file: `plan-survives-failure.jpg`
+- Published SHA-256: `9cc0befb2ab7a464fbdf69d35a4b2d2ca7dee62cdfb11e2bf478c5e186ace8a7`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: BytePlus Model Services terms — https://docs.byteplus.com/vi/docs/legal/docs-service-specific-terms
+- Publication note: BytePlus states that, to the extent permitted by law, output IP rights belong to the customer or other applicable rights holder and BytePlus does not claim ownership.
+
+### better-method-not-authority
+
+- Philosophy line: **A system may discover a better method. That does not mean it has earned the right to deploy that method, widen its own permissions, or remove the gate that judged it.**
+- Model: `recraft/recraft-v4.1`
+- Routed provider: `recraft`
+- Generation cost reported by OpenRouter: `$0.035`
+- Reference image supplied: **no**
+- Original run: `PaulTiffany/letGPTsustakethewheel` Actions run `32797015558`
+- Artifact: `chad-raster-art` (`9545294372`)
+- Original run file: `02-better-method-not-authority--recraft-recraft-v4-1.webp`
+- Original generation SHA-256: `d878ea8ebc02133a8e5ffe66151dbae969639fab880112f64d1c1c02c5b45f41`
+- Published file: `better-method-not-authority.webp`
+- Published SHA-256: `d878ea8ebc02133a8e5ffe66151dbae969639fab880112f64d1c1c02c5b45f41`
+- Publication transform: **none; exact-byte copy from the verified artifact**
+- Rights/source review: Recraft API Terms — https://www.recraft.ai/legal/terms
+- Publication note: Recraft states that API users own assets created with the API and assigns any copyright it may have, subject to a restriction against using the assets to train AI models, systems, or networks.
+

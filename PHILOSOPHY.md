@@ -222,6 +222,12 @@ A good team leaves handholds for other people.
 
 A good plan can survive one person getting tired, one tool failing, one assumption being wrong, or one experiment going badly.
 
+<p align="center">
+  <img src="assets/chad/plan-survives-failure.jpg" alt="Chad works beside a stable scaffold while a tired teammate rests and the project remains supported" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>bytedance-seed/seedream-5-0-lite</code> · <a href="assets/chad/PROVENANCE.md#plan-survives-failure">receipt</a></em></p>
+
 So:
 
 **Do not bite off more than you can chew. Do not make yourself the only thing holding the work together. Take care of the operator. Leave enough room to notice and repair mistakes.**
@@ -277,6 +283,12 @@ The same applies to recursive improvement:
 \]
 
 A system may discover a better method. That does not mean it has earned the right to deploy that method, widen its own permissions, or remove the gate that judged it.
+
+<p align="center">
+  <img src="assets/chad/better-method-not-authority.webp" alt="Chad holds a useful component beside a separate locked authorization gate while the machine remains behind the boundary" width="620">
+</p>
+
+<p align="center"><em>annoned by <code>recraft/recraft-v4.1</code> · <a href="assets/chad/PROVENANCE.md#better-method-not-authority">receipt</a></em></p>
 
 Where consequences matter, put a gate in the causal path before action.
 
