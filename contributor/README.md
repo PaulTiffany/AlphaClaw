@@ -27,7 +27,7 @@ Add a short title and a few useful sentences.
 
 **AI can help, but only you are responsible for what you publish.**
 
-![Ask Gemini](https://storage.googleapis.com/support-kms-prod/2c8c125e-5700-46e8-806a-90f9f7a67bb1) **Ask Gemini** in the top-right of Chrome opens beside GitHub. It can use the page you are on and up to 10 shared tabs without opening a separate AI website.
+<img src="https://storage.googleapis.com/support-kms-prod/2c8c125e-5700-46e8-806a-90f9f7a67bb1" alt="" width="18" height="18"> **Ask Gemini** in the top-right of Chrome opens beside GitHub. It can use the page you are on and up to 10 shared tabs without opening a separate AI website.
 
 Read it. Then click **Save Page**:
 
