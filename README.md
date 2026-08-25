@@ -4,7 +4,7 @@
 
 AlphaClaw is a small sensory tool for a text-only reasoning process.
 
-The repository also contains two deliberately separate supporting surfaces: a pedagogical human-development path and a local authority-reduction experiment for one exact pinned OmegaClaw source tree. They should not be confused with AlphaClaw itself.
+The repository also contains two deliberately separate supporting surfaces: a public human-development Wiki and a local authority-reduction experiment for one exact pinned OmegaClaw source tree. They should not be confused with AlphaClaw itself.
 
 ```text
 1. PERCEPTION
@@ -17,12 +17,11 @@ text handoff
     -> upstream OmegaClaw
 
 3. HUMAN DEVELOPMENT
-contributor Wiki
-    -> structured review proposal
-    -> human review
+GitHub Wiki
+    -> public authored pages
 ```
 
-The first is AlphaClaw proper. The second is an upstream dependency. The third is a pedagogical on-ramp for people who may not yet use command-line Git.
+The first is AlphaClaw proper. The second is an upstream dependency. The third is a small Git-backed place where a person can contribute documentation directly.
 
 ## 1. AlphaClaw: sensory boundary
 
@@ -70,33 +69,15 @@ That last experiment lives in `controller/`. It is deliberately **not AlphaClaw*
 perception != authority != inference
 ```
 
-## 3. Contributor Wiki: human developmental on-ramp
+## 3. Contributor Wiki
 
-`contributor/` and the two contributor-Wiki workflows are intentionally separate from both AlphaClaw perception and OmegaClaw inference.
+The [AlphaClaw Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is the whole beginner contributor surface.
 
-Their purpose is pedagogical: let a person contribute useful judgment and evidence before they know command-line Git, branches, or pull requests.
+A Wiki save changes the Wiki only. It does not run OmegaClaw, become AlphaClaw sensory input, change `main`, or trigger an automatic path into the codebase.
 
-```text
-edit or dictate into a Wiki template
-          |
-          v
-Ready for review: yes
-          |
-          v
-mechanical validation + exact provenance
-          |
-          v
-review-only branch / pull request
-          |
-          v
-human decides whether to merge
-```
+The beginner goal is simply to make two public Wiki pages. No command-line Git is required.
 
-A Wiki edit does **not** grant agent authority, run OmegaClaw, select tools, change inference budgets, or modify `main` directly.
-
-The contributor supplies the judgment and evidence. Automation carries syntax, provenance, and review plumbing.
-
-Start at `contributor/README.md`.
+`contributor/README.md` is the short source text mirrored to the Wiki Home page.
 
 ## Local-first controller experiments
 
@@ -125,7 +106,7 @@ Before adding a mechanism, capability, workflow, resident process, or controller
 
 > **WHY DO WE NEED THAT?**
 
-The question applies differently to the three surfaces. A contributor workflow may be justified because it reduces the human learning barrier even though AlphaClaw runtime does not need it. A runtime capability must justify the authority it adds.
+Documentation machinery has to answer the same question. A runtime capability must also justify the authority it adds.
 
 **Alpha senses. Omega reasons. Humans develop and authorize.**
 
