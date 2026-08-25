@@ -13,7 +13,7 @@ Other common licenses:
 - **GPL:** shared changed software usually stays under GPL.
 - **CC BY 4.0:** often used for writing and images; you may share and change them if you give credit.
 
-A **wiki** is an open encyclopedia. [This Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is public.
+A **wiki** is an open encyclopedia. [This Wiki is public.](https://github.com/PaulTiffany/AlphaClaw/wiki)
 
 Only post work you may share. Never post passwords, private messages, or personal information.
 
