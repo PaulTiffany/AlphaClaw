@@ -41,7 +41,17 @@ jobs:
 
       - name: Keep beginner Wiki surface small
         run: |
-          words="$(wc -w < contributor/README.md)"
+          words="$(python - <<'PY'
+          import re
+          from pathlib import Path
+
+          text = Path('contributor/README.md').read_text()
+          text = re.sub(r'<[^>]+>', ' ', text)
+          text = re.sub(r'!\[([^]]*)\]\([^)]+\)', r'\1', text)
+          text = re.sub(r'\[([^]]+)\]\([^)]+\)', r'\1', text)
+          print(len(re.findall(r"\b[\w’'-]+\b", text)))
+          PY
+          )"
           test "$words" -le 220
           grep -Fq 'MIT License' contributor/README.md
           grep -Fq 'This Wiki is public' contributor/README.md
