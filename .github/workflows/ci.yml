@@ -41,24 +41,28 @@ jobs:
 
       - name: Keep beginner Wiki surface small
         run: |
-          words="$(python - <<'PY'
+          python - <<'PY'
           import re
           from pathlib import Path
 
-          text = Path('contributor/README.md').read_text()
-          text = re.sub(r'<[^>]+>', ' ', text)
-          text = re.sub(r'!\[([^]]*)\]\([^)]+\)', r'\1', text)
-          text = re.sub(r'\[([^]]+)\]\([^)]+\)', r'\1', text)
-          print(len(re.findall(r"\b[\w’'-]+\b", text)))
+          source = Path('contributor/README.md').read_text()
+          visible = re.sub(r'<[^>]+>', ' ', source)
+          visible = re.sub(r'!\[([^]]*)\]\([^)]+\)', r'\1', visible)
+          visible = re.sub(r'\[([^]]+)\]\([^)]+\)', r'\1', visible)
+
+          words = re.findall(r"\b[\w’'-]+\b", visible)
+          assert len(words) <= 220, f"beginner Wiki surface has {len(words)} visible words"
+
+          for phrase in ('MIT License', 'This Wiki is public.', 'Gemini', 'Save Page'):
+              assert phrase in visible, f"missing visible phrase: {phrase}"
+
+          assert '/wiki/_new' in source, 'missing direct New Page link'
+          assert not re.search(
+              r'\b(branch|pull request|sha-?256|provenance|runtime|kernel|recursive)\b',
+              visible,
+              re.IGNORECASE,
+          ), 'advanced vocabulary leaked into beginner Wiki surface'
           PY
-          )"
-          test "$words" -le 220
-          grep -Fq 'MIT License' contributor/README.md
-          grep -Fq 'This Wiki is public' contributor/README.md
-          grep -Fq 'Gemini' contributor/README.md
-          grep -Fq 'Save Page' contributor/README.md
-          grep -Fq '/wiki/_new' contributor/README.md
-          ! grep -Eqi '\b(branch|pull request|sha-?256|provenance|runtime|kernel|recursive)\b' contributor/README.md
 
       - name: Run deterministic tests
         run: pytest -q
