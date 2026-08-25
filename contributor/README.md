@@ -2,14 +2,20 @@
 
 **Goal: make Wiki pages to learn Open Source development.**
 
-AlphaClaw is our example. [Open the code](https://github.com/PaulTiffany/AlphaClaw). [Open our MIT License](https://github.com/PaulTiffany/AlphaClaw/blob/main/LICENSE). A **license** is a permission slip. MIT lets people use, change, and share AlphaClaw's original work if the required notice stays with it.
+AlphaClaw is our example. [Open the code](https://github.com/PaulTiffany/AlphaClaw).
+
+A **license** is a permission slip. [Open our MIT License](https://github.com/PaulTiffany/AlphaClaw/blob/main/LICENSE).
+
+MIT lets people use, change, and share AlphaClaw's original work if the required notice stays with it.
 
 Other common licenses:
 - **Apache 2.0:** like MIT, with extra patent rules.
 - **GPL:** shared changed software usually stays under GPL.
 - **CC BY 4.0:** often used for writing and images; you may share and change them if you give credit.
 
-This Wiki is public. Only post work you may share. Never post passwords, private messages, or personal information.
+A **wiki** is an open encyclopedia. [This Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is public.
+
+Only post work you may share. Never post passwords, private messages, or personal information.
 
 ## 1. Sign in
 
