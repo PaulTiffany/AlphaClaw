@@ -62,8 +62,10 @@ jobs:
           EOF
           fi
 
-          # Remove only pages created by the old teaching system.
+          # Remove only pages created by the old teaching system, plus the
+          # one known temporary Come stub. Other Wiki pages are not touched.
           rm -f \
+            "$wiki/Come.md" \
             "$wiki/Start-Here.md" \
             "$wiki/Make-Another-Wiki-Page.md" \
             "$wiki/Contributor-Workspace.md" \
