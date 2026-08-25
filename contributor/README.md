@@ -1,6 +1,6 @@
-# Make a Wiki Page
+# Contributing
 
-**Goal: make two pages.**
+**Goal: make two Wiki pages.**
 
 Open source means people can see a project, learn from it, use it, change it, and share it under a license.
 
@@ -17,14 +17,13 @@ This Wiki is public. Do not post passwords, private messages, personal informati
 
 If Gemini helps, ask: **“Make these thoughts into a short Wiki page. Keep my meaning. Do not add facts.”**
 
-Read the result before you save it. GitHub keeps a history of who changed each page.
+Read the result before you save it.
 
 ## [Make a page →](https://github.com/PaulTiffany/AlphaClaw/wiki/_new)
 
 1. Sign in to GitHub.
 2. Add a short title and a few useful sentences.
 3. Click **Save Page**.
-4. Click **Home** in the Wiki list.
-5. Do it again.
+4. Return to the Wiki Home and choose **Contributing** when you want to make another page.
 
-Come back here whenever you want to make another page.
+GitHub keeps a public history of who changed each page.
