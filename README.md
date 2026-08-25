@@ -71,13 +71,13 @@ perception != authority != inference
 
 ## 3. Contributor Wiki
 
-The [AlphaClaw Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is the whole beginner contributor surface.
+The [AlphaClaw Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is the public project notebook.
+
+Its Home page is a small AlphaClaw landing page that humans can improve over time. The beginner open-source lesson lives on the Wiki's **Contributing** page.
 
 A Wiki save changes the Wiki only. It does not run OmegaClaw, become AlphaClaw sensory input, change `main`, or trigger an automatic path into the codebase.
 
-The beginner goal is simply to make two public Wiki pages. No command-line Git is required.
-
-`contributor/README.md` is the short source text mirrored to the Wiki Home page.
+`contributor/README.md` is the short source text mirrored to Wiki `Contributing.md`.
 
 ## Local-first controller experiments
 
