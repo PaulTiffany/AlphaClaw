@@ -36,25 +36,19 @@ jobs:
       - name: Install local test tooling
         run: python -m pip install pytest==9.1.1 ruff==0.16.4
 
-      - name: Lint sensory, controller, and contributor boundaries
-        run: ruff check ingress controller contributor tests
+      - name: Lint sensory and controller boundaries
+        run: ruff check ingress controller tests
 
-      - name: Run beginner Wiki guardrails
+      - name: Keep beginner Wiki surface small
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          path = Path("contributor/beginner_surface_guardrails.ipynb")
-          notebook = json.loads(path.read_text(encoding="utf-8"))
-          namespace = {"__name__": "__main__"}
-
-          for index, cell in enumerate(notebook["cells"], start=1):
-              if cell.get("cell_type") != "code":
-                  continue
-              source = "".join(cell.get("source", []))
-              exec(compile(source, f"{path}:cell-{index}", "exec"), namespace)
-          PY
+          words="$(wc -w < contributor/README.md)"
+          test "$words" -le 220
+          grep -Fq 'MIT License' contributor/README.md
+          grep -Fq 'This Wiki is public' contributor/README.md
+          grep -Fq 'Gemini' contributor/README.md
+          grep -Fq 'Save Page' contributor/README.md
+          grep -Fq '/wiki/_new' contributor/README.md
+          ! grep -Eqi '\b(branch|pull request|sha-?256|provenance|runtime|kernel|recursive)\b' contributor/README.md
 
       - name: Run deterministic tests
         run: pytest -q

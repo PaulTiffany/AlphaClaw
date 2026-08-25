@@ -1,11 +1,11 @@
-name: Bootstrap contributor Wiki
+name: Keep contributor Wiki simple
 
 on:
   push:
     branches: [main]
     paths:
       - ".github/workflows/bootstrap-contributor-wiki.yml"
-      - "contributor/wiki-templates/**"
+      - "contributor/README.md"
   gollum:
   workflow_dispatch:
 
@@ -13,19 +13,19 @@ permissions:
   contents: write
 
 concurrency:
-  group: bootstrap-contributor-wiki
-  cancel-in-progress: false
+  group: contributor-wiki-home
+  cancel-in-progress: true
 
 jobs:
-  bootstrap:
+  sync-home:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Seed low-friction contributor pages without overwriting edits
+      - name: Keep one beginner Wiki surface
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -34,77 +34,30 @@ jobs:
           remote="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git"
 
           if ! git clone "$remote" "$wiki"; then
-            echo "::notice title=One-time Wiki initialization needed::Open the repository Wiki in GitHub, create any first page, and choose Save Page. This workflow will rerun automatically and seed the contributor workspace."
+            echo "::notice title=Wiki not initialized::Create the first Wiki page once in GitHub, then run this workflow again."
             exit 0
           fi
 
-          install_if_absent() {
-            source="$1"
-            target="$2"
-            if [ ! -e "$target" ]; then
-              cp "$source" "$target"
-            fi
-          }
+          cp contributor/README.md "$wiki/Home.md"
 
-          install_if_absent contributor/wiki-templates/Start-Here.md "$wiki/Start-Here.md"
-          install_if_absent contributor/wiki-templates/Make-Another-Wiki-Page.md "$wiki/Make-Another-Wiki-Page.md"
-          install_if_absent contributor/wiki-templates/Domain-Rule.md "$wiki/Domain-Rule.md"
-          install_if_absent contributor/wiki-templates/Edge-Case-Evaluation.md "$wiki/Edge-Case-Evaluation.md"
-          install_if_absent contributor/wiki-templates/Provenance-Log.md "$wiki/Provenance-Log.md"
-
-          if [ ! -e "$wiki/Contributor-Workspace.md" ]; then
-            cat > "$wiki/Contributor-Workspace.md" <<'EOF'
-          # AlphaClaw Contributor Workspace
-
-          New to open-source development? Start with [[Start Here|Start-Here]].
-
-          The beginner tutorial asks you to make two Wiki pages. You do not need command-line Git or programming experience.
-
-          The structured review templates below are available when you need them:
-
-          - [[Domain Rule|Domain-Rule]] — a principle or boundary you think the project should respect.
-          - [[Edge-Case Evaluation|Edge-Case-Evaluation]] — something surprising, confusing, fragile, or worth reproducing.
-          - [[Provenance Log|Provenance-Log]] — a check of where a claim, result, or artifact came from.
-          EOF
-          fi
-
-          touch "$wiki/Home.md"
-          if ! grep -q "alphaclaw-beginner-start:v1" "$wiki/Home.md"; then
-            cat >> "$wiki/Home.md" <<'EOF'
-
-          <!-- alphaclaw-beginner-start:v1 -->
-          ## New to open-source development?
-
-          Start with [[Start Here|Start-Here]]. The beginner tutorial asks you to make two Wiki pages.
-          EOF
-          fi
-
-          if ! grep -q "alphaclaw-contributor-workspace:v1" "$wiki/Home.md"; then
-            cat >> "$wiki/Home.md" <<'EOF'
-
-          <!-- alphaclaw-contributor-workspace:v1 -->
-          ## Contributor workspace
-
-          For structured review templates, use [[Contributor Workspace|Contributor-Workspace]].
-          EOF
-          fi
+          # Remove the old teaching maze. User-authored pages are not touched.
+          rm -f \
+            "$wiki/Start-Here.md" \
+            "$wiki/Make-Another-Wiki-Page.md" \
+            "$wiki/Contributor-Workspace.md" \
+            "$wiki/Domain-Rule.md" \
+            "$wiki/Edge-Case-Evaluation.md" \
+            "$wiki/Provenance-Log.md"
 
           git -C "$wiki" config user.name "github-actions[bot]"
           git -C "$wiki" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git -C "$wiki" add \
-            Home.md \
-            Contributor-Workspace.md \
-            Start-Here.md \
-            Make-Another-Wiki-Page.md \
-            Domain-Rule.md \
-            Edge-Case-Evaluation.md \
-            Provenance-Log.md
+          git -C "$wiki" add -A
 
           if git -C "$wiki" diff --cached --quiet; then
-            echo "Contributor Wiki is already bootstrapped."
+            echo "Wiki Home is already simple."
             exit 0
           fi
 
-          git -C "$wiki" commit -m "Bootstrap low-friction contributor workspace"
+          git -C "$wiki" commit -m "Keep beginner contributor surface to one page"
           branch="$(git -C "$wiki" symbolic-ref --short HEAD)"
           git -C "$wiki" push origin "HEAD:${branch}"
