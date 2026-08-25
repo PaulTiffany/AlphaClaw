@@ -1,71 +1,30 @@
-# Human contributor on-ramp
+# Make a Wiki Page
 
-This directory is a **pedagogical development surface** for people who may not yet use command-line Git.
+**Goal: make two pages.**
 
-It is intentionally independent of AlphaClaw's sensory runtime and OmegaClaw's inference loop.
+Open source means people can see a project, learn from it, use it, change it, and share it under a license.
 
-The goal is not to hide development. The goal is to expose the important parts in a smaller order.
+A **license** is the permission slip. AlphaClaw uses the **MIT License**. MIT lets people use, copy, change, and share the work, even for business. Copies or large parts must keep the copyright and MIT notice.
 
-```text
-ordinary language
-    -> Wiki edit
-    -> visible Git history
-    -> mechanical validation
-    -> structured review proposal
-    -> human review
-```
+Other common licenses:
+- **Apache 2.0:** like MIT, with extra patent rules.
+- **GPL:** shared changed versions usually must stay open under the GPL.
+- **BSD:** broad permission, similar to MIT.
 
-A new contributor can learn what a commit, provenance record, branch, diff, and pull request are by participating before they need to operate those mechanisms directly.
+## Before you write
 
-## What authority this gives you
+This Wiki is public. Do not post passwords, private messages, personal information, or anything you do not have the right to share.
 
-The Wiki path gives a contributor bounded **developmental authority**:
+If Gemini helps, ask: **“Make these thoughts into a short Wiki page. Keep my meaning. Do not add facts.”**
 
-- write and revise a public contribution in ordinary Markdown;
-- decide when that contribution is ready for review;
-- preserve authorship and exact source provenance;
-- cause automation to prepare a review proposal.
+Read the result before you save it. GitHub keeps a history of who changed each page.
 
-It does **not** give a Wiki editor runtime authority over AlphaClaw or OmegaClaw. A Wiki save does not run OmegaClaw, change its tools, select a model, alter an inference budget, deploy an agent, or merge a change into `main`.
+## [Make a page →](https://github.com/PaulTiffany/AlphaClaw/wiki/_new)
 
-The distinction is intentional:
+1. Sign in to GitHub.
+2. Add a short title and a few useful sentences.
+3. Click **Save Page**.
+4. Click **Home** in the Wiki list.
+5. Do it again.
 
-```text
-developmental authority != agent authority
-```
-
-## Lowest-friction path
-
-1. Open the repository Wiki and choose **Contributor Workspace**.
-2. Pick a template:
-   - **Domain Rule** — a principle or boundary you think the project should respect.
-   - **Edge-Case Evaluation** — something surprising, confusing, fragile, or worth reproducing.
-   - **Provenance Log** — a check of where a claim, result, or artifact came from.
-3. Type or dictate into the existing sections. Plain language is fine.
-4. Keep **Ready for review** as `no` while you are still thinking.
-5. Change it to `yes` when the page says what you mean.
-6. Choose **Save Page**.
-
-The Wiki intake compiler validates only marked templates. If the page is ready, it creates an immutable JSON record addressed by the exact source Wiki commit and records the Git author, Wiki path, and SHA-256 of the exact Markdown.
-
-Automation places those records on a review branch and opens a pull request. **A human still decides whether to merge it.**
-
-## Why the machinery is here
-
-The contributor supplies the judgment and evidence. The machinery carries syntax, provenance, and review plumbing.
-
-A useful development system should not require someone to understand every layer before they are allowed to make a bounded, inspectable contribution. If getting started requires extensive private instruction, the interface is asking too much from the person.
-
-This project therefore treats onboarding itself as an interpretability problem.
-
-## Files
-
-- `wiki-templates/` — the small structured pages seeded into the GitHub Wiki.
-- `wiki_intake.py` — deterministic compiler from explicitly ready Wiki pages to review records.
-- `open-source-basics.md` — plain-language licensing and contribution notes.
-- `.github/workflows/bootstrap-contributor-wiki.yml` — seeds missing Wiki pages without overwriting contributor edits.
-- `.github/workflows/wiki-intake.yml` — compiles ready pages into a review-only pull request.
-
-## Public information only
-
-Do not place passwords, API keys, private messages, private personal information, or confidential third-party material in the public Wiki.
+Come back here whenever you want to make another page.
