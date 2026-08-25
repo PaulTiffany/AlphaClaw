@@ -2,17 +2,22 @@ name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:
   contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: recursive
           fetch-depth: 1
@@ -24,7 +29,7 @@ jobs:
             "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.11"
 
@@ -33,6 +38,23 @@ jobs:
 
       - name: Lint sensory, controller, and contributor boundaries
         run: ruff check ingress controller contributor tests
+
+      - name: Run beginner Wiki guardrails
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("contributor/beginner_surface_guardrails.ipynb")
+          notebook = json.loads(path.read_text(encoding="utf-8"))
+          namespace = {"__name__": "__main__"}
+
+          for index, cell in enumerate(notebook["cells"], start=1):
+              if cell.get("cell_type") != "code":
+                  continue
+              source = "".join(cell.get("source", []))
+              exec(compile(source, f"{path}:cell-{index}", "exec"), namespace)
+          PY
 
       - name: Run deterministic tests
         run: pytest -q

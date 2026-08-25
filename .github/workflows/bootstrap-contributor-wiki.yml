@@ -46,6 +46,8 @@ jobs:
             fi
           }
 
+          install_if_absent contributor/wiki-templates/Start-Here.md "$wiki/Start-Here.md"
+          install_if_absent contributor/wiki-templates/Make-Another-Wiki-Page.md "$wiki/Make-Another-Wiki-Page.md"
           install_if_absent contributor/wiki-templates/Domain-Rule.md "$wiki/Domain-Rule.md"
           install_if_absent contributor/wiki-templates/Edge-Case-Evaluation.md "$wiki/Edge-Case-Evaluation.md"
           install_if_absent contributor/wiki-templates/Provenance-Log.md "$wiki/Provenance-Log.md"
@@ -54,38 +56,36 @@ jobs:
             cat > "$wiki/Contributor-Workspace.md" <<'EOF'
           # AlphaClaw Contributor Workspace
 
-          This is a low-friction human development path. It is separate from AlphaClaw sensory ingress and from OmegaClaw runtime authority.
+          New to open-source development? Start with [[Start Here|Start-Here]].
 
-          You do not need command-line Git. Choose the page that best matches what you want to contribute:
+          The beginner tutorial asks you to make two Wiki pages. You do not need command-line Git or programming experience.
+
+          The structured review templates below are available when you need them:
 
           - [[Domain Rule|Domain-Rule]] — a principle or boundary you think the project should respect.
           - [[Edge-Case Evaluation|Edge-Case-Evaluation]] — something surprising, confusing, fragile, or worth reproducing.
           - [[Provenance Log|Provenance-Log]] — a check of where a claim, result, or artifact came from.
-
-          ## Working rhythm
-
-          1. Open one of the three pages above and choose **Edit**.
-          2. Type or dictate into the existing sections. Plain language is fine.
-          3. Keep **Ready for review** as `no` while you are still thinking.
-          4. Change it to `yes` only when the page says what you mean.
-          5. Choose **Save Page**.
-
-          A ready save is compiled into a review-only pull request. It does not silently change `main`, run OmegaClaw, or grant agent authority.
-
-          Each ready save is recorded separately by its exact Wiki commit and Markdown hash, so the three working pages may be reused later without erasing earlier contributions.
-
-          Do not place passwords, API keys, private messages, private personal information, or confidential third-party material in this public Wiki.
           EOF
           fi
 
           touch "$wiki/Home.md"
+          if ! grep -q "alphaclaw-beginner-start:v1" "$wiki/Home.md"; then
+            cat >> "$wiki/Home.md" <<'EOF'
+
+          <!-- alphaclaw-beginner-start:v1 -->
+          ## New to open-source development?
+
+          Start with [[Start Here|Start-Here]]. The beginner tutorial asks you to make two Wiki pages.
+          EOF
+          fi
+
           if ! grep -q "alphaclaw-contributor-workspace:v1" "$wiki/Home.md"; then
             cat >> "$wiki/Home.md" <<'EOF'
 
           <!-- alphaclaw-contributor-workspace:v1 -->
           ## Contributor workspace
 
-          For the low-friction human contribution path, start at [[Contributor Workspace|Contributor-Workspace]].
+          For structured review templates, use [[Contributor Workspace|Contributor-Workspace]].
           EOF
           fi
 
@@ -94,6 +94,8 @@ jobs:
           git -C "$wiki" add \
             Home.md \
             Contributor-Workspace.md \
+            Start-Here.md \
+            Make-Another-Wiki-Page.md \
             Domain-Rule.md \
             Edge-Case-Evaluation.md \
             Provenance-Log.md
