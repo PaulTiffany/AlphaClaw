@@ -6,18 +6,17 @@ on:
     paths:
       - ".github/workflows/bootstrap-contributor-wiki.yml"
       - "contributor/README.md"
-  gollum:
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: contributor-wiki-home
+  group: contributor-wiki
   cancel-in-progress: true
 
 jobs:
-  sync-home:
+  sync-wiki:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -25,7 +24,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Keep one beginner Wiki surface
+      - name: Keep one beginner contributor page
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: |
@@ -38,9 +37,32 @@ jobs:
             exit 0
           fi
 
-          cp contributor/README.md "$wiki/Home.md"
+          cp contributor/README.md "$wiki/Contributing.md"
 
-          # Remove the old teaching maze. User-authored pages are not touched.
+          # Seed a real AlphaClaw Home once. Also migrate the exact generated
+          # beginner Home from the previous design. After that, human edits win.
+          if [ ! -e "$wiki/Home.md" ] || \
+             { grep -Fq '# Make a Wiki Page' "$wiki/Home.md" && grep -Fq '**Goal: make two pages.**' "$wiki/Home.md"; }; then
+            cat > "$wiki/Home.md" <<'EOF'
+          # AlphaClaw
+
+          AlphaClaw is a small sensory boundary for text-only reasoning. It keeps perception, inference, and human authority separate.
+
+          This Wiki is the project's shared notebook. It is intentionally small and can grow as people add useful pages.
+
+          ## Start
+
+          - [[Contributing]] — make a Wiki page, even if you are new to GitHub.
+          - [Repository](https://github.com/PaulTiffany/AlphaClaw)
+          - [Philosophy](https://github.com/PaulTiffany/AlphaClaw/blob/main/PHILOSOPHY.md)
+
+          ## What belongs here?
+
+          Plain-language explanations, examples, observations, and other useful notes about AlphaClaw.
+          EOF
+          fi
+
+          # Remove only pages created by the old teaching system.
           rm -f \
             "$wiki/Start-Here.md" \
             "$wiki/Make-Another-Wiki-Page.md" \
@@ -54,10 +76,10 @@ jobs:
           git -C "$wiki" add -A
 
           if git -C "$wiki" diff --cached --quiet; then
-            echo "Wiki Home is already simple."
+            echo "Wiki is already in the simple layout."
             exit 0
           fi
 
-          git -C "$wiki" commit -m "Keep beginner contributor surface to one page"
+          git -C "$wiki" commit -m "Keep AlphaClaw Wiki Home and Contributing simple"
           branch="$(git -C "$wiki" symbolic-ref --short HEAD)"
           git -C "$wiki" push origin "HEAD:${branch}"
