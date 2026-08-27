@@ -25,7 +25,7 @@ controller/
 
 4. BENCHMARK ACCOUNTING
 external/ThreadKeeper
-    -> provider usage records only
+    -> isolated accounting witness only
 
 5. HUMAN DEVELOPMENT
 GitHub Wiki
@@ -58,7 +58,7 @@ export OPENROUTER_API_KEY=...
 python ingress/pipe.py --input-file image.png
 ```
 
-Unsupported media fails closed rather than being guessed at.
+Unsupported media fails closed rather than being guessed at. Measured image ingress also fails closed if OpenRouter does not return token usage; unknown sensory cost is never recorded as zero.
 
 The fixed prepend tells OmegaClaw that its handoff is text-only evidence. OmegaClaw must not pretend that the handoff itself provides direct image, audio, video, or other multimedia perception; further multimedia perception requires an explicitly authorized external perception tool.
 
@@ -130,12 +130,25 @@ real selected upstream provider
         v
 actual provider response + usage
         |
-        +--> ThreadKeeper Record / Account
-        +--> raw provider_usage.jsonl
+        +--> raw provider_usage.jsonl FIRST
+        |
+        +--> token counts only
+                 |
+                 v
+             python -I
+                 |
+                 v
+        pinned ThreadKeeper
+        Record / Account only
+                 |
+                 v
+             usage.jsonl
         |
         v
 unchanged response back to stock Omega
 ```
+
+The raw provider receipt is primary evidence. ThreadKeeper is a separate accounting witness; a ThreadKeeper failure invalidates certification but does not erase the provider receipt.
 
 This profile intentionally studies stock Omega through its generic OpenAI-compatible provider seam. It does **not** claim to reproduce provider-specific Omega plugins such as ASI:One thinking options, OpenRouter cache policy, or OpenAI's Responses-API implementation. Benchmark claims must name the profile actually used rather than silently conflating those populations.
 
@@ -191,15 +204,21 @@ The run manifest records the pinned Omega SHA and the concrete Docker image ID s
 
 The controller is intentionally the default supported way to produce benchmark claims. A developer who wants standing, autonomous, or otherwise unbounded OmegaClaw must deliberately bypass this apparatus and run upstream OmegaClaw directly. That is allowed, but it is a different population and must not be presented as an AlphaClaw bounded benchmark result.
 
+### Host transport trust boundary
+
+The reasoning subject stays inside its fresh container. The host controller does deliberately reuse one small piece of the exact pinned Omega checkout: `Autotests.mock.comm`, Omega's native test-channel RPC transport. That transport code is therefore an explicit trusted fixture dependency, not an accidental claim that arbitrary Omega code is trusted on the host.
+
+The old standalone `omega_mock_bridge.py` path has been removed so collaborators have one supported bounded benchmark route rather than a tempting bypass around the controller.
+
 ## 4. ThreadKeeper: benchmark accounting only
 
 `external/ThreadKeeper/` is a second pinned Git submodule. It exists here because Larry Greenblatt's ThreadKeeper already provides the token-accounting seam needed for the experiments.
 
-ThreadKeeper stays on the **host side**. The provider gateway uses only `BudgetTracker.record_from_openai_response(...)` after a real upstream response. Nothing from ThreadKeeper is copied into or mounted inside Omega.
+ThreadKeeper stays on the **host side**, but its code is not imported into the controller interpreter. The provider gateway preserves the real provider-returned usage receipt first. It then launches a short-lived isolated Python worker with `python -I`; that worker loads the exact pinned `ThreadKeeper/src/threadkeeper_budget.py` file and receives only token counts plus accounting paths.
 
-ThreadKeeper does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
+ThreadKeeper receives no provider credentials, prompt text, response text, Docker authority, or Alpha envelope. It does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
 
-Benchmark accounting is stricter than ThreadKeeper's normal runtime semantics: if a real provider response does not expose usage, or if the usage record cannot be persisted, the benchmark is invalid rather than silently counting zero tokens.
+Benchmark accounting is stricter than ThreadKeeper's normal runtime semantics: if a real provider response does not expose usage, or if the accounting witness cannot persist its record, the benchmark is invalid rather than silently counting zero tokens. The raw provider receipt remains even if the witness fails.
 
 Outputs include:
 
@@ -207,11 +226,13 @@ Outputs include:
 manifest.json
 alpha-envelope.json
 ingress-trace.json
-usage.jsonl              # ThreadKeeper-normalized counts
-provider_usage.jsonl     # raw provider usage + boot/episode phase
+usage.jsonl              # isolated ThreadKeeper-normalized counts
+provider_usage.jsonl     # primary raw provider usage + boot/episode phase
 container.log
 response.txt             # when a post-handoff response was emitted
 ```
+
+Default local runs are written under `benchmark-runs/`, which is intentionally ignored by Git so prompts, responses, logs, and receipts are not casually committed as source.
 
 ## 5. Contributor Wiki
 
@@ -231,8 +252,9 @@ The controller keeps the experimental fixture outside the subject:
 HOST
   Alpha ingress
   episode contract
-  provider meter / ThreadKeeper
-  communication endpoint
+  provider meter
+  isolated ThreadKeeper witness
+  pinned Omega mock transport
   start -> observe -> stop lifecycle
           |
           v
