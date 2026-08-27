@@ -24,6 +24,7 @@ def _load_budget_tracker(module_path: Path):
     if spec is None or spec.loader is None:
         raise RuntimeError("could not load pinned ThreadKeeper accounting module")
     module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module.BudgetTracker
 
