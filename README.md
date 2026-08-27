@@ -18,9 +18,10 @@ text handoff
 
 3. BOUNDED BENCHMARK APPARATUS
 controller/
-    -> fresh disposable OmegaBoi
-    -> finite episode contract
-    -> mechanical loop/termination bounds
+    -> one stock Omega Docker image
+    -> fresh container per episode
+    -> native Omega runtime bounds
+    -> host-side lifecycle + provider-call bound
 
 4. BENCHMARK ACCOUNTING
 external/ThreadKeeper
@@ -50,13 +51,7 @@ For already-textual input:
 python ingress/pipe.py --text "your message"
 ```
 
-For a text file, the file is read as UTF-8 and takes the same passthrough path:
-
-```bash
-python ingress/pipe.py --input-file notes.md
-```
-
-For an image, the pipe invokes the external sensory translator once and then prepends the resulting symbolic handoff:
+For an image:
 
 ```bash
 export OPENROUTER_API_KEY=...
@@ -69,8 +64,6 @@ The fixed prepend tells OmegaClaw that its handoff is text-only evidence. OmegaC
 
 The controller may fill one explicit `episode_contract` slot in that envelope during bounded experiments. It cannot replace or mutate Alpha's fixed sensory contract.
 
-The multimodal model is a perceptual translator, not an agent and not an authority source.
-
 AlphaClaw does not own the reasoning loop, lifecycle, memory, permissions, deployment, model selection, or recursive authorization.
 
 ## 2. OmegaClaw: pinned upstream dependency
@@ -79,13 +72,9 @@ This repository does **not** implement OmegaClaw.
 
 `OmegaClaw-Core/` is a pristine Git submodule pinned to one exact revision of the upstream `asi-alliance/OmegaClaw-Core` project. AlphaClaw does not silently fork it, rebrand its internals, or treat its implementation as AlphaClaw code.
 
+The benchmark runner likewise does **not** rewrite a disposable Omega tree. It builds and reuses OmegaClaw's own Dockerfile from the exact pinned source, then starts a fresh container for each measured episode. The image is the experimental subject; runtime configuration is the treatment fixture.
+
 For OmegaClaw installation, operation, internal architecture, channels, providers, tools, and normal behavior, refer to the upstream OmegaClaw documentation and source. Questions or defects intrinsic to OmegaClaw belong upstream.
-
-What this repository owns is narrower:
-
-- the exact upstream revision it chooses to test against;
-- the sensory interface presented to a text-reasoning process;
-- a deterministic benchmark transform over a disposable local Omega working copy.
 
 ```text
 perception != authority != inference
@@ -95,27 +84,24 @@ perception != authority != inference
 
 `controller/` is benchmark apparatus. It is deliberately **not AlphaClaw** and is not an alternate OmegaClaw implementation.
 
-The supported experiment is one fresh, bounded episode:
+The controller uses OmegaClaw's own runtime configuration seam:
 
 ```text
-one EpisodeContract
-       |
-       +--> Alpha episode clause: "at most N reasoning loops"
-       |
-       +--> Omega maxNewInputLoops: N
-       |
-       +--> host-side provider-call witness: <= N
-
-new user input -> finite grant
-send response  -> grant becomes 0
-no response by N calls -> terminate failed episode
-wake loops -> 0
-persistent history -> 0
+maxNewInputLoops = N
+maxWakeLoops = 0
+maxHistory = 0
+wakeupInterval > episode timeout
+commchannel = test
+provider = OpenAIAPI
 ```
 
-The default contract is 50 reasoning loops. The model is told the bound, but the model does not enforce it: the disposable Omega profile and outer Python runner do.
+The default post-handoff grant is **1 reasoning loop**. Deliberate iterative experiments may request more, up to a hard controller ceiling of 50.
 
-A real bounded run uses OmegaClaw's native mock communication seam with a real explicitly selected provider:
+OmegaClaw's normal startup reasoning is not raced away or patched out. It runs as stock Omega and is metered separately as `boot` usage. After the Alpha handoff, provider calls are recorded as `episode` usage. The host-side provider gateway refuses to forward episode call `N + 1`, so the model is told the bound, stock Omega is configured with the same bound, and a separate external witness caps paid calls.
+
+The controller also sets the first scheduled wake later than the entire allowed episode lifetime. The fresh container is stopped after the first post-handoff user response, provider-budget exhaustion, provider/accounting failure, or timeout. This makes the upstream `1 + maxWakeLoops` wake behavior unreachable during a valid one-shot benchmark without modifying Omega.
+
+A real run is human-initiated and requires an explicit provider credential. Example with ASI:One:
 
 ```bash
 export ASIONE_API_KEY=...
@@ -125,9 +111,18 @@ python controller/omegaboi.py \
   --model asi1-ultra
 ```
 
-The runner creates a fresh profiled Omega tree, builds Omega's own Docker image from it, delivers one Alpha envelope, records actual provider usage, captures the first user response, stops the container, and writes a run manifest under `benchmark-runs/` unless `--output-dir` is supplied.
+ASI Cloud, OpenRouter, OpenAI, and a custom OpenAI-compatible endpoint are also available through the same stock Omega `OpenAIAPI` provider seam. For a custom endpoint:
 
-For image evidence, Alpha perception happens first and its own OpenRouter token trace is recorded separately:
+```bash
+export OPENAIAPI_API_KEY=...
+python controller/omegaboi.py \
+  --text "hello" \
+  --provider openaiapi \
+  --openaiapi-url http://host-or-service.example/v1 \
+  --model your-model
+```
+
+For image evidence, Alpha perception happens first and its sensory trace is recorded separately:
 
 ```bash
 export OPENROUTER_API_KEY=...
@@ -137,20 +132,37 @@ python controller/omegaboi.py \
   --provider asione
 ```
 
+### One image, fresh containers
+
+The first local run builds a Docker image tagged from the pinned Omega SHA. Later runs reuse that exact local image unless `--rebuild-image` is explicitly requested.
+
+Each episode gets a fresh container from that image and no persistent Omega memory volume. Omega's own memory writes can occur inside the container, but `maxHistory=0` prevents persistent-history recall and the writable layer is destroyed with the container.
+
+The run manifest records the pinned Omega SHA and the concrete Docker image ID so a benchmark population can be tied to one actual execution substrate.
+
 The controller is intentionally the default supported way to produce benchmark claims. A developer who wants standing, autonomous, or otherwise unbounded OmegaClaw must deliberately bypass this apparatus and run upstream OmegaClaw directly. That is allowed, but it is a different population and must not be presented as an AlphaClaw bounded benchmark result.
 
 ## 4. ThreadKeeper: benchmark accounting only
 
 `external/ThreadKeeper/` is a second pinned Git submodule. It exists here because Larry Greenblatt's ThreadKeeper already provides the token-accounting seam needed for the experiments.
 
-The benchmark controller mounts ThreadKeeper read-only and uses only its usage recorder/accounting path. ThreadKeeper does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
+ThreadKeeper now stays on the **host side**. The provider gateway uses only `BudgetTracker.record_from_openai_response(...)` after a real upstream response. Nothing from ThreadKeeper is copied into or mounted inside Omega.
+
+ThreadKeeper does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
 
 Benchmark accounting is stricter than ThreadKeeper's normal runtime semantics: if a real provider response does not expose usage, or if the usage record cannot be persisted, the benchmark is invalid rather than silently counting zero tokens.
 
-The run keeps both:
+Outputs include:
 
-- ThreadKeeper-normalized `usage.jsonl` for comparable input/output token counts;
-- raw provider `provider_usage.jsonl` so provider-specific cache/reasoning details are not discarded.
+```text
+manifest.json
+alpha-envelope.json
+ingress-trace.json
+usage.jsonl              # ThreadKeeper-normalized counts
+provider_usage.jsonl     # raw provider usage + boot/episode phase
+container.log
+response.txt             # when a post-handoff response was emitted
+```
 
 ## 5. Contributor Wiki
 
@@ -164,22 +176,26 @@ A Wiki save changes the Wiki only. It does not run OmegaClaw, become AlphaClaw s
 
 ## Local-first controller experiments
 
-`controller/omega_profile.py` inspects the exact pinned Omega source shape and produces a disposable reduced-authority benchmark copy. It fails closed if expected upstream mechanics move.
-
-The bounded profile currently enforces:
+The controller keeps the experimental fixture outside the subject:
 
 ```text
-boot inference grant:          0
-new-human-input grant:         EpisodeContract.max_reasoning_loops
-scheduled-wake grant:          0
-history recall:                0
-persistent history writes:    disabled
-model-directed actions:        send only
-successful send:               current grant -> 0
-dynamic command expansion:    disabled
-autonomous goal prompt:        removed
-conversation bodies in logs:   removed
+HOST
+  Alpha ingress
+  episode contract
+  provider meter / ThreadKeeper
+  communication endpoint
+  start -> observe -> stop lifecycle
+          |
+          v
+FRESH CONTAINER
+  stock pinned OmegaClaw
+  stock prompt and skills
+  stock security profile
+  stock OpenAIAPI provider
+  runtime configuration only
 ```
+
+This is not a claim that stock OmegaClaw is intrinsically safe. It is a claim that the benchmark does not hide a fork of the thing it says it is studying. Omega's own container isolation and security profile remain in force, while the outer controller supplies the finite experimental boundary.
 
 Live-provider experiments remain human-initiated edge operations. There is no standing repository workflow that spends inference tokens.
 
