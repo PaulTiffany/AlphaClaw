@@ -301,6 +301,26 @@ def install_benchmark_meter(destination: Path) -> None:
     )
     asione.write_text(text, encoding="utf-8")
 
+    openai_provider = destination / "providers" / "openai.py"
+    text = openai_provider.read_text(encoding="utf-8")
+    import_anchor = "import lib_llm_ext as llm\n"
+    if text.count(import_anchor) != 1:
+        raise RuntimeError("OmegaClaw OpenAI imports changed")
+    text = text.replace(
+        import_anchor,
+        import_anchor + "from alphaclaw_benchmark_meter import record_responses_api\n",
+        1,
+    )
+    response_anchor = '            raw = response.output_text or ""\n'
+    if text.count(response_anchor) != 1:
+        raise RuntimeError("OmegaClaw OpenAI Responses API path changed")
+    text = text.replace(
+        response_anchor,
+        '            record_responses_api(self._model_name, response)\n' + response_anchor,
+        1,
+    )
+    openai_provider.write_text(text, encoding="utf-8")
+
 
 def apply_profile(
     source: Path,
