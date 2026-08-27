@@ -1,10 +1,8 @@
-"""Create a locally auditable minimum-authority OmegaClaw tree.
+"""Create a disposable bounded OmegaClaw tree for AlphaClaw benchmarks.
 
-This program is not AlphaClaw. AlphaClaw is the sensory/prepend boundary.
-This program is a separate deterministic controller utility that transforms one
-exact pinned OmegaClaw source tree into a reduced-authority working copy.
-
-The transformation fails closed if the expected upstream source mechanics move.
+This program is not AlphaClaw and is not an OmegaClaw fork. It is experimental
+apparatus: it transforms one exact pinned OmegaClaw source tree for a bounded,
+human-initiated benchmark episode and fails closed if upstream mechanics move.
 """
 
 from __future__ import annotations
@@ -15,7 +13,7 @@ import subprocess
 from pathlib import Path
 
 OMEGA_SHA = "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
-MAX_NEW_INPUT_LOOPS = 8
+MAX_NEW_INPUT_LOOPS = 50
 MAX_WAKE_LOOPS = 0
 MAX_HISTORY = 0
 
@@ -76,8 +74,8 @@ def restrict_loop(loop: Path) -> None:
     )
     new = (
         '          (change-state! &lastresults "")\n'
-        '          ; External controller gate: boot grants no inference authority.\n'
-        '          ; Genuinely new human input refills the finite stock Omega budget below.\n'
+        '          ; Benchmark controller gate: boot grants no inference authority.\n'
+        '          ; Genuinely new human input refills the finite episode budget below.\n'
         '          (change-state! &loops 0)\n'
         '          (change-state! &nextWakeAt (+ (get_time) (wakeupInterval)))\n'
         '          ))'
@@ -95,9 +93,11 @@ def restrict_loop(loop: Path) -> None:
     loop.write_text(text, encoding="utf-8")
 
 
-def restrict_config(config: Path) -> None:
+def restrict_config(config: Path, *, max_new_input_loops: int = MAX_NEW_INPUT_LOOPS) -> None:
+    if max_new_input_loops <= 0:
+        raise ValueError("max_new_input_loops must be positive")
     replacements = {
-        "maxNewInputLoops: 50": f"maxNewInputLoops: {MAX_NEW_INPUT_LOOPS}",
+        "maxNewInputLoops: 50": f"maxNewInputLoops: {max_new_input_loops}",
         "maxWakeLoops: 1": f"maxWakeLoops: {MAX_WAKE_LOOPS}",
         "maxHistory: 30000": f"maxHistory: {MAX_HISTORY}",
     }
@@ -107,6 +107,26 @@ def restrict_config(config: Path) -> None:
             raise RuntimeError(f"OmegaClaw config changed; missing exact setting {old!r}")
         text = text.replace(old, new, 1)
     config.write_text(text, encoding="utf-8")
+
+
+def restrict_send_termination(channels: Path) -> None:
+    """A successful send mechanically consumes the rest of this episode's grant."""
+    old = """(= (send $msg)
+   (if (!= $msg (get-state &lastsend))
+       (progn (change-state! &lastsend $msg)
+              (let $safemsg (string-replace $msg  "\\n" "\\\\n")
+                   (let $temp (cut) (commChannelSend $safemsg)))) _))
+"""
+    new = """(= (send $msg)
+   (if (!= $msg (get-state &lastsend))
+       (progn (change-state! &lastsend $msg)
+              (let $safemsg (string-replace $msg  "\\n" "\\\\n")
+                   (let $temp (cut)
+                        (progn (commChannelSend $safemsg)
+                               ; A response ends the current benchmark inference grant.
+                               (change-state! &loops 0))))) _))
+"""
+    replace_once(channels, old, new, "send termination gate")
 
 
 def plugin_record(name: str, loader: str, location: str) -> str:
@@ -187,7 +207,7 @@ def disable_persistent_history(memory: Path) -> None:
    (append-file-raw (library OmegaClaw-Core ./memory/history.metta) (swrite $addition)))
 """
     new = """(= (appendToHistory $addition)
-   ; External controller profile: persistent history writes disabled.
+   ; Benchmark profile: persistent history writes disabled.
    True)
 """
     replace_once(memory, old, new, "history writer")
@@ -234,7 +254,63 @@ def sanitize_logging(loop: Path, provider: Path) -> None:
     provider.write_text(provider_text.replace(old, new, 1), encoding="utf-8")
 
 
-def apply_profile(source: Path, destination: Path, *, channel: str, provider: str) -> None:
+def install_benchmark_meter(destination: Path) -> None:
+    """Instrument provider responses with the pinned external ThreadKeeper recorder."""
+    meter_source = Path(__file__).with_name("threadkeeper_meter.py")
+    if not meter_source.is_file():
+        raise RuntimeError(f"benchmark meter source is missing: {meter_source}")
+    shutil.copy2(meter_source, destination / "providers" / "alphaclaw_benchmark_meter.py")
+
+    provider = destination / "providers" / "lib_llm_ext.py"
+    text = provider.read_text(encoding="utf-8")
+    import_anchor = "from config import config_get_by_key\n"
+    if text.count(import_anchor) != 1:
+        raise RuntimeError("OmegaClaw provider imports changed; refusing meter transform")
+    text = text.replace(
+        import_anchor,
+        import_anchor + "from alphaclaw_benchmark_meter import record_openai_response\n",
+        1,
+    )
+    response_anchor = '            raw = response.choices[0].message.content or ""\n'
+    if text.count(response_anchor) != 1:
+        raise RuntimeError("OmegaClaw base provider response path changed")
+    text = text.replace(
+        response_anchor,
+        '            record_openai_response(self._model_name, response)\n' + response_anchor,
+        1,
+    )
+    provider.write_text(text, encoding="utf-8")
+
+    asione = destination / "providers" / "asione.py"
+    text = asione.read_text(encoding="utf-8")
+    import_anchor = "import lib_llm_ext as llm\n"
+    if text.count(import_anchor) != 1:
+        raise RuntimeError("OmegaClaw ASI:One imports changed")
+    text = text.replace(
+        import_anchor,
+        import_anchor + "from alphaclaw_benchmark_meter import record_openai_response\n",
+        1,
+    )
+    response_anchor = "            raw = response.choices[0].message.content\n"
+    if text.count(response_anchor) != 1:
+        raise RuntimeError("OmegaClaw ASI:One response path changed")
+    text = text.replace(
+        response_anchor,
+        '            record_openai_response(self._model_name, response)\n' + response_anchor,
+        1,
+    )
+    asione.write_text(text, encoding="utf-8")
+
+
+def apply_profile(
+    source: Path,
+    destination: Path,
+    *,
+    channel: str,
+    provider: str,
+    max_new_input_loops: int = MAX_NEW_INPUT_LOOPS,
+    meter: bool = False,
+) -> None:
     validate_source(source)
     if destination.exists():
         raise RuntimeError(f"destination already exists: {destination}")
@@ -242,12 +318,18 @@ def apply_profile(source: Path, destination: Path, *, channel: str, provider: st
 
     loop = destination / "src" / "loop.metta"
     restrict_loop(loop)
-    restrict_config(destination / "config" / "config.yaml")
+    restrict_config(
+        destination / "config" / "config.yaml",
+        max_new_input_loops=max_new_input_loops,
+    )
+    restrict_send_termination(destination / "src" / "channels.metta")
     restrict_plugins(destination / "config" / "plugins.yaml", channel, provider)
     restrict_model_actions(destination / "src" / "helper.py", destination / "src" / "skills.metta")
     disable_persistent_history(destination / "src" / "memory.metta")
     restrict_prompt(destination / "memory" / "prompt.txt")
     sanitize_logging(loop, destination / "providers" / "lib_llm_ext.py")
+    if meter:
+        install_benchmark_meter(destination)
 
 
 def main() -> int:
@@ -256,12 +338,26 @@ def main() -> int:
     parser.add_argument("--destination", type=Path, required=True)
     parser.add_argument("--channel", choices=tuple(CHANNELS), default="mockchannel")
     parser.add_argument("--provider", choices=tuple(PROVIDERS), default="mockprovider")
+    parser.add_argument("--max-loops", type=int, default=MAX_NEW_INPUT_LOOPS)
+    parser.add_argument("--meter", action="store_true")
     args = parser.parse_args()
-    apply_profile(args.source, args.destination, channel=args.channel, provider=args.provider)
+    apply_profile(
+        args.source,
+        args.destination,
+        channel=args.channel,
+        provider=args.provider,
+        max_new_input_loops=args.max_loops,
+        meter=args.meter,
+    )
     print(f"profiled {OMEGA_SHA} -> {args.destination}")
     print(f"channel={args.channel} provider={args.provider}")
-    print(f"maxNewInputLoops={MAX_NEW_INPUT_LOOPS} maxWakeLoops={MAX_WAKE_LOOPS} maxHistory={MAX_HISTORY}")
+    print(
+        f"maxNewInputLoops={args.max_loops} "
+        f"maxWakeLoops={MAX_WAKE_LOOPS} maxHistory={MAX_HISTORY}"
+    )
+    print("after_response=wait_for_new_user_input_or_terminate")
     print("model_actions=send")
+    print(f"threadkeeper_meter={'enabled' if args.meter else 'disabled'}")
     return 0
 
 
