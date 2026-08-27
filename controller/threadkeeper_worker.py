@@ -91,7 +91,15 @@ def main() -> int:
         if not isinstance(payload, dict):
             raise TypeError("worker input must be a JSON object")
         result = run(payload)
-    except Exception as exc:
+    except (
+        AttributeError,
+        ImportError,
+        KeyError,
+        OSError,
+        RuntimeError,
+        TypeError,
+        ValueError,
+    ) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}), file=sys.stderr)
         return 1
 
