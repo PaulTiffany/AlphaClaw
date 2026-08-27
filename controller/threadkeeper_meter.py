@@ -11,6 +11,7 @@ import json
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 THREADKEEPER_SRC = Path("/ThreadKeeper/src")
@@ -65,26 +66,38 @@ def _raw_usage(usage: Any) -> dict[str, Any]:
         dumped = to_dict()
         if isinstance(dumped, dict):
             return dumped
-    return {
-        "prompt_tokens": _usage_member(usage, "prompt_tokens"),
-        "completion_tokens": _usage_member(usage, "completion_tokens"),
-        "total_tokens": getattr(usage, "total_tokens", None),
-    }
+
+    raw: dict[str, Any] = {}
+    for name in (
+        "prompt_tokens",
+        "completion_tokens",
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "input_tokens_details",
+        "output_tokens_details",
+        "prompt_tokens_details",
+        "completion_tokens_details",
+    ):
+        value = getattr(usage, name, None)
+        if value is not None:
+            raw[name] = value
+    return raw
 
 
-def record_openai_response(model: str, response: Any) -> None:
-    """Record one real provider call through Larry Greenblatt's accounting seam.
-
-    ThreadKeeper's runtime-oriented recorder intentionally degrades safely on
-    write errors. Benchmarking needs the opposite semantic, so this adapter
-    validates provider usage first and verifies the JSONL write happened.
-    """
+def _record(
+    model: str,
+    response: Any,
+    *,
+    input_field: str,
+    output_field: str,
+) -> None:
     usage = getattr(response, "usage", None)
     if usage is None:
         raise RuntimeError("provider response did not include usage accounting")
 
-    _usage_member(usage, "prompt_tokens")
-    _usage_member(usage, "completion_tokens")
+    input_tokens = _usage_member(usage, input_field)
+    output_tokens = _usage_member(usage, output_field)
     run_id = _run_id()
 
     BenchmarkTracker = _load_budget_tracker()
@@ -94,11 +107,19 @@ def record_openai_response(model: str, response: Any) -> None:
         escalation_log=str(BENCHMARK_DIR / "unused-escalations.jsonl"),
     )
 
+    # ThreadKeeper's helper expects the Chat Completions field names. Normalize
+    # only the two common counts while preserving the provider's raw usage below.
+    normalized_response = SimpleNamespace(
+        usage=SimpleNamespace(
+            prompt_tokens=input_tokens,
+            completion_tokens=output_tokens,
+        )
+    )
     before = USAGE_LOG.stat().st_size if USAGE_LOG.exists() else 0
     tracker.record_from_openai_response(
         node_role="omega_reasoning",
         model=model,
-        resp=response,
+        resp=normalized_response,
         thread_id=run_id,
     )
     after = USAGE_LOG.stat().st_size if USAGE_LOG.exists() else 0
@@ -114,6 +135,26 @@ def record_openai_response(model: str, response: Any) -> None:
     }
     try:
         with RAW_USAGE_LOG.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(raw_record, sort_keys=True) + "\n")
+            handle.write(json.dumps(raw_record, sort_keys=True, default=str) + "\n")
     except OSError as exc:
         raise RuntimeError("could not persist raw provider usage") from exc
+
+
+def record_openai_response(model: str, response: Any) -> None:
+    """Record an OpenAI-compatible Chat Completions response."""
+    _record(
+        model,
+        response,
+        input_field="prompt_tokens",
+        output_field="completion_tokens",
+    )
+
+
+def record_responses_api(model: str, response: Any) -> None:
+    """Record an OpenAI Responses API response."""
+    _record(
+        model,
+        response,
+        input_field="input_tokens",
+        output_field="output_tokens",
+    )
