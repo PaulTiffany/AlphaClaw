@@ -18,11 +18,16 @@ ALPHA_DIRECTIONS = (
 )
 
 
-def envelope(payload: str) -> dict[str, object]:
+def envelope(
+    payload: str,
+    *,
+    episode_contract: dict[str, object] | None = None,
+) -> dict[str, object]:
     payload = payload.strip()
     if not payload:
         raise ValueError("payload must not be empty")
-    return {
+
+    document: dict[str, object] = {
         "schema_version": SCHEMA_VERSION,
         "kind": KIND,
         "contract": list(ALPHA_DIRECTIONS),
@@ -31,11 +36,26 @@ def envelope(payload: str) -> dict[str, object]:
             "content": payload,
         },
     }
+    if episode_contract is not None:
+        if not isinstance(episode_contract, dict) or not episode_contract:
+            raise ValueError("episode_contract must be a non-empty object")
+        # The controller may fill this explicit experimental slot. It cannot
+        # replace or mutate the fixed Alpha contract above.
+        document["episode_contract"] = episode_contract
+    return document
 
 
-def prepend(payload: str) -> str:
+def prepend(
+    payload: str,
+    *,
+    episode_contract: dict[str, object] | None = None,
+) -> str:
     """Return data-only JSON; never emit a MeTTa form or executable wrapper."""
-    return json.dumps(envelope(payload), ensure_ascii=False, sort_keys=True) + "\n"
+    return json.dumps(
+        envelope(payload, episode_contract=episode_contract),
+        ensure_ascii=False,
+        sort_keys=True,
+    ) + "\n"
 
 
 def main() -> int:
