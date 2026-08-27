@@ -11,6 +11,7 @@ import urllib.request
 from collections.abc import Callable
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from typing import Any
 
 from threadkeeper_meter import ThreadKeeperRecorder
@@ -107,6 +108,32 @@ def _network_transport(
     if not isinstance(payload, dict):
         raise ProviderProxyError(f"{spec.display_name} returned non-object JSON")
     return payload
+
+
+def _append_raw_usage_receipt(
+    recorder: ThreadKeeperRecorder,
+    *,
+    provider: str,
+    model: str,
+    phase: str,
+    payload: dict[str, Any],
+) -> None:
+    """Persist provider-returned usage before invoking any third-party witness."""
+    path = Path(recorder.raw_usage_log)
+    record = {
+        "ts": time.time(),
+        "thread_id": recorder.run_id,
+        "node_role": f"omega_{phase}",
+        "phase": phase,
+        "provider": provider,
+        "model": model,
+        "usage": payload.get("usage"),
+    }
+    try:
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(record, sort_keys=True, default=str) + "\n")
+    except OSError as exc:
+        raise RuntimeError("could not persist raw provider usage receipt") from exc
 
 
 class MeteredProviderGateway:
@@ -211,6 +238,13 @@ class MeteredProviderGateway:
 
         try:
             payload = self.transport(self.upstream, self.api_key, self.base_url, body)
+            _append_raw_usage_receipt(
+                self.recorder,
+                provider=self.upstream.display_name,
+                model=self.model,
+                phase=phase,
+                payload=payload,
+            )
             self.recorder.record(
                 provider=self.upstream.display_name,
                 model=self.model,
