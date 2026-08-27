@@ -25,27 +25,40 @@ def _load(name: str, path: Path):
 runner = _load("omegaboi", CONTROLLER / "omegaboi.py")
 
 
-def test_threadkeeper_is_exact_clean_benchmark_gitlink() -> None:
+def test_benchmark_dependencies_are_exact_clean_gitlinks() -> None:
+    assert runner.verify_omega() == runner.OMEGA_SHA
     assert runner.verify_threadkeeper() == runner.THREADKEEPER_SHA
 
 
-def test_docker_command_mounts_threadkeeper_read_only_and_selects_provider(tmp_path: Path) -> None:
-    spec = runner.PROVIDERS["asione"]
+def test_docker_command_runs_stock_omega_with_runtime_configuration_only() -> None:
+    contract = runner.EpisodeContract(max_reasoning_loops=7)
     command = runner._docker_run_command(
-        image="alphaclaw-omegaboi:test",
+        image=runner.stock_image_tag(),
         container_name="omegaboi-test",
-        output_dir=tmp_path,
-        threadkeeper_dir=ROOT / "external" / "ThreadKeeper",
-        provider=spec,
+        proxy_url="http://host.docker.internal:12345/v1/",
+        proxy_token="fixture-token",
         model="asi1-ultra",
-        openaiapi_url=None,
+        contract=contract,
+        timeout=90,
     )
 
     assert "TEST_SERVER_IP=host.docker.internal" in command
-    assert any(value.endswith(":/ThreadKeeper:ro") for value in command)
-    assert "provider=ASIOne" in command
+    assert "OPENAIAPI_API_KEY=fixture-token" in command
+    assert "provider=OpenAIAPI" in command
+    assert "openaiapi_url=http://host.docker.internal:12345/v1/" in command
     assert "model=asi1-ultra" in command
-    assert "ASIONE_API_KEY" in command
+    assert "maxNewInputLoops=7" in command
+    assert "maxWakeLoops=0" in command
+    assert "maxHistory=0" in command
+    assert "wakeupInterval=150" in command
+    assert "securityPolicyPath=/PeTTa/repos/OmegaClaw-Core/profile/policy.yaml" in command
+    assert "-v" not in command
+    assert "--volume" not in command
+
+
+def test_stock_image_tag_is_bound_to_pinned_omega_sha() -> None:
+    assert runner.OMEGA_SHA[:12] in runner.stock_image_tag()
+    assert "stock" in runner.stock_image_tag()
 
 
 def test_usage_summary_counts_threadkeeper_records(tmp_path: Path) -> None:
