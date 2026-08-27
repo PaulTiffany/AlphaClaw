@@ -27,13 +27,43 @@ The first is AlphaClaw proper. The second is an upstream dependency. The third i
 
 `ingress/` contains the AlphaClaw runtime idea.
 
-For already-textual input, `ingress/prepend.py` preserves the evidence and wraps it in a fixed data-only boundary envelope:
+`ingress/pipe.py` is the deterministic front door. It mechanically chooses only between text passthrough and supported multimedia perception. Text never invokes a sensory model. Both paths always converge on the same fixed Alpha prepend before anything is handed to OmegaClaw.
+
+```text
+text -------------------------------> fixed Alpha prepend -> text-only handoff
+image -> one external perception ---> fixed Alpha prepend -> text-only handoff
+```
+
+For already-textual input:
+
+```bash
+python ingress/pipe.py --text "your message"
+```
+
+For a text file, the file is read as UTF-8 and takes the same passthrough path:
+
+```bash
+python ingress/pipe.py --input-file notes.md
+```
+
+For an image, the pipe invokes the external sensory translator once and then prepends the resulting symbolic handoff:
+
+```bash
+export OPENROUTER_API_KEY=...
+python ingress/pipe.py --input-file image.png
+```
+
+Unsupported media fails closed rather than being guessed at.
+
+The fixed prepend tells OmegaClaw that its handoff is text-only evidence. OmegaClaw must not pretend that the handoff itself provides direct image, audio, video, or other multimedia perception; further multimedia perception requires an explicitly authorized external perception tool.
+
+The lower-level stages remain independently callable. For already-textual input, `ingress/prepend.py` preserves the evidence and wraps it in the fixed data-only boundary envelope:
 
 ```bash
 python ingress/prepend.py --text "your message"
 ```
 
-For non-text evidence, one external sensory inference may translate the evidence before that prepend:
+For image evidence, the sensory translation can also be run separately before that prepend:
 
 ```bash
 python ingress/openrouter_image.py \
