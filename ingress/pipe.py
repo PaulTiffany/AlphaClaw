@@ -108,6 +108,7 @@ def prepare(
     model: str = openrouter_image.DEFAULT_MODEL,
     api_key: str = "",
     image_runner: ImageRunner = openrouter_image.run,
+    episode_contract: dict[str, object] | None = None,
 ) -> tuple[str, dict[str, Any]]:
     """Produce the exact text-only Alpha envelope to deliver to OmegaClaw."""
     if (text is None) == (input_file is None):
@@ -125,7 +126,7 @@ def prepare(
         )
 
     # Mandatory convergence point: passthrough and perception both receive Alpha's fixed prepend.
-    return alpha_prepend.prepend(payload), trace
+    return alpha_prepend.prepend(payload, episode_contract=episode_contract), trace
 
 
 def append_trace(path: Path, trace: dict[str, Any]) -> None:
