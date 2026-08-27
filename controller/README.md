@@ -26,7 +26,8 @@ provider -> raw provider receipt -> isolated ThreadKeeper witness
 The separation is deliberate:
 
 ```text
-perception != inference != control != measurement != judgment
+perception != authority != inference
+control != measurement != judgment
 ```
 
 ## Stock Omega stays stock
