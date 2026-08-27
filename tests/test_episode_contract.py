@@ -23,21 +23,26 @@ episode = _load("episode_contract", ROOT / "controller" / "episode_contract.py")
 prepend = _load("episode_prepend", ROOT / "ingress" / "prepend.py")
 
 
-def test_default_contract_is_fifty_loops_and_no_wakeups() -> None:
+def test_default_contract_is_iterative_and_stock_boot_is_accounted_separately() -> None:
     contract = episode.EpisodeContract()
 
     assert contract.max_reasoning_loops == 50
     assert contract.max_wake_loops == 0
     assert contract.max_history == 0
     assert contract.after_response == "wait_for_new_user_input_or_terminate"
-    assert any("at most 50 total reasoning loops" in line for line in contract.instructions())
-    assert any("inference grant ends" in line for line in contract.instructions())
+    assert contract.boot_behavior == "stock_omegaclaw_boot_observed_and_metered"
+    assert any("at most 50 reasoning loops" in line for line in contract.instructions())
+    assert any("stock startup activity" in line for line in contract.instructions())
 
 
-def test_contract_rejects_autonomous_wakeups_or_empty_budget() -> None:
-    with pytest.raises(ValueError, match="positive"):
+def test_contract_allows_smaller_deliberate_bounds_but_has_hard_ceiling() -> None:
+    assert episode.EpisodeContract(max_reasoning_loops=1).max_reasoning_loops == 1
+    assert episode.EpisodeContract(max_reasoning_loops=7).max_reasoning_loops == 7
+    with pytest.raises(ValueError, match="between 1 and 50"):
         episode.EpisodeContract(max_reasoning_loops=0)
-    with pytest.raises(ValueError, match="wake loops"):
+    with pytest.raises(ValueError, match="between 1 and 50"):
+        episode.EpisodeContract(max_reasoning_loops=51)
+    with pytest.raises(ValueError, match="scheduled wake grants"):
         episode.EpisodeContract(max_wake_loops=1)
 
 

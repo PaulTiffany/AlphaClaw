@@ -75,21 +75,13 @@ jobs:
       - name: Run deterministic tests
         run: pytest -q
 
-      - name: Dry-profile bounded Omega locally with no credentials
+      - name: Verify stock Omega benchmark fixture is read-only
         run: |
-          destination="$(mktemp -d)/omegaclaw-profiled"
-          python controller/omega_profile.py \
+          test ! -e controller/omega_profile.py
+          python controller/inspect_omega.py \
             --source OmegaClaw-Core \
-            --destination "$destination" \
-            --max-loops 7 \
-            --meter
-          grep -Fq 'maxNewInputLoops: 7' "$destination/config/config.yaml"
-          grep -Fq 'maxWakeLoops: 0' "$destination/config/config.yaml"
-          grep -Fq 'maxHistory: 0' "$destination/config/config.yaml"
-          grep -Fq 'STATIC_LLM_COMMANDS = {"send"}' "$destination/src/helper.py"
-          grep -Fq 'A response ends the current benchmark inference grant' \
-            "$destination/src/channels.metta"
-          test -f "$destination/providers/alphaclaw_benchmark_meter.py"
-          test "$(grep -c '^- name:' "$destination/config/plugins.yaml")" = 2
-          grep -Fq -- '- name: mockchannel' "$destination/config/plugins.yaml"
-          grep -Fq -- '- name: mockprovider' "$destination/config/plugins.yaml"
+            --output /tmp/omega-state.json
+          grep -Fq '3d711e4b9f5254ae94f31123ca242f60cfd97d29' /tmp/omega-state.json
+          grep -Fq '"maxNewInputLoops": 50' /tmp/omega-state.json
+          grep -Fq '"maxWakeLoops": 1' /tmp/omega-state.json
+          test -z "$(git -C OmegaClaw-Core status --porcelain)"
