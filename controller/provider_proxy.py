@@ -146,6 +146,8 @@ class MeteredProviderGateway:
         self._boot_attempts = 0
         self._episode_attempts = 0
         self._boot_completed = threading.Event()
+        self._episode_release = threading.Event()
+        self._closed = threading.Event()
         self._budget_exhausted = threading.Event()
         self._fatal_message = ""
         self._server: ThreadingHTTPServer | None = None
@@ -161,8 +163,13 @@ class MeteredProviderGateway:
         return self._budget_exhausted.is_set()
 
     def mark_episode_started(self) -> None:
+        """Classify subsequent Omega provider requests as post-handoff episode calls."""
         with self._lock:
             self._phase = "episode"
+
+    def release_episode_calls(self) -> None:
+        """Allow a queued episode provider request to reach the real upstream."""
+        self._episode_release.set()
 
     def wait_for_boot_call(self, timeout: float) -> bool:
         return self._boot_completed.wait(timeout)
@@ -183,6 +190,12 @@ class MeteredProviderGateway:
         with self._lock:
             self._fatal_message = message
 
+    def _wait_until_episode_released(self) -> None:
+        if not self._episode_release.wait(timeout=60):
+            raise ProviderProxyError("episode provider request was never released by controller")
+        if self._closed.is_set():
+            raise ProviderProxyError("provider gateway closed before episode request was released")
+
     def handle_completion(self, body: dict[str, Any]) -> dict[str, Any]:
         requested_model = body.get("model")
         if requested_model != self.model:
@@ -193,6 +206,8 @@ class MeteredProviderGateway:
         phase, allowed = self._reserve_call()
         if not allowed:
             return _noop_completion(self.model)
+        if phase == "episode":
+            self._wait_until_episode_released()
 
         try:
             payload = self.transport(self.upstream, self.api_key, self.base_url, body)
@@ -217,6 +232,7 @@ class MeteredProviderGateway:
                 "boot_attempts": self._boot_attempts,
                 "episode_attempts": self._episode_attempts,
                 "max_episode_calls": self.max_episode_calls,
+                "episode_released": self._episode_release.is_set(),
                 "budget_exhausted": self._budget_exhausted.is_set(),
                 "fatal_error": self._fatal_message or None,
             }
@@ -285,6 +301,8 @@ class MeteredProviderGateway:
         return f"http://host.docker.internal:{port}/v1/"
 
     def stop(self) -> None:
+        self._closed.set()
+        self._episode_release.set()
         if self._server is not None:
             self._server.shutdown()
             self._server.server_close()

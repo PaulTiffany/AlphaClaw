@@ -422,17 +422,17 @@ def run_episode(
                 raise RuntimeError(f"stock Omega boot provider call failed: {gateway.fatal_message}")
             raise TimeoutError("stock Omega produced no metered boot provider call")
 
-        # The boot provider response has been received by the host gateway, but
-        # Omega has not yet started its next iteration. Queue Alpha now so the
-        # next stock receive() sees genuinely new user input. No boot race or
-        # source patch is required.
+        # The current provider request was reserved as boot before its response
+        # existed. Classify all future requests as episode now, then queue Alpha
+        # synchronously while Omega is still processing that boot response.
+        gateway.mark_episode_started()
         if not server.send_message(rendered, timeout=10):
             raise RuntimeError("OmegaBoi benchmark channel rejected the Alpha envelope")
-        gateway.mark_episode_started()
 
-        # Wait only to separate messages emitted while processing the stock boot
-        # response. Alpha is already queued, so this marker is not an injection
-        # timing dependency.
+        # An extremely fast episode request may already be waiting at the host
+        # gateway, but it cannot reach the real provider until we release it.
+        # That lets us separate stock boot-time public messages without racing a
+        # post-handoff user response.
         _wait_for_log_marker(
             container_log,
             "(---------iteration 2)",
@@ -440,6 +440,7 @@ def run_episode(
             min(timeout, 30.0),
         )
         startup_messages = _drain_messages(server)
+        gateway.release_episode_calls()
 
         response, termination_reason = _wait_for_response(
             server,

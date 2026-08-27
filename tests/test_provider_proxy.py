@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import sys
+import threading
 from pathlib import Path
 
 import pytest
@@ -34,6 +35,15 @@ class FakeRecorder:
         self.rows.append(kwargs)
 
 
+def _response(body):
+    return {
+        "id": "ok",
+        "model": body["model"],
+        "choices": [{"message": {"role": "assistant", "content": "(send hello)"}}],
+        "usage": {"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
+    }
+
+
 def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
     recorder = FakeRecorder()
 
@@ -41,12 +51,7 @@ def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
         assert spec.display_name == "OpenRouter"
         assert api_key == "upstream-key"
         assert base_url == "https://example.invalid/v1"
-        return {
-            "id": "ok",
-            "model": body["model"],
-            "choices": [{"message": {"role": "assistant", "content": "(send hello)"}}],
-            "usage": {"prompt_tokens": 10, "completion_tokens": 2, "total_tokens": 12},
-        }
+        return _response(body)
 
     gateway = proxy.MeteredProviderGateway(
         upstream=proxy.UPSTREAMS["openrouter"],
@@ -63,6 +68,7 @@ def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
     assert recorder.rows[0]["phase"] == "boot"
 
     gateway.mark_episode_started()
+    gateway.release_episode_calls()
     gateway.handle_completion({"model": "demo-model", "messages": []})
     assert recorder.rows[1]["phase"] == "episode"
 
@@ -70,6 +76,45 @@ def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
     assert blocked["choices"][0]["message"]["content"] == "()"
     assert gateway.budget_exhausted is True
     assert len(recorder.rows) == 2
+
+
+def test_episode_request_waits_for_controller_release() -> None:
+    recorder = FakeRecorder()
+    reached_upstream = threading.Event()
+    result: list[dict[str, object]] = []
+
+    def transport(spec, api_key, base_url, body):
+        reached_upstream.set()
+        return _response(body)
+
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asione"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=2,
+        recorder=recorder,
+        transport=transport,
+    )
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+    reached_upstream.clear()
+    gateway.mark_episode_started()
+
+    thread = threading.Thread(
+        target=lambda: result.append(
+            gateway.handle_completion({"model": "demo-model", "messages": []})
+        )
+    )
+    thread.start()
+    thread.join(timeout=0.05)
+    assert thread.is_alive()
+    assert not reached_upstream.is_set()
+
+    gateway.release_episode_calls()
+    thread.join(timeout=1)
+    assert not thread.is_alive()
+    assert reached_upstream.is_set()
+    assert result[0]["id"] == "ok"
 
 
 def test_gateway_rejects_model_switch() -> None:

@@ -47,13 +47,15 @@ The runner verifies the Omega and ThreadKeeper gitlinks are exact and clean befo
 Defaults:
 
 ```text
-post-handoff reasoning loops:  1
+post-handoff reasoning loops:  50
 hard controller ceiling:       50
 maxWakeLoops:                  0
 maxHistory:                    0
 after response:                stop this one-shot episode
 boot behavior:                 stock Omega; meter separately
 ```
+
+Fifty is not a requirement to spend fifty calls. It preserves the pinned OmegaClaw iterative default as the ceiling; the controller tears the container down after the first user response. Smaller deliberate bounds such as `--max-loops 1` or `--max-loops 7` remain available for targeted experiments.
 
 The same contract is represented three ways:
 
@@ -67,9 +69,11 @@ The model is told the bound. The model does not enforce the bound.
 
 OmegaClaw normally starts with `&loops = maxNewInputLoops` before any human message. The benchmark does not race, delete, or patch that behavior.
 
-The provider gateway begins in `boot` phase and meters the stock startup call(s). After the first stock loop has completed, the controller marks the Alpha handoff as the start of `episode` phase and sends the prepared envelope. Boot usage remains visible and separate from the human-input grant.
+The provider gateway begins in `boot` phase and meters the first stock startup inference. As soon as that upstream boot response reaches the host gateway, the controller queues the prepared Alpha envelope into Omega's native test channel. The current boot response is still being processed, so the next stock `receive()` sees genuinely new human input without a source patch or boot-sequence race.
 
-The default `N=1` gives the cleanest lifecycle: one stock boot inference, then one provider grant after genuinely new human input. Deliberate iterative experiments can select a larger `N` up to 50.
+The controller waits for Omega's second-iteration log marker only to separate any public messages emitted while processing the boot response. Alpha has already been queued at that point; the marker is not used to time injection.
+
+Boot usage remains visible and separate from the human-input grant.
 
 ## Wake behavior
 
@@ -85,7 +89,7 @@ and destroys the fresh container on response, budget exhaustion, failure, or tim
 
 ## Provider and ThreadKeeper seam
 
-Omega stays stock and uses its built-in `OpenAIAPI` provider. That provider is configured to reach a tiny host-side OpenAI-compatible gateway over `host.docker.internal`.
+Omega stays stock and uses its built-in `OpenAIAPI` provider. That documented generic provider seam points to a tiny host-side OpenAI-compatible gateway over `host.docker.internal`.
 
 The gateway:
 
@@ -107,6 +111,8 @@ actual provider response + usage
         v
 unchanged response back to stock Omega
 ```
+
+This intentionally studies stock Omega through its generic OpenAI-compatible provider seam; it does not claim to reproduce provider-specific Omega plugins such as ASI:One thinking options or OpenRouter cache policy. Keeping that distinction explicit avoids another runtime overlay solely for metering.
 
 For OpenRouter the gateway asks the upstream response to include usage accounting. For all providers, missing usage invalidates the benchmark instead of being treated as zero.
 
@@ -133,6 +139,15 @@ python controller/omegaboi.py \
   --provider asicloud
 ```
 
+Example with a one-call human-input grant:
+
+```bash
+python controller/omegaboi.py \
+  --text "answer once" \
+  --provider asione \
+  --max-loops 1
+```
+
 Example with image evidence:
 
 ```bash
@@ -141,15 +156,6 @@ export ASIONE_API_KEY=...
 python controller/omegaboi.py \
   --input-file image.png \
   --provider asione
-```
-
-An iterative experiment is explicit:
-
-```bash
-python controller/omegaboi.py \
-  --text "investigate this and report" \
-  --provider asione \
-  --max-loops 7
 ```
 
 The hard controller ceiling is 50.
