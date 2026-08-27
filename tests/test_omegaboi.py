@@ -30,6 +30,11 @@ def test_benchmark_dependencies_are_exact_clean_gitlinks() -> None:
     assert runner.verify_threadkeeper() == runner.THREADKEEPER_SHA
 
 
+def test_default_runner_contract_keeps_stock_iterative_ceiling() -> None:
+    assert runner.DEFAULT_MAX_REASONING_LOOPS == 50
+    assert runner.EpisodeContract().max_reasoning_loops == 50
+
+
 def test_docker_command_runs_stock_omega_with_runtime_configuration_only() -> None:
     contract = runner.EpisodeContract(max_reasoning_loops=7)
     command = runner._docker_run_command(

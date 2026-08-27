@@ -29,7 +29,7 @@ if str(INGRESS_DIR) not in sys.path:
 import openrouter_image
 import pipe as ingress_pipe
 
-from episode_contract import EpisodeContract
+from episode_contract import DEFAULT_MAX_REASONING_LOOPS, EpisodeContract
 from provider_proxy import UPSTREAMS, MeteredProviderGateway
 from threadkeeper_meter import ThreadKeeperRecorder
 
@@ -38,7 +38,6 @@ THREADKEEPER_SHA = "a64de99e10f9f8078d25bff511b44fd71819e931"
 COMM_CHANNEL = "test"
 HOST_ALIAS = "host.docker.internal"
 OMEGA_PROVIDER = "OpenAIAPI"
-STARTUP_SETTLE_SECONDS = 0.25
 
 
 def _git_output(*args: str, cwd: Path = ROOT) -> str:
@@ -223,15 +222,13 @@ def _wait_for_log_marker(
 
 
 def _drain_messages(server: Any) -> list[str]:
+    """Drain messages already emitted by stock Omega; do not wait for new ones."""
     messages: list[str] = []
-    deadline = time.monotonic() + STARTUP_SETTLE_SECONDS
-    while time.monotonic() < deadline:
+    while True:
         value = server.getLastMessage()
-        if value:
-            messages.append(value)
-            continue
-        time.sleep(0.025)
-    return messages
+        if not value:
+            return messages
+        messages.append(value)
 
 
 def _wait_for_response(
@@ -396,6 +393,7 @@ def run_episode(
     log_handle = None
     response: str | None = None
     termination_reason = "controller_error"
+    startup_messages: list[str] = []
     proxy_url = gateway.start()
 
     try:
@@ -423,6 +421,18 @@ def run_episode(
             if gateway.fatal_message:
                 raise RuntimeError(f"stock Omega boot provider call failed: {gateway.fatal_message}")
             raise TimeoutError("stock Omega produced no metered boot provider call")
+
+        # The boot provider response has been received by the host gateway, but
+        # Omega has not yet started its next iteration. Queue Alpha now so the
+        # next stock receive() sees genuinely new user input. No boot race or
+        # source patch is required.
+        if not server.send_message(rendered, timeout=10):
+            raise RuntimeError("OmegaBoi benchmark channel rejected the Alpha envelope")
+        gateway.mark_episode_started()
+
+        # Wait only to separate messages emitted while processing the stock boot
+        # response. Alpha is already queued, so this marker is not an injection
+        # timing dependency.
         _wait_for_log_marker(
             container_log,
             "(---------iteration 2)",
@@ -430,10 +440,6 @@ def run_episode(
             min(timeout, 30.0),
         )
         startup_messages = _drain_messages(server)
-
-        gateway.mark_episode_started()
-        if not server.send_message(rendered, timeout=10):
-            raise RuntimeError("OmegaBoi benchmark channel rejected the Alpha envelope")
 
         response, termination_reason = _wait_for_response(
             server,
@@ -489,7 +495,7 @@ def main() -> int:
     parser.add_argument("--provider", choices=tuple(UPSTREAMS), required=True)
     parser.add_argument("--model")
     parser.add_argument("--sensory-model", default=openrouter_image.DEFAULT_MODEL)
-    parser.add_argument("--max-loops", type=int, default=1)
+    parser.add_argument("--max-loops", type=int, default=DEFAULT_MAX_REASONING_LOOPS)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--timeout", type=float, default=900.0)
     parser.add_argument("--openaiapi-url")

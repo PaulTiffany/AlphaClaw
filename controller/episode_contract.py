@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 
-DEFAULT_MAX_REASONING_LOOPS = 1
+DEFAULT_MAX_REASONING_LOOPS = 50
 MAX_REASONING_LOOPS = 50
 AFTER_RESPONSE = "wait_for_new_user_input_or_terminate"
 BOOT_BEHAVIOR = "stock_omegaclaw_boot_observed_and_metered"
