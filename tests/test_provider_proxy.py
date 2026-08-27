@@ -28,7 +28,11 @@ meter = _load("threadkeeper_meter_test", CONTROLLER / "threadkeeper_meter.py")
 
 
 class FakeRecorder:
-    def __init__(self) -> None:
+    def __init__(self, run_dir: Path) -> None:
+        self.run_dir = run_dir
+        self.run_id = "fake-run"
+        self.raw_usage_log = run_dir / "provider_usage.jsonl"
+        self.raw_usage_log.touch()
         self.rows: list[dict[str, object]] = []
 
     def record(self, **kwargs) -> None:
@@ -44,8 +48,8 @@ def _response(body):
     }
 
 
-def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
-    recorder = FakeRecorder()
+def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls(tmp_path: Path) -> None:
+    recorder = FakeRecorder(tmp_path)
 
     def transport(spec, api_key, base_url, body):
         assert spec.display_name == "OpenRouter"
@@ -77,9 +81,13 @@ def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls() -> None:
     assert gateway.budget_exhausted is True
     assert len(recorder.rows) == 2
 
+    raw = [json.loads(line) for line in recorder.raw_usage_log.read_text().splitlines()]
+    assert [row["phase"] for row in raw] == ["boot", "episode"]
+    assert raw[0]["usage"]["total_tokens"] == 12
 
-def test_episode_request_waits_for_controller_release() -> None:
-    recorder = FakeRecorder()
+
+def test_episode_request_waits_for_controller_release(tmp_path: Path) -> None:
+    recorder = FakeRecorder(tmp_path)
     reached_upstream = threading.Event()
     result: list[dict[str, object]] = []
 
@@ -117,21 +125,57 @@ def test_episode_request_waits_for_controller_release() -> None:
     assert result[0]["id"] == "ok"
 
 
-def test_gateway_rejects_model_switch() -> None:
+def test_gateway_rejects_model_switch(tmp_path: Path) -> None:
     gateway = proxy.MeteredProviderGateway(
         upstream=proxy.UPSTREAMS["asione"],
         api_key="key",
         base_url="https://example.invalid/v1",
         model="expected",
         max_episode_calls=1,
-        recorder=FakeRecorder(),
+        recorder=FakeRecorder(tmp_path),
         transport=lambda *args: {},
     )
     with pytest.raises(proxy.ProviderProxyError, match="unexpected model"):
         gateway.handle_completion({"model": "other"})
 
 
-def test_threadkeeper_recorder_runs_on_host_and_preserves_raw_usage(tmp_path: Path) -> None:
+def test_raw_receipt_survives_threadkeeper_failure(tmp_path: Path) -> None:
+    class FailingRecorder(FakeRecorder):
+        def record(self, **kwargs) -> None:
+            raise RuntimeError("witness failed")
+
+    recorder = FailingRecorder(tmp_path)
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asione"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        recorder=recorder,
+        transport=lambda spec, api_key, base_url, body: _response(body),
+    )
+
+    with pytest.raises(RuntimeError, match="witness failed"):
+        gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    raw = [json.loads(line) for line in recorder.raw_usage_log.read_text().splitlines()]
+    assert len(raw) == 1
+    assert raw[0]["phase"] == "boot"
+    assert raw[0]["usage"]["prompt_tokens"] == 10
+
+
+def test_threadkeeper_runs_isolated_and_receives_no_credentials(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("ASIONE_API_KEY", "do-not-cross")
+    monkeypatch.setenv("OPENROUTER_API_KEY", "do-not-cross-either")
+
+    assert meter.worker_command()[1] == "-I"
+    worker_env = meter.sanitized_worker_env()
+    assert "ASIONE_API_KEY" not in worker_env
+    assert "OPENROUTER_API_KEY" not in worker_env
+
     recorder = meter.ThreadKeeperRecorder(run_dir=tmp_path, run_id="run-1")
     recorder.record(
         provider="ASIOne",
@@ -148,7 +192,6 @@ def test_threadkeeper_recorder_runs_on_host_and_preserves_raw_usage(tmp_path: Pa
     )
 
     normalized = [json.loads(line) for line in (tmp_path / "usage.jsonl").read_text().splitlines()]
-    raw = [json.loads(line) for line in (tmp_path / "provider_usage.jsonl").read_text().splitlines()]
     assert normalized == [
         {
             "ts": normalized[0]["ts"],
@@ -159,6 +202,11 @@ def test_threadkeeper_recorder_runs_on_host_and_preserves_raw_usage(tmp_path: Pa
             "output_tokens": 4,
         }
     ]
-    assert raw[0]["provider"] == "ASIOne"
-    assert raw[0]["phase"] == "episode"
-    assert raw[0]["usage"]["completion_tokens_details"]["reasoning_tokens"] == 2
+    assert (tmp_path / "provider_usage.jsonl").read_text() == ""
+
+
+def test_controller_never_imports_threadkeeper_into_its_interpreter() -> None:
+    source = (CONTROLLER / "threadkeeper_meter.py").read_text(encoding="utf-8")
+    assert "sys.path.insert" not in source
+    assert "from threadkeeper_budget import" not in source
+    assert "BudgetTracker(" not in source
