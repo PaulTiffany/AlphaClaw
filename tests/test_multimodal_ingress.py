@@ -53,7 +53,7 @@ def test_response_content_rejects_unknown_usage():
         "model": "example/vision:free",
         "choices": [{"message": {"content": "{}"}}],
     }
-    with pytest.raises(RuntimeError, match="did not include usage accounting"):
+    with pytest.raises(TypeError, match="did not include usage accounting"):
         MODULE.response_content(response)
 
 
