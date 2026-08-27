@@ -91,8 +91,7 @@ class ThreadKeeperRecorder:
         result = subprocess.run(
             worker_command(),
             input=json.dumps(request, sort_keys=True),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            capture_output=True,
             text=True,
             cwd=self.run_dir,
             env=sanitized_worker_env(),
