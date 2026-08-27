@@ -1,6 +1,8 @@
 import importlib.util
 from pathlib import Path
 
+import pytest
+
 SOURCE = Path("ingress/openrouter_image.py")
 SPEC = importlib.util.spec_from_file_location("openrouter_image", SOURCE)
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -37,6 +39,22 @@ def test_normalize_handoff_keeps_observation_separate_from_interpretation(tmp_pa
     assert handoff["observation"]["interpretations"] == ["A project logo"]
     assert handoff["provenance"]["resolved_model"] == "example/vision:free"
     assert len(handoff["source"]["sha256"]) == 64
+
+
+def test_build_request_asks_openrouter_for_usage(tmp_path):
+    image = tmp_path / "fixture.png"
+    image.write_bytes(b"fake-image")
+    payload, _mime_type = MODULE.build_request(image, "openrouter/free")
+    assert payload["usage"] == {"include": True}
+
+
+def test_response_content_rejects_unknown_usage():
+    response = {
+        "model": "example/vision:free",
+        "choices": [{"message": {"content": "{}"}}],
+    }
+    with pytest.raises(TypeError, match="did not include usage accounting"):
+        MODULE.response_content(response)
 
 
 def test_trace_uses_existing_benchmark_role():

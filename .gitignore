@@ -1,0 +1,13 @@
+# Local benchmark outputs are evidence, not source.
+/benchmark-runs/
+
+# Local credentials must never become repository content.
+.env
+.env.*
+!.env.example
+
+# Local Python tooling state.
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.py[cod]

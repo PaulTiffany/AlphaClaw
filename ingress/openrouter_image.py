@@ -130,6 +130,7 @@ def build_request(image: Path, model: str) -> tuple[dict[str, Any], str]:
         ],
         "response_format": {"type": "json_object"},
         "temperature": 0,
+        "usage": {"include": True},
     }
     return payload, mime_type
 
@@ -160,6 +161,15 @@ def call_openrouter(payload: dict[str, Any], api_key: str) -> dict[str, Any]:
     return result
 
 
+def _required_usage_int(usage: dict[str, Any], key: str) -> int:
+    if key not in usage or usage[key] is None:
+        raise RuntimeError(f"OpenRouter image response is missing usage.{key}")
+    value = int(usage[key])
+    if value < 0:
+        raise RuntimeError(f"OpenRouter image response has negative usage.{key}")
+    return value
+
+
 def response_content(response: dict[str, Any]) -> tuple[str, str, int, int]:
     choices = response.get("choices")
     if not isinstance(choices, list) or not choices:
@@ -176,9 +186,9 @@ def response_content(response: dict[str, Any]) -> tuple[str, str, int, int]:
         resolved_model = "unknown"
     usage = response.get("usage")
     if not isinstance(usage, dict):
-        usage = {}
-    prompt_tokens = int(usage.get("prompt_tokens") or 0)
-    completion_tokens = int(usage.get("completion_tokens") or 0)
+        raise TypeError("OpenRouter image response did not include usage accounting")
+    prompt_tokens = _required_usage_int(usage, "prompt_tokens")
+    completion_tokens = _required_usage_int(usage, "completion_tokens")
     return message["content"], resolved_model, prompt_tokens, completion_tokens
 
 
