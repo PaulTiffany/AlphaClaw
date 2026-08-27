@@ -8,9 +8,10 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from collections.abc import Callable
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from typing import Any, Callable
+from typing import Any
 
 from threadkeeper_meter import ThreadKeeperRecorder
 
@@ -243,10 +244,16 @@ class MeteredProviderGateway:
                 try:
                     body = json.loads(self.rfile.read(length))
                     if not isinstance(body, dict):
-                        raise ValueError("request JSON must be an object")
+                        raise TypeError("request JSON must be an object")
                     payload = gateway.handle_completion(body)
                     rendered = json.dumps(payload).encode("utf-8")
-                except Exception as exc:
+                except (
+                    json.JSONDecodeError,
+                    ProviderProxyError,
+                    RuntimeError,
+                    TypeError,
+                    ValueError,
+                ) as exc:
                     gateway._fail(str(exc))
                     rendered = json.dumps(
                         {"error": {"message": str(exc), "type": "alphaclaw_proxy_error"}}
