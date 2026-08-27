@@ -1,9 +1,4 @@
-"""Benchmark-only adapter from Omega provider responses to ThreadKeeper accounting.
-
-This file is copied into disposable profiled Omega trees by the controller. It
-uses the pinned ThreadKeeper submodule only for recording/accounting. Missing
-provider usage invalidates the benchmark instead of being treated as zero.
-"""
+"""Host-side adapter from provider responses to pinned ThreadKeeper accounting."""
 
 from __future__ import annotations
 
@@ -14,12 +9,9 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
 
-THREADKEEPER_SRC = Path("/ThreadKeeper/src")
-THREADKEEPER_CONFIG = Path("/ThreadKeeper/threadkeeper.config.yaml")
-BENCHMARK_DIR = Path("/benchmark")
-RUN_ID_FILE = BENCHMARK_DIR / "run_id"
-USAGE_LOG = BENCHMARK_DIR / "usage.jsonl"
-RAW_USAGE_LOG = BENCHMARK_DIR / "provider_usage.jsonl"
+ROOT = Path(__file__).resolve().parents[1]
+THREADKEEPER_SRC = ROOT / "external" / "ThreadKeeper" / "src"
+THREADKEEPER_CONFIG = ROOT / "external" / "ThreadKeeper" / "threadkeeper.config.yaml"
 
 
 def _load_budget_tracker():
@@ -33,128 +25,77 @@ def _load_budget_tracker():
     return BudgetTracker
 
 
-def _run_id() -> str:
-    try:
-        value = RUN_ID_FILE.read_text(encoding="utf-8").strip()
-    except OSError as exc:
-        raise RuntimeError("benchmark run_id is unavailable") from exc
-    if not value:
-        raise RuntimeError("benchmark run_id is empty")
-    return value
+def _usage_member(usage: dict[str, Any], *names: str) -> int:
+    for name in names:
+        if name in usage and usage[name] is not None:
+            value = int(usage[name])
+            if value < 0:
+                raise RuntimeError(f"provider response usage has negative {name}")
+            return value
+    raise RuntimeError(f"provider response usage is missing {'/'.join(names)}")
 
 
-def _usage_member(usage: Any, name: str) -> int:
-    value = usage.get(name) if isinstance(usage, dict) else getattr(usage, name, None)
-    if value is None:
-        raise RuntimeError(f"provider response usage is missing {name}")
-    value = int(value)
-    if value < 0:
-        raise RuntimeError(f"provider response usage has negative {name}")
-    return value
+class ThreadKeeperRecorder:
+    """Use ThreadKeeper's recorder without importing its routing or escalation decisions."""
 
+    def __init__(self, *, run_dir: Path, run_id: str) -> None:
+        self.run_dir = run_dir
+        self.run_id = run_id
+        self.usage_log = run_dir / "usage.jsonl"
+        self.raw_usage_log = run_dir / "provider_usage.jsonl"
+        self.usage_log.touch(exist_ok=True)
+        self.raw_usage_log.touch(exist_ok=True)
 
-def _raw_usage(usage: Any) -> dict[str, Any]:
-    if isinstance(usage, dict):
-        return dict(usage)
-    model_dump = getattr(usage, "model_dump", None)
-    if callable(model_dump):
-        dumped = model_dump()
-        if isinstance(dumped, dict):
-            return dumped
-    to_dict = getattr(usage, "to_dict", None)
-    if callable(to_dict):
-        dumped = to_dict()
-        if isinstance(dumped, dict):
-            return dumped
-
-    raw: dict[str, Any] = {}
-    for name in (
-        "prompt_tokens",
-        "completion_tokens",
-        "input_tokens",
-        "output_tokens",
-        "total_tokens",
-        "input_tokens_details",
-        "output_tokens_details",
-        "prompt_tokens_details",
-        "completion_tokens_details",
-    ):
-        value = getattr(usage, name, None)
-        if value is not None:
-            raw[name] = value
-    return raw
-
-
-def _record(
-    model: str,
-    response: Any,
-    *,
-    input_field: str,
-    output_field: str,
-) -> None:
-    usage = getattr(response, "usage", None)
-    if usage is None:
-        raise RuntimeError("provider response did not include usage accounting")
-
-    input_tokens = _usage_member(usage, input_field)
-    output_tokens = _usage_member(usage, output_field)
-    run_id = _run_id()
-
-    BenchmarkTracker = _load_budget_tracker()
-    tracker = BenchmarkTracker(
-        config_path=str(THREADKEEPER_CONFIG),
-        usage_log=str(USAGE_LOG),
-        escalation_log=str(BENCHMARK_DIR / "unused-escalations.jsonl"),
-    )
-
-    # ThreadKeeper's helper expects the Chat Completions field names. Normalize
-    # only the two common counts while preserving the provider's raw usage below.
-    normalized_response = SimpleNamespace(
-        usage=SimpleNamespace(
-            prompt_tokens=input_tokens,
-            completion_tokens=output_tokens,
+        BudgetTracker = _load_budget_tracker()
+        self.tracker = BudgetTracker(
+            config_path=str(THREADKEEPER_CONFIG),
+            usage_log=str(self.usage_log),
+            escalation_log=str(run_dir / "unused-escalations.jsonl"),
         )
-    )
-    before = USAGE_LOG.stat().st_size if USAGE_LOG.exists() else 0
-    tracker.record_from_openai_response(
-        node_role="omega_reasoning",
-        model=model,
-        resp=normalized_response,
-        thread_id=run_id,
-    )
-    after = USAGE_LOG.stat().st_size if USAGE_LOG.exists() else 0
-    if after <= before:
-        raise RuntimeError("ThreadKeeper did not persist the provider usage record")
 
-    raw_record = {
-        "ts": time.time(),
-        "thread_id": run_id,
-        "node_role": "omega_reasoning",
-        "model": model,
-        "usage": _raw_usage(usage),
-    }
-    try:
-        with RAW_USAGE_LOG.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(raw_record, sort_keys=True, default=str) + "\n")
-    except OSError as exc:
-        raise RuntimeError("could not persist raw provider usage") from exc
+    def record(
+        self,
+        *,
+        provider: str,
+        model: str,
+        phase: str,
+        response_payload: dict[str, Any],
+    ) -> None:
+        usage = response_payload.get("usage")
+        if not isinstance(usage, dict):
+            raise RuntimeError("provider response did not include usage accounting")
 
+        input_tokens = _usage_member(usage, "prompt_tokens", "input_tokens")
+        output_tokens = _usage_member(usage, "completion_tokens", "output_tokens")
+        normalized = SimpleNamespace(
+            usage=SimpleNamespace(
+                prompt_tokens=input_tokens,
+                completion_tokens=output_tokens,
+            )
+        )
 
-def record_openai_response(model: str, response: Any) -> None:
-    """Record an OpenAI-compatible Chat Completions response."""
-    _record(
-        model,
-        response,
-        input_field="prompt_tokens",
-        output_field="completion_tokens",
-    )
+        before = self.usage_log.stat().st_size
+        self.tracker.record_from_openai_response(
+            node_role=f"omega_{phase}",
+            model=model,
+            resp=normalized,
+            thread_id=self.run_id,
+        )
+        after = self.usage_log.stat().st_size
+        if after <= before:
+            raise RuntimeError("ThreadKeeper did not persist the provider usage record")
 
-
-def record_responses_api(model: str, response: Any) -> None:
-    """Record an OpenAI Responses API response."""
-    _record(
-        model,
-        response,
-        input_field="input_tokens",
-        output_field="output_tokens",
-    )
+        raw_record = {
+            "ts": time.time(),
+            "thread_id": self.run_id,
+            "node_role": f"omega_{phase}",
+            "phase": phase,
+            "provider": provider,
+            "model": model,
+            "usage": usage,
+        }
+        try:
+            with self.raw_usage_log.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(raw_record, sort_keys=True, default=str) + "\n")
+        except OSError as exc:
+            raise RuntimeError("could not persist raw provider usage") from exc
