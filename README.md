@@ -72,7 +72,7 @@ This repository does **not** implement OmegaClaw.
 
 `OmegaClaw-Core/` is a pristine Git submodule pinned to one exact revision of the upstream `asi-alliance/OmegaClaw-Core` project. AlphaClaw does not silently fork it, rebrand its internals, or treat its implementation as AlphaClaw code.
 
-The benchmark runner likewise does **not** rewrite a disposable Omega tree. It builds and reuses OmegaClaw's own Dockerfile from the exact pinned source, then starts a fresh container for each measured episode. The image is the experimental subject; runtime configuration is the treatment fixture.
+The benchmark runner likewise does **not** rewrite a disposable Omega tree. It builds and reuses OmegaClaw's own Dockerfile from the exact pinned source, then starts a fresh container for each measured episode. The image is the experimental subject; runtime configuration and the host fixture define the experiment.
 
 For OmegaClaw installation, operation, internal architecture, channels, providers, tools, and normal behavior, refer to the upstream OmegaClaw documentation and source. Questions or defects intrinsic to OmegaClaw belong upstream.
 
@@ -95,13 +95,53 @@ commchannel = test
 provider = OpenAIAPI
 ```
 
-The default post-handoff grant is **1 reasoning loop**. Deliberate iterative experiments may request more, up to a hard controller ceiling of 50.
+The default post-handoff grant is **50 reasoning loops**, matching the pinned OmegaClaw iterative default and the controller's hard ceiling. Fifty is a ceiling, not a target: the controller destroys the fresh container after the first post-handoff user response. Smaller deliberate experiments may use `--max-loops 1`, `--max-loops 7`, or another value from 1 through 50.
 
-OmegaClaw's normal startup reasoning is not raced away or patched out. It runs as stock Omega and is metered separately as `boot` usage. After the Alpha handoff, provider calls are recorded as `episode` usage. The host-side provider gateway refuses to forward episode call `N + 1`, so the model is told the bound, stock Omega is configured with the same bound, and a separate external witness caps paid calls.
+### Stock boot stays stock
 
-The controller also sets the first scheduled wake later than the entire allowed episode lifetime. The fresh container is stopped after the first post-handoff user response, provider-budget exhaustion, provider/accounting failure, or timeout. This makes the upstream `1 + maxWakeLoops` wake behavior unreachable during a valid one-shot benchmark without modifying Omega.
+OmegaClaw's normal startup reasoning is not raced away or patched out. It runs as stock Omega and is metered separately as `boot` usage.
 
-A real run is human-initiated and requires an explicit provider credential. Example with ASI:One:
+When the first stock boot provider response reaches the host gateway, that request is already classified as boot. The controller then classifies future calls as episode calls and synchronously queues the prepared Alpha envelope into Omega's native test channel while Omega is still processing the boot response.
+
+The first post-handoff provider request is allowed to reach the host gateway but is held there until Omega reaches its next iteration and any boot-time public messages have been drained. Only then is the episode request released to the real provider. This means the benchmark does not depend on winning a race against Omega's next `receive()` and cannot accidentally discard a very fast post-handoff answer as boot output.
+
+The host-side gateway refuses to forward episode call `N + 1`. The model is told the bound, stock Omega is configured with the same bound, and an independent external witness caps paid post-handoff calls.
+
+### Wake behavior
+
+Pinned Omega currently grants `1 + maxWakeLoops` when a scheduled wake fires, so `maxWakeLoops=0` is not itself a proof of zero future wake inference.
+
+The controller therefore also sets the first wake deadline later than the entire allowed episode lifetime. The fresh container is stopped after response, provider-budget exhaustion, provider/accounting failure, or timeout. The scheduled wake is outside the reachable lifetime of a valid one-shot benchmark without modifying Omega.
+
+### Provider seam
+
+Omega remains stock and uses its built-in generic `OpenAIAPI` provider. That documented OpenAI-compatible seam points to a small host-side metering gateway over `host.docker.internal`.
+
+```text
+stock Omega OpenAIAPI request
+        |
+        +--> fixed model check
+        +--> post-handoff call ceiling
+        +--> phase gate during boot separation
+        |
+        v
+real selected upstream provider
+        |
+        v
+actual provider response + usage
+        |
+        +--> ThreadKeeper Record / Account
+        +--> raw provider_usage.jsonl
+        |
+        v
+unchanged response back to stock Omega
+```
+
+This profile intentionally studies stock Omega through its generic OpenAI-compatible provider seam. It does **not** claim to reproduce provider-specific Omega plugins such as ASI:One thinking options, OpenRouter cache policy, or OpenAI's Responses-API implementation. Benchmark claims must name the profile actually used rather than silently conflating those populations.
+
+For OpenRouter the gateway requests returned usage accounting. For every upstream, missing usage invalidates the benchmark instead of being treated as zero.
+
+A real run is human-initiated and requires an explicit provider credential. Example with ASI:One as the upstream endpoint:
 
 ```bash
 export ASIONE_API_KEY=...
@@ -111,7 +151,16 @@ python controller/omegaboi.py \
   --model asi1-ultra
 ```
 
-ASI Cloud, OpenRouter, OpenAI, and a custom OpenAI-compatible endpoint are also available through the same stock Omega `OpenAIAPI` provider seam. For a custom endpoint:
+A deliberately narrow one-call human-input experiment is explicit:
+
+```bash
+python controller/omegaboi.py \
+  --text "answer once" \
+  --provider asione \
+  --max-loops 1
+```
+
+For a custom OpenAI-compatible endpoint:
 
 ```bash
 export OPENAIAPI_API_KEY=...
@@ -146,7 +195,7 @@ The controller is intentionally the default supported way to produce benchmark c
 
 `external/ThreadKeeper/` is a second pinned Git submodule. It exists here because Larry Greenblatt's ThreadKeeper already provides the token-accounting seam needed for the experiments.
 
-ThreadKeeper now stays on the **host side**. The provider gateway uses only `BudgetTracker.record_from_openai_response(...)` after a real upstream response. Nothing from ThreadKeeper is copied into or mounted inside Omega.
+ThreadKeeper stays on the **host side**. The provider gateway uses only `BudgetTracker.record_from_openai_response(...)` after a real upstream response. Nothing from ThreadKeeper is copied into or mounted inside Omega.
 
 ThreadKeeper does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
 
