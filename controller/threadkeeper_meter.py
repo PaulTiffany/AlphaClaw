@@ -63,7 +63,7 @@ class ThreadKeeperRecorder:
     ) -> None:
         usage = response_payload.get("usage")
         if not isinstance(usage, dict):
-            raise RuntimeError("provider response did not include usage accounting")
+            raise TypeError("provider response did not include usage accounting")
 
         input_tokens = _usage_member(usage, "prompt_tokens", "input_tokens")
         output_tokens = _usage_member(usage, "completion_tokens", "output_tokens")
