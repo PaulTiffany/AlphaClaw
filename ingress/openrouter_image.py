@@ -186,7 +186,7 @@ def response_content(response: dict[str, Any]) -> tuple[str, str, int, int]:
         resolved_model = "unknown"
     usage = response.get("usage")
     if not isinstance(usage, dict):
-        raise RuntimeError("OpenRouter image response did not include usage accounting")
+        raise TypeError("OpenRouter image response did not include usage accounting")
     prompt_tokens = _required_usage_int(usage, "prompt_tokens")
     completion_tokens = _required_usage_int(usage, "completion_tokens")
     return message["content"], resolved_model, prompt_tokens, completion_tokens
