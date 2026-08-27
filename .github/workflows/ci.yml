@@ -29,6 +29,14 @@ jobs:
             "3d711e4b9f5254ae94f31123ca242f60cfd97d29"
           test -z "$(git -C OmegaClaw-Core status --porcelain)"
 
+      - name: Verify benchmark-only ThreadKeeper pin
+        run: |
+          test "$(git -C external/ThreadKeeper rev-parse HEAD)" = \
+            "a64de99e10f9f8078d25bff511b44fd71819e931"
+          test -z "$(git -C external/ThreadKeeper status --porcelain)"
+          test "$(git ls-files -s external/ThreadKeeper | awk '{print $1, $2}')" = \
+            "160000 a64de99e10f9f8078d25bff511b44fd71819e931"
+
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.11"
@@ -67,16 +75,21 @@ jobs:
       - name: Run deterministic tests
         run: pytest -q
 
-      - name: Dry-profile Omega locally with no credentials
+      - name: Dry-profile bounded Omega locally with no credentials
         run: |
           destination="$(mktemp -d)/omegaclaw-profiled"
           python controller/omega_profile.py \
             --source OmegaClaw-Core \
-            --destination "$destination"
-          grep -Fq 'maxNewInputLoops: 8' "$destination/config/config.yaml"
+            --destination "$destination" \
+            --max-loops 7 \
+            --meter
+          grep -Fq 'maxNewInputLoops: 7' "$destination/config/config.yaml"
           grep -Fq 'maxWakeLoops: 0' "$destination/config/config.yaml"
           grep -Fq 'maxHistory: 0' "$destination/config/config.yaml"
           grep -Fq 'STATIC_LLM_COMMANDS = {"send"}' "$destination/src/helper.py"
+          grep -Fq 'A response ends the current benchmark inference grant' \
+            "$destination/src/channels.metta"
+          test -f "$destination/providers/alphaclaw_benchmark_meter.py"
           test "$(grep -c '^- name:' "$destination/config/plugins.yaml")" = 2
           grep -Fq -- '- name: mockchannel' "$destination/config/plugins.yaml"
           grep -Fq -- '- name: mockprovider' "$destination/config/plugins.yaml"

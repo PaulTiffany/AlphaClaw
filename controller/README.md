@@ -1,41 +1,55 @@
-# Local Omega profile utilities
+# Bounded benchmark controller
 
 This directory is **not AlphaClaw** and not OmegaClaw.
 
-AlphaClaw is the sensory/prepend boundary in `ingress/`. OmegaClaw itself is the pinned upstream `OmegaClaw-Core/` submodule. These utilities are a separately auditable experiment for preparing a disposable OmegaClaw working tree with reduced authority.
+AlphaClaw is the sensory/prepend boundary in `ingress/`. OmegaClaw itself is the pinned upstream `OmegaClaw-Core/` submodule. `controller/` is the experimental apparatus used to construct and run bounded OmegaClaw benchmark episodes.
 
 ```text
 world / human
     |
     v
 AlphaClaw sensory boundary
-media -> symbolic/text handoff
     |
     v
-upstream OmegaClaw text inference
+fixed text-only envelope
+    |
+    +-- controller-issued EpisodeContract
+    |
+    v
+fresh bounded OmegaBoi
+    |
+    v
+user response / failed finite episode
 
-SEPARATE AUTHORITY PLANE:
-controller/omega_profile.py
-exact pinned Omega source -> deterministic reduced-authority copy
+SEPARATE OBSERVATION SEAM:
+external/ThreadKeeper -> provider usage accounting
 ```
 
-The separation is intentional:
+The separation remains:
 
 ```text
 perception != authority != inference
 ```
 
-## Upstream ownership boundary
+and, for benchmarks:
 
-This repository does not document or claim ownership of OmegaClaw's normal internals.
+```text
+measurement != control
+```
 
-For OmegaClaw installation, operation, channels, providers, tools, architecture, and intended upstream behavior, use the documentation and source in `OmegaClaw-Core/` / `asi-alliance/OmegaClaw-Core`.
+## One contract, three witnesses
 
-This controller only owns its own narrow claim:
+`episode_contract.py` is the source of truth for the bounded experiment. The default is 50 reasoning loops, zero wake loops, zero persistent-history recall, and `wait_for_new_user_input_or_terminate` after a response.
 
-> given the exact pinned upstream source shape we inspected, apply these explicit reductions or fail closed.
+The same contract is represented three ways:
 
-If upstream Omega changes such that an expected source fragment no longer matches, the correct controller behavior is refusal and human review—not silent adaptation.
+1. Alpha includes a plain-language/structured episode clause in its fixed JSON envelope.
+2. `omega_profile.py` writes the same `max_reasoning_loops` into the disposable Omega loop grant.
+3. `omegaboi.py` counts actual metered provider calls and refuses a run that exceeds the declared grant.
+
+The model is told the bound. The model does not enforce the bound.
+
+A successful `send` inside the profiled Omega copy mechanically sets the current loop grant to zero. With no autonomous wake loops, the process must then wait for genuinely new user input; the one-shot benchmark runner tears the container down after collecting that response.
 
 ## Inspect upstream state
 
@@ -47,25 +61,27 @@ python controller/inspect_omega.py --source OmegaClaw-Core
 
 Its output is **not a safety certificate and not authorization to run or deploy anything**.
 
-## Create a local reduced-authority copy
+## Create a disposable bounded profile
 
-Start with the credential-free mock profile:
+Credential-free mechanical inspection still works without running a provider:
 
 ```bash
 python controller/omega_profile.py \
   --source OmegaClaw-Core \
-  --destination /tmp/omegaclaw-profiled
+  --destination /tmp/omegaclaw-profiled \
+  --max-loops 50
 ```
 
-The default profile uses `mockchannel` + `mockprovider` and applies these constraints:
+The profile applies these benchmark constraints:
 
 ```text
 boot inference grant:          0
-new-human-input grant:         8
+new-human-input grant:         chosen finite loop budget
 scheduled-wake grant:          0
 history recall:                0
 persistent history writes:    disabled
 model-directed actions:        send only
+successful send:               current grant -> 0
 dynamic command expansion:    disabled
 autonomous goal prompt:        removed
 conversation bodies in logs:   removed
@@ -73,49 +89,90 @@ conversation bodies in logs:   removed
 
 The controller refuses to transform an unexpected or dirty Omega source tree. It uses exact-source substitutions so upstream mechanical drift becomes a visible failure.
 
-## Deliver one Alpha handoff to a running local mock Omega
+## Run one real bounded OmegaBoi episode
 
-`omega_mock_bridge.py` is a one-shot adapter around OmegaClaw's own native mock communication channel. It does not perceive input, choose models, start Omega, or change Omega authority. It accepts an already prepared Alpha text envelope, sends that exact string once, returns Omega's first reply, and exits.
+`omegaboi.py` is the default supported benchmark runner. A provider must be selected explicitly; there is no default API spend.
 
-After the profiled Omega process has been started separately with its `test` communication channel, Alpha output can be piped directly into the bridge:
+Example with ASI:One:
 
 ```bash
-python ingress/pipe.py --text "hello" | \
-  python controller/omega_mock_bridge.py \
-    --omega-source /tmp/omegaclaw-profiled
+export ASIONE_API_KEY=...
+python controller/omegaboi.py \
+  --text "hello" \
+  --provider asione \
+  --model asi1-ultra
 ```
 
-The same bridge receives the final Alpha envelope whether the original input took the text-passthrough path or the multimedia-perception path.
-
-A real provider or WebSocket channel is an explicit controller invocation, for example:
+Example with image evidence:
 
 ```bash
-python controller/omega_profile.py \
-  --source OmegaClaw-Core \
-  --destination /tmp/omegaclaw-profiled \
-  --channel wschat \
+export OPENROUTER_API_KEY=...
+export ASIONE_API_KEY=...
+python controller/omegaboi.py \
+  --input-file image.png \
   --provider asione
 ```
 
-That choice belongs to the outer controller/operator. AlphaClaw does not select providers, channels, credentials, inference budgets, plugins, or permissions.
-
-## Local-first testing
-
-The intended testing order is:
+For each run the controller:
 
 ```text
-1. read upstream Omega documentation for upstream behavior
-2. inspect the exact pinned source state we depend on
-3. create a disposable profiled copy
-4. mechanically test the copy locally without credentials
-5. only then add one explicitly chosen real inference provider if needed
-6. destroy the disposable run after the experiment
+verify pinned pristine Omega + ThreadKeeper
+        |
+        v
+create one EpisodeContract
+        |
+        +--> prepare Alpha envelope
+        |
+        +--> create fresh bounded Omega tree
+        |
+        v
+build Omega's native Dockerfile
+        |
+        v
+start native mock communication channel + real chosen provider
+        |
+        v
+send exactly one Alpha envelope
+        |
+        v
+first response OR finite-budget failure
+        |
+        v
+stop container and write manifest/accounting
 ```
 
-There is no standing resident, cloud lifecycle controller, upstream watcher, automatic promotion path, or remote kill-switch protocol in this architecture.
+The native Omega mock communication seam keeps benchmark traffic deterministic and programmatic. The provider call itself is real.
+
+## ThreadKeeper accounting
+
+`external/ThreadKeeper/` is mounted read-only into the benchmark container. `omega_profile.py --meter` inserts a tiny provider-boundary adapter into the disposable copy. The adapter calls ThreadKeeper's `BudgetTracker.record_from_openai_response(...)` after each real provider response.
+
+It does not use ThreadKeeper's routing or escalation policy.
+
+Benchmark semantics are deliberately stricter than ThreadKeeper runtime semantics: missing provider usage or a failed accounting write invalidates the run.
+
+Outputs include:
+
+```text
+manifest.json
+alpha-envelope.json
+ingress-trace.json
+usage.jsonl              # ThreadKeeper-normalized input/output counts
+provider_usage.jsonl     # raw provider usage details
+container.log
+response.txt             # when a response was emitted
+```
+
+## The unbounded population is explicit
+
+This controller does not silently turn itself off.
+
+A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate experiment or deployment choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
+
+There is no standing cloud lifecycle controller, upstream watcher, automatic promotion path, or repository workflow that spends provider tokens.
 
 The default development question remains:
 
 > **WHY DO WE NEED THAT?**
 
-A capability is restored only after a bounded experiment demonstrates that the minimum system cannot answer the research question without it.
+For this controller the answer is narrow: construct a fresh finite experiment, tell Omega the true experimental boundary, mechanically enforce the same boundary, measure what happened, and stop.

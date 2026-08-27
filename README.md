@@ -4,24 +4,34 @@
 
 AlphaClaw is a small sensory tool for a text-only reasoning process.
 
-The repository also contains two deliberately separate supporting surfaces: a public human-development Wiki and a local authority-reduction experiment for one exact pinned OmegaClaw source tree. They should not be confused with AlphaClaw itself.
+The repository also carries deliberately separate experimental and human-development surfaces. They should not be confused with AlphaClaw itself.
 
 ```text
 1. PERCEPTION
 human / world
     -> AlphaClaw sensory boundary
-    -> inert text/data handoff
+    -> fixed text-only evidence envelope
 
 2. INFERENCE
 text handoff
-    -> upstream OmegaClaw
+    -> pinned upstream OmegaClaw
 
-3. HUMAN DEVELOPMENT
+3. BOUNDED BENCHMARK APPARATUS
+controller/
+    -> fresh disposable OmegaBoi
+    -> finite episode contract
+    -> mechanical loop/termination bounds
+
+4. BENCHMARK ACCOUNTING
+external/ThreadKeeper
+    -> provider usage records only
+
+5. HUMAN DEVELOPMENT
 GitHub Wiki
     -> public authored pages
 ```
 
-The first is AlphaClaw proper. The second is an upstream dependency. The third is a small Git-backed place where a person can contribute documentation directly.
+The first is AlphaClaw proper. OmegaClaw and ThreadKeeper are pinned upstream dependencies. The controller is experimental apparatus. The Wiki is a human contribution surface.
 
 ## 1. AlphaClaw: sensory boundary
 
@@ -57,23 +67,7 @@ Unsupported media fails closed rather than being guessed at.
 
 The fixed prepend tells OmegaClaw that its handoff is text-only evidence. OmegaClaw must not pretend that the handoff itself provides direct image, audio, video, or other multimedia perception; further multimedia perception requires an explicitly authorized external perception tool.
 
-The lower-level stages remain independently callable. For already-textual input, `ingress/prepend.py` preserves the evidence and wraps it in the fixed data-only boundary envelope:
-
-```bash
-python ingress/prepend.py --text "your message"
-```
-
-For image evidence, the sensory translation can also be run separately before that prepend:
-
-```bash
-python ingress/openrouter_image.py \
-  --image image.png \
-  --output handoff.json
-
-python ingress/prepend.py --input-file handoff.json
-```
-
-The sensory handoff separates observation, interpretation, uncertainty, unresolved evidence, entities/relations, and provenance.
+The controller may fill one explicit `episode_contract` slot in that envelope during bounded experiments. It cannot replace or mutate Alpha's fixed sensory contract.
 
 The multimodal model is a perceptual translator, not an agent and not an authority source.
 
@@ -91,15 +85,74 @@ What this repository owns is narrower:
 
 - the exact upstream revision it chooses to test against;
 - the sensory interface presented to a text-reasoning process;
-- a separate deterministic experiment for reducing authority in a disposable local Omega working copy.
-
-That last experiment lives in `controller/`. It is deliberately **not AlphaClaw**. It is also not an upstream OmegaClaw implementation; it is our local transformation utility. See `controller/README.md`.
+- a deterministic benchmark transform over a disposable local Omega working copy.
 
 ```text
 perception != authority != inference
 ```
 
-## 3. Contributor Wiki
+## 3. Bounded OmegaBoi experiments
+
+`controller/` is benchmark apparatus. It is deliberately **not AlphaClaw** and is not an alternate OmegaClaw implementation.
+
+The supported experiment is one fresh, bounded episode:
+
+```text
+one EpisodeContract
+       |
+       +--> Alpha episode clause: "at most N reasoning loops"
+       |
+       +--> Omega maxNewInputLoops: N
+       |
+       +--> host-side provider-call witness: <= N
+
+new user input -> finite grant
+send response  -> grant becomes 0
+no response by N calls -> terminate failed episode
+wake loops -> 0
+persistent history -> 0
+```
+
+The default contract is 50 reasoning loops. The model is told the bound, but the model does not enforce it: the disposable Omega profile and outer Python runner do.
+
+A real bounded run uses OmegaClaw's native mock communication seam with a real explicitly selected provider:
+
+```bash
+export ASIONE_API_KEY=...
+python controller/omegaboi.py \
+  --text "hello" \
+  --provider asione \
+  --model asi1-ultra
+```
+
+The runner creates a fresh profiled Omega tree, builds Omega's own Docker image from it, delivers one Alpha envelope, records actual provider usage, captures the first user response, stops the container, and writes a run manifest under `benchmark-runs/` unless `--output-dir` is supplied.
+
+For image evidence, Alpha perception happens first and its own OpenRouter token trace is recorded separately:
+
+```bash
+export OPENROUTER_API_KEY=...
+export ASIONE_API_KEY=...
+python controller/omegaboi.py \
+  --input-file image.png \
+  --provider asione
+```
+
+The controller is intentionally the default supported way to produce benchmark claims. A developer who wants standing, autonomous, or otherwise unbounded OmegaClaw must deliberately bypass this apparatus and run upstream OmegaClaw directly. That is allowed, but it is a different population and must not be presented as an AlphaClaw bounded benchmark result.
+
+## 4. ThreadKeeper: benchmark accounting only
+
+`external/ThreadKeeper/` is a second pinned Git submodule. It exists here because Larry Greenblatt's ThreadKeeper already provides the token-accounting seam needed for the experiments.
+
+The benchmark controller mounts ThreadKeeper read-only and uses only its usage recorder/accounting path. ThreadKeeper does not choose providers, route work, set loop bounds, alter the Alpha prepend, select actions, or decide whether an answer is good.
+
+Benchmark accounting is stricter than ThreadKeeper's normal runtime semantics: if a real provider response does not expose usage, or if the usage record cannot be persisted, the benchmark is invalid rather than silently counting zero tokens.
+
+The run keeps both:
+
+- ThreadKeeper-normalized `usage.jsonl` for comparable input/output token counts;
+- raw provider `provider_usage.jsonl` so provider-specific cache/reasoning details are not discarded.
+
+## 5. Contributor Wiki
 
 The [AlphaClaw Wiki](https://github.com/PaulTiffany/AlphaClaw/wiki) is the public project notebook.
 
@@ -111,24 +164,24 @@ A Wiki save changes the Wiki only. It does not run OmegaClaw, become AlphaClaw s
 
 ## Local-first controller experiments
 
-`controller/` contains separately auditable utilities for inspecting the exact pinned Omega source and producing a reduced-authority local copy. The default profile is credential-free and fail-closed against unexpected source drift.
+`controller/omega_profile.py` inspects the exact pinned Omega source shape and produces a disposable reduced-authority benchmark copy. It fails closed if expected upstream mechanics move.
 
-Testing should remain disposable and local wherever possible:
+The bounded profile currently enforces:
 
 ```text
-exact pinned upstream source
-      |
-      v
-optional deterministic profile
-      |
-      v
-local bounded experiment
-      |
-      v
-process/container destroyed
+boot inference grant:          0
+new-human-input grant:         EpisodeContract.max_reasoning_loops
+scheduled-wake grant:          0
+history recall:                0
+persistent history writes:    disabled
+model-directed actions:        send only
+successful send:               current grant -> 0
+dynamic command expansion:    disabled
+autonomous goal prompt:        removed
+conversation bodies in logs:   removed
 ```
 
-Live-provider experiments belong at the human-operated edge, not in standing repository automation.
+Live-provider experiments remain human-initiated edge operations. There is no standing repository workflow that spends inference tokens.
 
 ## Development invariant
 
@@ -138,7 +191,7 @@ Before adding a mechanism, capability, workflow, resident process, or controller
 
 Documentation machinery has to answer the same question. A runtime capability must also justify the authority it adds.
 
-**Alpha senses. Omega reasons. Humans develop and authorize.**
+**Alpha senses. Omega reasons. The benchmark controller bounds. ThreadKeeper measures. Humans authorize and judge.**
 
 ## Philosophy
 
@@ -148,4 +201,4 @@ Documentation machinery has to answer the same question. A runtime capability mu
 
 AlphaClaw original code: MIT © 2026 Paul Carver Tiffany III.
 
-`OmegaClaw-Core` is upstream work and retains its own upstream license, authorship, documentation, and notices.
+`OmegaClaw-Core` and `external/ThreadKeeper` are upstream works and retain their own upstream licenses, authorship, documentation, and notices.

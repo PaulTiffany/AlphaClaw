@@ -32,27 +32,38 @@ def test_controller_is_separate_from_alpha_boundary() -> None:
     assert "perception != authority != inference" in controller_readme
 
 
-def test_profile_constants_are_minimum_authority() -> None:
-    assert profile.MAX_NEW_INPUT_LOOPS == 8
+def test_profile_constants_are_bounded() -> None:
+    assert profile.MAX_NEW_INPUT_LOOPS == 50
     assert profile.MAX_WAKE_LOOPS == 0
     assert profile.MAX_HISTORY == 0
     assert tuple(profile.CHANNELS) == ("mockchannel", "wschat")
     assert "mockprovider" in profile.PROVIDERS
 
 
-def test_config_reduction_is_exact_and_local(tmp_path: Path) -> None:
+def test_config_reduction_is_exact_local_and_parameterized(tmp_path: Path) -> None:
     source = ROOT / "OmegaClaw-Core" / "config" / "config.yaml"
     config = tmp_path / "config.yaml"
     shutil.copy2(source, config)
 
     original = source.read_text(encoding="utf-8")
-    profile.restrict_config(config)
+    profile.restrict_config(config, max_new_input_loops=13)
     reduced = config.read_text(encoding="utf-8")
 
-    assert "maxNewInputLoops: 8" in reduced
+    assert "maxNewInputLoops: 13" in reduced
     assert "maxWakeLoops: 0" in reduced
     assert "maxHistory: 0" in reduced
     assert source.read_text(encoding="utf-8") == original
+
+
+def test_send_mechanically_ends_current_episode_grant(tmp_path: Path) -> None:
+    channels = tmp_path / "channels.metta"
+    shutil.copy2(ROOT / "OmegaClaw-Core" / "src" / "channels.metta", channels)
+
+    profile.restrict_send_termination(channels)
+    reduced = channels.read_text(encoding="utf-8")
+
+    assert "A response ends the current benchmark inference grant" in reduced
+    assert "(change-state! &loops 0)" in reduced
 
 
 def test_plugin_profile_loads_only_selected_channel_and_provider(tmp_path: Path) -> None:
@@ -108,6 +119,24 @@ def test_history_prompt_and_logs_are_reduced(tmp_path: Path) -> None:
     assert prompt.read_text(encoding="utf-8") == profile.RESIDENT_PROMPT
     assert '(log INFO "loop" $lastmessage)' not in loop.read_text(encoding="utf-8")
     assert 'raw={raw!r}' not in provider.read_text(encoding="utf-8")
+
+
+def test_profile_can_install_benchmark_only_threadkeeper_meter(tmp_path: Path) -> None:
+    destination = tmp_path / "profiled"
+    profile.apply_profile(
+        ROOT / "OmegaClaw-Core",
+        destination,
+        channel="mockchannel",
+        provider="asione",
+        max_new_input_loops=3,
+        meter=True,
+    )
+
+    assert (destination / "providers" / "alphaclaw_benchmark_meter.py").is_file()
+    assert "record_openai_response" in (destination / "providers" / "lib_llm_ext.py").read_text()
+    assert "record_openai_response" in (destination / "providers" / "asione.py").read_text()
+    assert "record_responses_api" in (destination / "providers" / "openai.py").read_text()
+    assert "maxNewInputLoops: 3" in (destination / "config" / "config.yaml").read_text()
 
 
 def test_inspector_reports_state_without_certifying() -> None:
