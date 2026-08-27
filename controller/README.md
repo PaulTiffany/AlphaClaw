@@ -73,6 +73,20 @@ conversation bodies in logs:   removed
 
 The controller refuses to transform an unexpected or dirty Omega source tree. It uses exact-source substitutions so upstream mechanical drift becomes a visible failure.
 
+## Deliver one Alpha handoff to a running local mock Omega
+
+`omega_mock_bridge.py` is a one-shot adapter around OmegaClaw's own native mock communication channel. It does not perceive input, choose models, start Omega, or change Omega authority. It accepts an already prepared Alpha text envelope, sends that exact string once, returns Omega's first reply, and exits.
+
+After the profiled Omega process has been started separately with its `test` communication channel, Alpha output can be piped directly into the bridge:
+
+```bash
+python ingress/pipe.py --text "hello" | \
+  python controller/omega_mock_bridge.py \
+    --omega-source /tmp/omegaclaw-profiled
+```
+
+The same bridge receives the final Alpha envelope whether the original input took the text-passthrough path or the multimedia-perception path.
+
 A real provider or WebSocket channel is an explicit controller invocation, for example:
 
 ```bash
