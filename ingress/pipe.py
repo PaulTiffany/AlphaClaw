@@ -8,8 +8,9 @@ import json
 import mimetypes
 import os
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import openrouter_image
 import prepend as alpha_prepend
