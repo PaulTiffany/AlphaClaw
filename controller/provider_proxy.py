@@ -48,6 +48,15 @@ class ProviderProxyError(RuntimeError):
     pass
 
 
+class BootBudgetExhausted(ProviderProxyError):
+    """The controller refused upstream authorization for a boot-phase request.
+
+    Raised instead of forwarding, so no second upstream POST is ever issued. This is
+    a controller authorization decision, not an upstream failure, so it must not be
+    recorded as the gateway's fatal error when a successful boot call already exists.
+    """
+
+
 Transport = Callable[[UpstreamSpec, str, str, dict[str, Any]], dict[str, Any]]
 
 
@@ -147,6 +156,7 @@ class MeteredProviderGateway:
         base_url: str,
         model: str,
         max_episode_calls: int,
+        max_boot_calls: int,
         recorder: ThreadKeeperRecorder,
         transport: Transport = _network_transport,
     ) -> None:
@@ -158,12 +168,15 @@ class MeteredProviderGateway:
             raise ValueError("model must not be empty")
         if max_episode_calls <= 0:
             raise ValueError("max_episode_calls must be positive")
+        if max_boot_calls <= 0:
+            raise ValueError("max_boot_calls must be positive")
 
         self.upstream = upstream
         self.api_key = api_key
         self.base_url = base_url
         self.model = model
         self.max_episode_calls = max_episode_calls
+        self.max_boot_calls = max_boot_calls
         self.recorder = recorder
         self.transport = transport
         self.proxy_token = secrets.token_urlsafe(24)
@@ -176,6 +189,7 @@ class MeteredProviderGateway:
         self._episode_release = threading.Event()
         self._closed = threading.Event()
         self._budget_exhausted = threading.Event()
+        self._boot_budget_exhausted = threading.Event()
         self._fatal_message = ""
         self._server: ThreadingHTTPServer | None = None
         self._thread: threading.Thread | None = None
@@ -189,6 +203,10 @@ class MeteredProviderGateway:
     def budget_exhausted(self) -> bool:
         return self._budget_exhausted.is_set()
 
+    @property
+    def boot_budget_exhausted(self) -> bool:
+        return self._boot_budget_exhausted.is_set()
+
     def mark_episode_started(self) -> None:
         """Classify subsequent Omega provider requests as post-handoff episode calls."""
         with self._lock:
@@ -199,7 +217,20 @@ class MeteredProviderGateway:
         self._episode_release.set()
 
     def wait_for_boot_call(self, timeout: float) -> bool:
-        return self._boot_completed.wait(timeout)
+        """Wait for the first successful boot call, or for the boot budget to bind.
+
+        Returns False promptly once the controller has refused boot-phase
+        authorization, so a run whose boot budget is exhausted without a successful
+        upstream call terminates immediately instead of stalling for the full wait.
+        """
+        deadline = time.monotonic() + timeout
+        while time.monotonic() < deadline:
+            if self._boot_completed.is_set():
+                return True
+            if self._boot_budget_exhausted.is_set():
+                return False
+            time.sleep(0.05)
+        return self._boot_completed.is_set()
 
     def _reserve_call(self) -> tuple[str, bool]:
         with self._lock:
@@ -210,6 +241,18 @@ class MeteredProviderGateway:
                     return phase, False
                 self._episode_attempts += 1
             else:
+                if self._boot_attempts >= self.max_boot_calls:
+                    self._boot_budget_exhausted.set()
+                    # Only claim the fatal slot when no successful boot call exists.
+                    # A refusal after a healthy boot must not abort the episode.
+                    # NOTE: self._lock is held here and is not reentrant, so assign
+                    # directly rather than calling _fail().
+                    if not self._boot_completed.is_set() and not self._fatal_message:
+                        self._fatal_message = (
+                            "stock boot provider budget exhausted before a successful "
+                            "boot call; controller refused upstream authorization"
+                        )
+                    return phase, False
                 self._boot_attempts += 1
             return phase, True
 
@@ -232,6 +275,16 @@ class MeteredProviderGateway:
 
         phase, allowed = self._reserve_call()
         if not allowed:
+            if phase == "boot":
+                # Refuse rather than fabricate: a synthetic completion would enter
+                # Omega's context as genuine model output and contaminate the boot
+                # behavior being observed. An error is a condition Omega can meet
+                # in the wild; an invented assistant turn is not.
+                raise BootBudgetExhausted(
+                    "stock boot provider budget exhausted after "
+                    f"{self.max_boot_calls} upstream attempt(s); "
+                    "controller refused further boot-phase provider authorization"
+                )
             return _noop_completion(self.model)
         if phase == "episode":
             self._wait_until_episode_released()
@@ -266,8 +319,10 @@ class MeteredProviderGateway:
                 "boot_attempts": self._boot_attempts,
                 "episode_attempts": self._episode_attempts,
                 "max_episode_calls": self.max_episode_calls,
+                "max_boot_calls": self.max_boot_calls,
                 "episode_released": self._episode_release.is_set(),
                 "budget_exhausted": self._budget_exhausted.is_set(),
+                "boot_budget_exhausted": self._boot_budget_exhausted.is_set(),
                 "fatal_error": self._fatal_message or None,
             }
 
@@ -297,6 +352,24 @@ class MeteredProviderGateway:
                         raise TypeError("request JSON must be an object")
                     payload = gateway.handle_completion(body)
                     rendered = json.dumps(payload).encode("utf-8")
+                except BootBudgetExhausted as exc:
+                    # Deliberately does not call gateway._fail(): refusing to fund a
+                    # boot retry is a controller decision, and must not overwrite the
+                    # gateway's fatal state when a boot call already succeeded.
+                    rendered = json.dumps(
+                        {
+                            "error": {
+                                "message": str(exc),
+                                "type": "alphaclaw_boot_budget_exhausted",
+                            }
+                        }
+                    ).encode("utf-8")
+                    self.send_response(502)
+                    self.send_header("Content-Type", "application/json")
+                    self.send_header("Content-Length", str(len(rendered)))
+                    self.end_headers()
+                    self.wfile.write(rendered)
+                    return
                 except (
                     json.JSONDecodeError,
                     ProviderProxyError,

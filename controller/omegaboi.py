@@ -365,6 +365,7 @@ def run_episode(
         base_url=upstream_url,
         model=resolved_model,
         max_episode_calls=contract.max_reasoning_loops,
+        max_boot_calls=contract.max_boot_calls,
         recorder=recorder,
     )
 
@@ -466,15 +467,29 @@ def run_episode(
     gateway_state = gateway.snapshot()
     if phases.get("episode", {}).get("calls", 0) > contract.max_reasoning_loops:
         raise RuntimeError("benchmark exceeded its declared post-handoff provider-call budget")
+    if phases.get("boot", {}).get("calls", 0) > contract.max_boot_calls:
+        raise RuntimeError("benchmark exceeded its declared stock-boot provider-call budget")
     if phases.get("boot", {}).get("calls", 0) < 1:
         raise RuntimeError("benchmark did not record stock Omega boot usage")
 
     if response is not None:
         (run_dir / "response.txt").write_text(response + "\n", encoding="utf-8")
 
+    # A run in which the controller refused boot-phase provider authorization is a
+    # disclosed controller-bound failure condition, not a normal bounded episode,
+    # even when a response arrived.
+    boot_budget_exhausted = bool(gateway_state.get("boot_budget_exhausted"))
+    if boot_budget_exhausted:
+        status = "boot_budget_exhausted"
+    elif response is not None:
+        status = "completed"
+    else:
+        status = "terminated_without_response"
+
     manifest.update(
         {
-            "status": "completed" if response is not None else "terminated_without_response",
+            "status": status,
+            "boot_budget_exhausted": boot_budget_exhausted,
             "termination_reason": termination_reason,
             "usage": usage,
             "usage_by_phase": phases,
@@ -521,6 +536,8 @@ def main() -> int:
         return 1
 
     print(json.dumps(manifest, indent=2, sort_keys=True))
+    if manifest.get("boot_budget_exhausted"):
+        return 3
     return 0 if manifest.get("response_present") else 2
 
 
