@@ -1,0 +1,226 @@
+{
+  "canvas": {
+    "height": 56,
+    "width": 152
+  },
+  "generator": "scripts/make_benchmark_suite.py",
+  "items": [
+    {
+      "atomic_fact_count": 3,
+      "expected_answer": "M45",
+      "facts": [
+        {
+          "type": "token",
+          "value": "M4"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 5
+        }
+      ],
+      "family": "OCR + count",
+      "image_bytes": 25660,
+      "image_filename": "ocr_count.png",
+      "image_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "item_id": "ocr_count",
+      "probe": "perception",
+      "rule_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1",
+      "rule_text": "Reply with the token shown, then the number of squares. Use uppercase for the token and digits only for the count. Reply with no spaces and no other text.",
+      "text_control_input": "The token M4 is shown. There are 5 blue squares. Reply with the token shown, then the number of squares. Use uppercase for the token and digits only for the count. Reply with no spaces and no other text.",
+      "text_control_sha256": "26b2e8be69e857206ad2d0fe1e91c9ff5ce94ead04264efdb59b61f7aabc62de"
+    },
+    {
+      "atomic_fact_count": 4,
+      "expected_answer": "32",
+      "facts": [
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 3
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 2
+        }
+      ],
+      "family": "colour + count",
+      "image_bytes": 25660,
+      "image_filename": "colour_count.png",
+      "image_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "item_id": "colour_count",
+      "probe": "perception",
+      "rule_sha256": "da1964cacc4f9eeccf1e8a7efbf6bfa4338ac6580b0f98a4d1894cabb333fd09",
+      "rule_text": "Reply with the number of red squares then the number of blue squares. Use digits only. Reply with no spaces and no other text.",
+      "text_control_input": "There are 3 red squares and 2 blue squares. Reply with the number of red squares then the number of blue squares. Use digits only. Reply with no spaces and no other text.",
+      "text_control_sha256": "04ad0483ca71edafdb42f77131ebcce0fac446395ce07fa27d8b6469252b966b"
+    },
+    {
+      "atomic_fact_count": 3,
+      "expected_answer": "RED",
+      "facts": [
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "object_colour": "blue",
+          "object_shape": "square",
+          "predicate": "left_of",
+          "subject_colour": "red",
+          "subject_shape": "square",
+          "type": "relation"
+        }
+      ],
+      "family": "spatial relation",
+      "image_bytes": 25660,
+      "image_filename": "spatial_relation.png",
+      "image_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "item_id": "spatial_relation",
+      "probe": "perception",
+      "rule_sha256": "5ffc09fe4a72b3a44a9a4ecfb26389e427981a093cc68795b1f37f5f726c313b",
+      "rule_text": "Reply with the colour word of the leftmost square. Use uppercase. Reply with no spaces and no other text.",
+      "text_control_input": "A red square is on the left and a blue square is on the right. Reply with the colour word of the leftmost square. Use uppercase. Reply with no spaces and no other text.",
+      "text_control_sha256": "fc91dec6e41f095d01de73243267999841152be60921016743754c1a2ee51407"
+    },
+    {
+      "atomic_fact_count": 2,
+      "expected_answer": "19",
+      "facts": [
+        {
+          "type": "number",
+          "value": 12
+        },
+        {
+          "type": "number",
+          "value": 7
+        }
+      ],
+      "family": "visible-number arithmetic",
+      "image_bytes": 25660,
+      "image_filename": "number_arithmetic.png",
+      "image_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "item_id": "number_arithmetic",
+      "probe": "resident_reasoning",
+      "rule_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+      "rule_text": "Add the two numbers shown and reply with their sum. Use digits only. Reply with no spaces and no other text.",
+      "text_control_input": "The numbers 12 and 7 are shown. Add the two numbers shown and reply with their sum. Use digits only. Reply with no spaces and no other text.",
+      "text_control_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e"
+    },
+    {
+      "atomic_fact_count": 4,
+      "expected_answer": "RED",
+      "facts": [
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 4
+        },
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 1
+        }
+      ],
+      "family": "distractor / visual selection",
+      "image_bytes": 25660,
+      "image_filename": "distractor_selection.png",
+      "image_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "item_id": "distractor_selection",
+      "probe": "perception",
+      "rule_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+      "rule_text": "Reply with the colour word of the square that appears exactly once. Use uppercase. Reply with no spaces and no other text.",
+      "text_control_input": "There are 4 blue squares and 1 red square. Reply with the colour word of the square that appears exactly once. Use uppercase. Reply with no spaces and no other text.",
+      "text_control_sha256": "71133af1606c3c9a31fcd0696069a73c72ec5fdc1bd313ff39ecdb719556fcf0"
+    },
+    {
+      "atomic_fact_count": 5,
+      "expected_answer": "Q932",
+      "facts": [
+        {
+          "type": "token",
+          "value": "Q9"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "blue",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 3
+        },
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_presence"
+        },
+        {
+          "colour": "red",
+          "shape": "square",
+          "type": "shape_count",
+          "value": 2
+        }
+      ],
+      "family": "multi-fact relation + composition",
+      "image_bytes": 25660,
+      "image_filename": "multi_fact_composition.png",
+      "image_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "item_id": "multi_fact_composition",
+      "probe": "perception",
+      "rule_sha256": "c473668281ecb5df3c173dd89c0d6378a405fd5b15cf8833f12be7a3f6a49024",
+      "rule_text": "Reply with the token, then the number of blue squares, then the number of red squares. Use uppercase for the token and digits only for the counts. Reply with no spaces and no other text.",
+      "text_control_input": "The token Q9 is shown. There are 3 blue squares and 2 red squares. Reply with the token, then the number of blue squares, then the number of red squares. Use uppercase for the token and digits only for the counts. Reply with no spaces and no other text.",
+      "text_control_sha256": "664fddd85ac8fc293f5e5c6d44e1370c92bd78405f83c859d57ecf8caee980ac"
+    }
+  ],
+  "reasoning_condition": {
+    "max_history": 0,
+    "max_new_input_loops": 1,
+    "max_wake_loops": 0,
+    "model": "minimax/minimax-m3",
+    "note": "Fixed sponsored resident reasoning condition for this tranche. Held constant across all items; not a benchmark-tuning target and not compared against other resident models here.",
+    "provider": "asicloud"
+  },
+  "schema_version": 1,
+  "total_atomic_facts": 21
+}
