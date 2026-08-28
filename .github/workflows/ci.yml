@@ -44,6 +44,27 @@ jobs:
       - name: Install local test tooling
         run: python -m pip install pytest==9.1.1 ruff==0.16.4
 
+      - name: Verify pinned dependency bytes match their pinned blobs
+        run: |
+          python - <<'PY'
+          import sys
+
+          sys.path.insert(0, "controller")
+          from omegaboi import verify_omega, verify_threadkeeper
+
+          for name, verify in (
+              ("OmegaClaw-Core", verify_omega),
+              ("external/ThreadKeeper", verify_threadkeeper),
+          ):
+              pin = verify()
+              print(
+                  f"{name}: commit_matches_pin={pin.commit_matches_pin} "
+                  f"worktree_bytes_match_pin={pin.worktree_bytes_match_pin}"
+              )
+              assert pin.commit_matches_pin, f"{name} commit drift"
+              assert pin.worktree_bytes_match_pin, f"{name} byte drift"
+          PY
+
       - name: Lint sensory and controller boundaries
         run: ruff check ingress controller tests
 

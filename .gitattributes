@@ -1,0 +1,8 @@
+# Line-ending policy for AlphaClaw-owned files only.
+#
+# This CANNOT govern the pinned submodules. Git resolves attributes from the
+# repository that owns a path, so OmegaClaw-Core/ and external/ThreadKeeper/ are
+# controlled by their own repositories and local config, not by this file. Byte
+# drift in those trees is caught at runtime by controller/omegaboi.py instead.
+* text=auto eol=lf
+*.ps1 text eol=crlf
