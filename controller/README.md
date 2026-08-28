@@ -850,6 +850,75 @@ B2 items, the v2.1 repeat-0 rule, the B1 artifact and its handoff bytes, the tas
 the sensory and resident models, the scorer, the expected answers, the bounds, the
 ASICloud caps and B2 grading are unchanged.
 
+## Protocol v2 Condition B2 -- result (frozen)
+
+Replay of the frozen B1 `repeat_index = 0` handoffs, composed under Amendment v2.2 with
+the frozen benchmark instruction, into the same resident (ASICloud `minimax/minimax-m3`).
+**3 runs, 0 new sensory calls, 3 boot + 3 episode = 6 ASICloud calls.** Frozen at
+`benchmark/benchmark-v2-B2.json`.
+
+All nine mechanical checks passed for every item **before** its provider call: repeat-0
+selection through the v2.1 selector, both constituent digests, v2.2 composition, the
+composed digest, equality with the live image+text payload under the frozen handoff,
+Alpha prepend, envelope equality, and provenance validation. The delivered envelope was
+also checked *after* each run: `envelope_payload_sha256` equals `composed_payload_sha256`
+on all three.
+
+| item | expected | response | verdict |
+|---|---|---|---|
+| `ocr_count` | `M45` | `M45` | PASS |
+| `distractor_selection` | `RED` | *(none)* | **FAIL** -- output-contract |
+| `multi_fact_composition` | `Q932` | `Q932` | PASS |
+
+Exact-match **2/3**. Every run recorded `route: text_passthrough`,
+`sensory_inference: false` and no `sensory_trace` -- receipts were not rewritten to
+pretend perception occurred; provenance carries the origin instead.
+
+### Paired contrast against Condition A image+text
+
+Same task instruction (identical `text_sha256`), same resident, different
+sensory-model handoff.
+
+| item | dots handoff | qwen handoff | facts needed | dots | qwen | A | B2 | transition |
+|---|---|---|---|---|---|---|---|---|
+| `ocr_count` | `453cae8d…` | `d55183d4…` | 3 | 3/3 | 3/3 | `M45` PASS | `M45` PASS | none |
+| `distractor_selection` | `b8d4741e…` | `b6d1cd82…` | 4 | 4/4 | 4/4 | FAIL | FAIL | none |
+| `multi_fact_composition` | `b394302a…` | `e41d1d2e…` | 5 | 5/5 | 5/5 | `Q932` PASS | `Q932` PASS | none |
+
+Fact verdicts come from the frozen scorer; no new judge was introduced. Both sensory
+models supplied every mechanically identifiable fact each task needs.
+
+**No pass/fail transition on any of the three paired items.**
+
+The preregistered case of interest was `distractor_selection`. In Condition A the dots
+handoff was correct 4/4, the resident internally derived `RED`, and emitted it as an
+invalid skill call. B2 reproduces that exactly with different symbolic evidence:
+
+```
+A  (dots): (RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))
+B2 (qwen): (RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))
+```
+
+Zero `send` emissions in either run; both timed out with no channel message. On this one
+item, **changing only the symbolic sensory evidence did not change the resident's
+emission behaviour.** `RED` again appears in the log inside an error, and the run again
+scores FAIL / output-contract -- it is not rounded up.
+
+This is three preregistered paired cases with one failure in common. It is not evidence
+about emission behaviour in general, and no causal claim beyond these three is made.
+
+### Cap status after A + B2
+
+| | used | cap | headroom |
+|---|---|---|---|
+| ASICloud calls | **42** | 42 | **0** |
+| input tokens | 86,057 | 124,572 | 38,515 |
+| output tokens | 7,771 | 21,714 | 13,943 |
+
+**Conditions A and B2 together consume the ASICloud call cap exactly.** Condition C has
+no call headroom left under Protocol v2 and cannot be run without an amendment raising
+the cap. A test asserts this.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.

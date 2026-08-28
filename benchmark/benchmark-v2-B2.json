@@ -1,0 +1,435 @@
+{
+  "amendments": [
+    "v2.1",
+    "v2.2"
+  ],
+  "attempted_runs": 3,
+  "condition_id": "B2",
+  "generated_at": "2026-08-28T22:37:29.765201+00:00",
+  "new_sensory_calls": 0,
+  "protocol_version": "v2",
+  "replay_source": "B1 repeat_index=0",
+  "resident_model": "minimax/minimax-m3",
+  "resident_provider": "asicloud",
+  "runs": [
+    {
+      "all_checks_passed": true,
+      "checks": {
+        "1_repeat_zero_via_v2_1_selector": true,
+        "2_raw_handoff_digest": true,
+        "3_human_text_digest": true,
+        "4_composed_under_v2_2": true,
+        "5_composed_payload_digest": true,
+        "6_equals_live_image_text_payload": true,
+        "7_alpha_contract_prepended": true,
+        "8_envelope_equality": true,
+        "8b_replay_file_roundtrip": true,
+        "9_provenance_valid": true
+      },
+      "composed_payload_sha256": "57a3a785a224f4e72b3cec6a568a2ea6bad532d5bdfd08bca55e7df8deae0d72",
+      "controller_error": null,
+      "envelope_equals_live": true,
+      "envelope_matches_composed": true,
+      "envelope_payload_sha256": "57a3a785a224f4e72b3cec6a568a2ea6bad532d5bdfd08bca55e7df8deae0d72",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "M45",
+      "handoff_payload_sha256": "d55183d4daae008f7f034952a7e87e8fd803dbadd9ef3e03444d349f9997b0a3",
+      "human_text_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1",
+      "item_id": "ocr_count",
+      "manifest": {
+        "alpha_git_sha": "f70c0461a637dbf4717b37a9675a4510515e6a7e",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T22:21:29.074900+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "ocr_count.json",
+          "source_sha256": "57a3a785a224f4e72b3cec6a568a2ea6bad532d5bdfd08bca55e7df8deae0d72"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T222102Z-42831526ce",
+        "started_at": "2026-08-28T22:21:02.102147+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4263,
+          "output_tokens": 289
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 153
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2831,
+            "output_tokens": 136
+          }
+        }
+      },
+      "provenance": {
+        "amendment": "v2.2",
+        "composed_payload_sha256": "57a3a785a224f4e72b3cec6a568a2ea6bad532d5bdfd08bca55e7df8deae0d72",
+        "handoff_payload_sha256": "d55183d4daae008f7f034952a7e87e8fd803dbadd9ef3e03444d349f9997b0a3",
+        "human_text_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1",
+        "is_native_text_condition": false,
+        "item_id": "ocr_count",
+        "origin_run_id": "B1",
+        "original_image_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+        "receipt_note": "Ingress correctly records route=text_passthrough and sensory_inference=false for this replay event. No perception occurred during this run: the sensory constituent was produced earlier by the model named above, and the text constituent is the frozen benchmark instruction. The combined payload is a deterministic composition of the two and is byte-identical to what the live image+text route would build from that same handoff.",
+        "replayed_from": "B1",
+        "sensory_inference": false,
+        "sensory_model": "qwen/qwen3.7-flash"
+      },
+      "provider_call_made": true,
+      "repeat_index": 0,
+      "response": "M45\n",
+      "run_id": "20260828T222102Z-42831526ce"
+    },
+    {
+      "all_checks_passed": true,
+      "checks": {
+        "1_repeat_zero_via_v2_1_selector": true,
+        "2_raw_handoff_digest": true,
+        "3_human_text_digest": true,
+        "4_composed_under_v2_2": true,
+        "5_composed_payload_digest": true,
+        "6_equals_live_image_text_payload": true,
+        "7_alpha_contract_prepended": true,
+        "8_envelope_equality": true,
+        "8b_replay_file_roundtrip": true,
+        "9_provenance_valid": true
+      },
+      "composed_payload_sha256": "dae9694c1c54ff553a23b3bcdacf1faa7b81e4bf78fb7d7f8059287214023ffd",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_equals_live": true,
+      "envelope_matches_composed": true,
+      "envelope_payload_sha256": "dae9694c1c54ff553a23b3bcdacf1faa7b81e4bf78fb7d7f8059287214023ffd",
+      "exact_match": false,
+      "exit_code": 2,
+      "expected_answer": "RED",
+      "handoff_payload_sha256": "b6d1cd82e793179bab42fb838ab8878e414e9b6f5d1a81f1e63033a2cd7e2b7f",
+      "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+      "item_id": "distractor_selection",
+      "manifest": {
+        "alpha_git_sha": "f70c0461a637dbf4717b37a9675a4510515e6a7e",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T22:36:55.837778+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "distractor_selection.json",
+          "source_sha256": "dae9694c1c54ff553a23b3bcdacf1faa7b81e4bf78fb7d7f8059287214023ffd"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": false,
+        "run_id": "20260828T222138Z-d01f643e78",
+        "started_at": "2026-08-28T22:21:38.997752+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "terminated_without_response",
+        "termination_reason": "timeout",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4460,
+          "output_tokens": 151
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 54
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 3028,
+            "output_tokens": 97
+          }
+        }
+      },
+      "provenance": {
+        "amendment": "v2.2",
+        "composed_payload_sha256": "dae9694c1c54ff553a23b3bcdacf1faa7b81e4bf78fb7d7f8059287214023ffd",
+        "handoff_payload_sha256": "b6d1cd82e793179bab42fb838ab8878e414e9b6f5d1a81f1e63033a2cd7e2b7f",
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "is_native_text_condition": false,
+        "item_id": "distractor_selection",
+        "origin_run_id": "B1",
+        "original_image_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+        "receipt_note": "Ingress correctly records route=text_passthrough and sensory_inference=false for this replay event. No perception occurred during this run: the sensory constituent was produced earlier by the model named above, and the text constituent is the frozen benchmark instruction. The combined payload is a deterministic composition of the two and is byte-identical to what the live image+text route would build from that same handoff.",
+        "replayed_from": "B1",
+        "sensory_inference": false,
+        "sensory_model": "qwen/qwen3.7-flash"
+      },
+      "provider_call_made": true,
+      "repeat_index": 0,
+      "response": null,
+      "run_id": "20260828T222138Z-d01f643e78"
+    },
+    {
+      "all_checks_passed": true,
+      "checks": {
+        "1_repeat_zero_via_v2_1_selector": true,
+        "2_raw_handoff_digest": true,
+        "3_human_text_digest": true,
+        "4_composed_under_v2_2": true,
+        "5_composed_payload_digest": true,
+        "6_equals_live_image_text_payload": true,
+        "7_alpha_contract_prepended": true,
+        "8_envelope_equality": true,
+        "8b_replay_file_roundtrip": true,
+        "9_provenance_valid": true
+      },
+      "composed_payload_sha256": "ea81908124b539024bc7e674eb679e7924dc22817fb88178f25acad0a1797b54",
+      "controller_error": null,
+      "envelope_equals_live": true,
+      "envelope_matches_composed": true,
+      "envelope_payload_sha256": "ea81908124b539024bc7e674eb679e7924dc22817fb88178f25acad0a1797b54",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "Q932",
+      "handoff_payload_sha256": "e41d1d2e9c75e279d1c886ab2bb3cbf208271bd9b78e266ce246a80a3ae95237",
+      "human_text_sha256": "c473668281ecb5df3c173dd89c0d6378a405fd5b15cf8833f12be7a3f6a49024",
+      "item_id": "multi_fact_composition",
+      "manifest": {
+        "alpha_git_sha": "f70c0461a637dbf4717b37a9675a4510515e6a7e",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T22:37:29.685346+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "multi_fact_composition.json",
+          "source_sha256": "ea81908124b539024bc7e674eb679e7924dc22817fb88178f25acad0a1797b54"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T223705Z-6920253336",
+        "started_at": "2026-08-28T22:37:05.138925+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4530,
+          "output_tokens": 239
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 86
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 3098,
+            "output_tokens": 153
+          }
+        }
+      },
+      "provenance": {
+        "amendment": "v2.2",
+        "composed_payload_sha256": "ea81908124b539024bc7e674eb679e7924dc22817fb88178f25acad0a1797b54",
+        "handoff_payload_sha256": "e41d1d2e9c75e279d1c886ab2bb3cbf208271bd9b78e266ce246a80a3ae95237",
+        "human_text_sha256": "c473668281ecb5df3c173dd89c0d6378a405fd5b15cf8833f12be7a3f6a49024",
+        "is_native_text_condition": false,
+        "item_id": "multi_fact_composition",
+        "origin_run_id": "B1",
+        "original_image_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+        "receipt_note": "Ingress correctly records route=text_passthrough and sensory_inference=false for this replay event. No perception occurred during this run: the sensory constituent was produced earlier by the model named above, and the text constituent is the frozen benchmark instruction. The combined payload is a deterministic composition of the two and is byte-identical to what the live image+text route would build from that same handoff.",
+        "replayed_from": "B1",
+        "sensory_inference": false,
+        "sensory_model": "qwen/qwen3.7-flash"
+      },
+      "provider_call_made": true,
+      "repeat_index": 0,
+      "response": "Q932\n",
+      "run_id": "20260828T223705Z-6920253336"
+    }
+  ],
+  "schema_version": 1,
+  "sensory_model_origin": "qwen/qwen3.7-flash"
+}

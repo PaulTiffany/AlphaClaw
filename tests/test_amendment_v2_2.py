@@ -304,5 +304,23 @@ def test_live_ingress_still_refuses_a_non_image_combined_input(tmp_path) -> None
         pipe.route_image_with_text(payload, "some text", model="m", api_key="k")
 
 
-def test_no_b2_result_artifact_exists_yet() -> None:
-    assert not (ROOT / "benchmark" / "benchmark-v2-B2.json").exists()
+def test_b2_artifact_if_present_used_this_amendment(items, sources) -> None:
+    """Once B2 has run, its artifact must show the v2.2 composition actually applied:
+    the composed digests it recorded must equal what this module composes now."""
+    artifact = ROOT / "benchmark" / "benchmark-v2-B2.json"
+    if not artifact.exists():
+        pytest.skip("B2 has not been run yet")
+    data = json.loads(artifact.read_text(encoding="utf-8"))
+    assert data["condition_id"] == "B2"
+    assert "v2.2" in data["amendments"]
+    assert data["new_sensory_calls"] == 0
+    for run in data["runs"]:
+        item_id = run["item_id"]
+        expected = a22.sha256_text(a22.compose_replay_payload(
+            human_text=items[item_id]["rule_text"],
+            handoff_payload=sources[item_id]["handoff_payload"]))
+        assert run["composed_payload_sha256"] == expected
+        assert run["handoff_payload_sha256"] == a22.FROZEN_HANDOFF_SHA256[item_id]
+        assert run["human_text_sha256"] == a22.FROZEN_HUMAN_TEXT_SHA256[item_id]
+        assert run["repeat_index"] == 0
+        assert run["all_checks_passed"] is True
