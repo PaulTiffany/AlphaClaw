@@ -56,3 +56,45 @@ def test_episode_clause_cannot_replace_fixed_alpha_contract() -> None:
     assert document["episode_contract"]["mode"] == "bounded_benchmark"
     assert any("outside OmegaClaw" in line for line in document["contract"])
     assert any("text-only evidence" in line for line in document["contract"])
+
+
+def test_boot_call_budget_defaults_to_one_and_is_validated() -> None:
+    assert episode.EpisodeContract().max_boot_calls == 1
+    assert episode.EpisodeContract(max_boot_calls=3).max_boot_calls == 3
+    with pytest.raises(ValueError, match="max_boot_calls must be between 1 and 50"):
+        episode.EpisodeContract(max_boot_calls=0)
+    with pytest.raises(ValueError, match="max_boot_calls must be between 1 and 50"):
+        episode.EpisodeContract(max_boot_calls=51)
+
+
+def test_boot_budget_is_a_controller_bound_and_never_reaches_omega() -> None:
+    """The host authorization budget must not leak into Omega's observed input.
+
+    handoff() feeds Alpha's envelope. Adding the budget there would change the text
+    stock Omega receives and contaminate the behavior the benchmark measures.
+    """
+    contract = episode.EpisodeContract(max_boot_calls=1)
+
+    handoff = contract.handoff()
+    assert "max_boot_calls" not in handoff
+    assert all("boot call" not in line for line in contract.instructions())
+    assert all("budget" not in line for line in contract.instructions())
+
+    # ...but it must be present in the receipts.
+    assert contract.manifest()["max_boot_calls"] == 1
+
+
+def test_omega_facing_handoff_shape_is_unchanged_by_the_boot_budget() -> None:
+    contract = episode.EpisodeContract(max_reasoning_loops=7)
+    rendered = prepend.prepend("hello", episode_contract=contract.handoff())
+    document = json.loads(rendered)
+
+    assert set(document["episode_contract"]) == {
+        "mode",
+        "max_reasoning_loops",
+        "max_wake_loops",
+        "max_history",
+        "after_response",
+        "boot_behavior",
+        "instructions",
+    }

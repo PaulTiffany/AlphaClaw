@@ -63,6 +63,7 @@ def test_gateway_preserves_stock_boot_then_bounds_post_handoff_calls(tmp_path: P
         base_url="https://example.invalid/v1",
         model="demo-model",
         max_episode_calls=1,
+        max_boot_calls=1,
         recorder=recorder,
         transport=transport,
     )
@@ -101,6 +102,7 @@ def test_episode_request_waits_for_controller_release(tmp_path: Path) -> None:
         base_url="https://example.invalid/v1",
         model="demo-model",
         max_episode_calls=2,
+        max_boot_calls=1,
         recorder=recorder,
         transport=transport,
     )
@@ -132,6 +134,7 @@ def test_gateway_rejects_model_switch(tmp_path: Path) -> None:
         base_url="https://example.invalid/v1",
         model="expected",
         max_episode_calls=1,
+        max_boot_calls=1,
         recorder=FakeRecorder(tmp_path),
         transport=lambda *args: {},
     )
@@ -151,6 +154,7 @@ def test_raw_receipt_survives_threadkeeper_failure(tmp_path: Path) -> None:
         base_url="https://example.invalid/v1",
         model="demo-model",
         max_episode_calls=1,
+        max_boot_calls=1,
         recorder=recorder,
         transport=lambda spec, api_key, base_url, body: _response(body),
     )
@@ -210,3 +214,169 @@ def test_controller_never_imports_threadkeeper_into_its_interpreter() -> None:
     assert "sys.path.insert" not in source
     assert "from threadkeeper_budget import" not in source
     assert "BudgetTracker(" not in source
+
+
+def test_boot_budget_refuses_second_upstream_attempt(tmp_path: Path) -> None:
+    """The mechanical certificate: attempt #2 never reaches the transport.
+
+    Not 'a flag was set' -- the upstream callable itself is never invoked a second
+    time, so no second provider POST can occur.
+    """
+    recorder = FakeRecorder(tmp_path)
+    upstream_bodies: list[dict[str, object]] = []
+
+    def transport(spec, api_key, base_url, body):
+        upstream_bodies.append(body)
+        return _response(body)
+
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asicloud"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        max_boot_calls=1,
+        recorder=recorder,
+        transport=transport,
+    )
+
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+    assert len(upstream_bodies) == 1
+
+    for _ in range(5):
+        with pytest.raises(proxy.BootBudgetExhausted, match="boot provider budget exhausted"):
+            gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    # No second upstream POST occurred, despite five further boot attempts.
+    assert len(upstream_bodies) == 1
+    assert gateway.boot_budget_exhausted is True
+    assert gateway.snapshot()["boot_attempts"] == 1
+    assert gateway.snapshot()["max_boot_calls"] == 1
+
+
+def test_boot_budget_counts_attempts_not_successful_completions(tmp_path: Path) -> None:
+    """A failed upstream attempt consumes the budget; failure buys no free retry."""
+    recorder = FakeRecorder(tmp_path)
+    attempts: list[dict[str, object]] = []
+
+    def failing_transport(spec, api_key, base_url, body):
+        attempts.append(body)
+        raise proxy.ProviderProxyError("ASICloud returned HTTP 401: bad key")
+
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asicloud"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        max_boot_calls=1,
+        recorder=recorder,
+        transport=failing_transport,
+    )
+
+    with pytest.raises(proxy.ProviderProxyError, match="HTTP 401"):
+        gateway.handle_completion({"model": "demo-model", "messages": []})
+    assert len(attempts) == 1
+
+    with pytest.raises(proxy.BootBudgetExhausted):
+        gateway.handle_completion({"model": "demo-model", "messages": []})
+    assert len(attempts) == 1
+
+    # The original upstream error is preserved, not overwritten by the refusal.
+    assert "HTTP 401" in gateway.fatal_message
+    # And the controller stops waiting immediately rather than stalling.
+    assert gateway.wait_for_boot_call(5.0) is False
+
+
+def test_boot_refusal_after_healthy_boot_does_not_poison_the_episode(tmp_path: Path) -> None:
+    recorder = FakeRecorder(tmp_path)
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asicloud"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        max_boot_calls=1,
+        recorder=recorder,
+        transport=lambda spec, api_key, base_url, body: _response(body),
+    )
+
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+    assert gateway.wait_for_boot_call(1.0) is True
+
+    with pytest.raises(proxy.BootBudgetExhausted):
+        gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    # A refusal that follows a successful boot must not claim the fatal slot,
+    # otherwise _wait_for_response would abort a legitimate episode.
+    assert gateway.fatal_message == ""
+
+    gateway.mark_episode_started()
+    gateway.release_episode_calls()
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+    assert recorder.rows[-1]["phase"] == "episode"
+
+
+def test_boot_refusal_is_not_a_fabricated_completion(tmp_path: Path) -> None:
+    """Boot refusal raises; it must never inject synthetic assistant content."""
+    recorder = FakeRecorder(tmp_path)
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asicloud"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        max_boot_calls=1,
+        recorder=recorder,
+        transport=lambda spec, api_key, base_url, body: _response(body),
+    )
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    try:
+        gateway.handle_completion({"model": "demo-model", "messages": []})
+    except proxy.BootBudgetExhausted as exc:
+        assert "()" not in str(exc)
+    else:
+        raise AssertionError("boot refusal must raise, not return a completion")
+
+
+def test_boot_refusal_does_not_inflate_boot_usage_accounting(tmp_path: Path) -> None:
+    recorder = FakeRecorder(tmp_path)
+    gateway = proxy.MeteredProviderGateway(
+        upstream=proxy.UPSTREAMS["asicloud"],
+        api_key="key",
+        base_url="https://example.invalid/v1",
+        model="demo-model",
+        max_episode_calls=1,
+        max_boot_calls=1,
+        recorder=recorder,
+        transport=lambda spec, api_key, base_url, body: _response(body),
+    )
+
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+    for _ in range(3):
+        with pytest.raises(proxy.BootBudgetExhausted):
+            gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    gateway.mark_episode_started()
+    gateway.release_episode_calls()
+    gateway.handle_completion({"model": "demo-model", "messages": []})
+
+    raw = [json.loads(line) for line in recorder.raw_usage_log.read_text().splitlines()]
+    # Refusals are a failure-state fact, not a usage fact: boot/episode split intact.
+    assert [row["phase"] for row in raw] == ["boot", "episode"]
+    assert len(recorder.rows) == 2
+
+
+def test_gateway_requires_a_positive_boot_budget(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="max_boot_calls must be positive"):
+        proxy.MeteredProviderGateway(
+            upstream=proxy.UPSTREAMS["asicloud"],
+            api_key="key",
+            base_url="https://example.invalid/v1",
+            model="demo-model",
+            max_episode_calls=1,
+            max_boot_calls=0,
+            recorder=FakeRecorder(tmp_path),
+            transport=lambda *args: {},
+        )
