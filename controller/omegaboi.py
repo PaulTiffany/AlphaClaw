@@ -385,6 +385,18 @@ def _docker_run_command(
         "docker",
         "run",
         "--rm",
+        # Allocate a pseudo-TTY. Stock Omega's entrypoint drops nginx to www-data
+        # (entrypoint.sh) and its config logs to /dev/stderr (proxy/nginx.conf.template).
+        # Without a TTY, fd 2 is a root-owned pipe (mode 0300) that www-data cannot
+        # reopen, so nginx dies with [emerg] open() "/dev/stderr" failed (13: Permission
+        # denied) before the benchmark channel ever connects. With a TTY, fd 2 is
+        # /dev/pts/0 in group tty, which upstream already grants via
+        # `usermod -a -G tty www-data` in its Dockerfile.
+        #
+        # This is stdio plumbing only: it grants no privilege and weakens no sandbox.
+        # The failure reproduces with every containment flag removed, so none of them
+        # were ever implicated. No -i: Omega reads from the comm channel, not stdin.
+        "-t",
         "--name",
         container_name,
         "--security-opt",
