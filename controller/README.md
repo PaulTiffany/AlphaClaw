@@ -180,7 +180,14 @@ directory, mounts it read-only at `/etc/alphaclaw-bounds.yaml` (outside the tmpf
 mounts, which would shadow it), and selects it with `config=`. Selecting a config
 file replaces Omega's own `config.yaml` wholesale, so the file is kept minimal:
 every omitted key resolves from the in-source default at its `(configure key default)`
-site, and those defaults match the pinned `config.yaml`.
+site.
+
+Those in-source defaults were compared against all 42 keys in the pinned
+`config.yaml` and match it with one exception: `openClawURL` defaults to `""` in
+`plugins/openclaw/openclaw.metta` while the pinned `config.yaml` sets
+`http://172.17.0.1:18789`. That difference is inert while `openClawEnabled` is
+`disabled`, which is both the pinned default and the in-source default, so the
+plugin never reads the URL.
 
 What the bounds do and do not claim:
 
