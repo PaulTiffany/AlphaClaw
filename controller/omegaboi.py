@@ -17,6 +17,7 @@ import subprocess
 import sys
 import time
 import uuid
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -44,7 +45,91 @@ def _git_output(*args: str, cwd: Path = ROOT) -> str:
     return subprocess.check_output(["git", *args], cwd=cwd, text=True).strip()
 
 
-def _verify_gitlink(path: str, expected_sha: str) -> str:
+@dataclass(frozen=True)
+class PinVerification:
+    """Two independent provenance facts about a pinned benchmark dependency.
+
+    A matching commit does not imply matching bytes. Git's line-ending filters can
+    rewrite a checked-out working tree while `git status` still reports it clean, so
+    the two facts are measured and reported separately.
+    """
+
+    path: str
+    commit: str
+    commit_matches_pin: bool
+    worktree_bytes_match_pin: bool
+    mismatched_paths: tuple[str, ...] = ()
+    unverifiable_paths: tuple[str, ...] = ()
+
+
+_RENORMALIZE_HINT = (
+    "git status cannot detect this when core.autocrlf rewrites line endings. "
+    "Restore the pinned bytes with:\n"
+    "  git -C {path} config core.autocrlf false\n"
+    "  git -C {path} config core.eol lf\n"
+    "  git -C {path} rm --cached -rq .\n"
+    "  git -C {path} reset --hard HEAD"
+)
+
+
+def _tracked_blobs(module: Path) -> tuple[list[tuple[str, str]], list[str]]:
+    raw = subprocess.run(
+        ["git", "-C", str(module), "ls-tree", "-r", "-z", "HEAD"],
+        stdout=subprocess.PIPE,
+        check=True,
+    ).stdout.decode("utf-8", "surrogateescape")
+
+    regular: list[tuple[str, str]] = []
+    unverifiable: list[str] = []
+    for record in raw.split("\0"):
+        if not record:
+            continue
+        meta, _, path = record.partition("\t")
+        mode, _kind, blob_sha = meta.split()
+        # Newlines would corrupt --stdin-paths framing; non-regular modes (symlinks,
+        # nested gitlinks) cannot be compared as plain file bytes. Neither is silently
+        # skipped: both are surfaced so the caller fails loudly instead of passing.
+        if mode not in ("100644", "100755") or "\n" in path:
+            unverifiable.append(path)
+            continue
+        regular.append((blob_sha, path))
+    return regular, unverifiable
+
+
+def worktree_byte_mismatches(module: Path) -> tuple[list[str], list[str]]:
+    """Compare every tracked regular file's raw bytes against its pinned blob.
+
+    Uses `git hash-object --no-filters` deliberately: the filtered form applies the
+    same CRLF conversion that produced the drift, so it would report a corrupted tree
+    as matching. Returns (mismatched_paths, unverifiable_paths).
+    """
+    regular, unverifiable = _tracked_blobs(module)
+
+    missing = [path for _, path in regular if not (module / path).is_file()]
+    present = [(sha, path) for sha, path in regular if (module / path).is_file()]
+
+    mismatched = list(missing)
+    if present:
+        result = subprocess.run(
+            ["git", "-C", str(module), "hash-object", "--no-filters", "--stdin-paths"],
+            input="\n".join(path for _, path in present) + "\n",
+            stdout=subprocess.PIPE,
+            text=True,
+            check=True,
+        )
+        hashed = result.stdout.split()
+        if len(hashed) != len(present):
+            raise RuntimeError(
+                f"{module}: hashed {len(hashed)} of {len(present)} tracked files"
+            )
+        mismatched.extend(
+            path for (expected, path), actual in zip(present, hashed) if expected != actual
+        )
+    return sorted(mismatched), sorted(unverifiable)
+
+
+def inspect_gitlink(path: str, expected_sha: str) -> PinVerification:
+    """Report commit and raw-byte provenance independently, without raising on drift."""
     module = ROOT / path
     if not module.is_dir():
         raise RuntimeError(f"submodule is not initialized: {path}")
@@ -54,21 +139,52 @@ def _verify_gitlink(path: str, expected_sha: str) -> str:
         raise RuntimeError(f"{path} is not a Git submodule gitlink")
     indexed_sha = parts[1]
     checked_out_sha = _git_output("-C", str(module), "rev-parse", "HEAD")
-    if indexed_sha != expected_sha or checked_out_sha != expected_sha:
+
+    mismatched, unverifiable = worktree_byte_mismatches(module)
+    return PinVerification(
+        path=path,
+        commit=checked_out_sha,
+        commit_matches_pin=indexed_sha == expected_sha and checked_out_sha == expected_sha,
+        worktree_bytes_match_pin=not mismatched and not unverifiable,
+        mismatched_paths=tuple(mismatched),
+        unverifiable_paths=tuple(unverifiable),
+    )
+
+
+def _verify_gitlink(path: str, expected_sha: str) -> PinVerification:
+    verification = inspect_gitlink(path, expected_sha)
+    module = ROOT / path
+
+    if not verification.commit_matches_pin:
+        indexed_sha = _git_output("ls-files", "-s", path).split()[1]
         raise RuntimeError(
             f"{path} pin mismatch: expected {expected_sha}, "
-            f"indexed {indexed_sha}, checked out {checked_out_sha}"
+            f"indexed {indexed_sha}, checked out {verification.commit}"
         )
     if _git_output("-C", str(module), "status", "--porcelain"):
         raise RuntimeError(f"{path} benchmark dependency is dirty")
-    return checked_out_sha
+    if verification.unverifiable_paths:
+        listed = ", ".join(verification.unverifiable_paths[:5])
+        raise RuntimeError(
+            f"{path} has {len(verification.unverifiable_paths)} tracked entries whose "
+            f"bytes cannot be verified ({listed}); refusing to treat the tree as pinned"
+        )
+    if not verification.worktree_bytes_match_pin:
+        listed = ", ".join(verification.mismatched_paths[:5])
+        more = "" if len(verification.mismatched_paths) <= 5 else ", ..."
+        raise RuntimeError(
+            f"{path} working tree bytes differ from the pinned blobs for "
+            f"{len(verification.mismatched_paths)} file(s) ({listed}{more}). "
+            + _RENORMALIZE_HINT.format(path=path)
+        )
+    return verification
 
 
-def verify_omega() -> str:
+def verify_omega() -> PinVerification:
     return _verify_gitlink("OmegaClaw-Core", OMEGA_SHA)
 
 
-def verify_threadkeeper() -> str:
+def verify_threadkeeper() -> PinVerification:
     return _verify_gitlink("external/ThreadKeeper", THREADKEEPER_SHA)
 
 
@@ -158,18 +274,19 @@ def _docker_image_id(image: str) -> str | None:
 
 
 def ensure_stock_image(*, rebuild: bool = False) -> tuple[str, str]:
+    # Byte-faithful pin verification runs ahead of the build boundary on purpose: a
+    # CRLF-rewritten checkout poisons the cache key of Dockerfile's requirements.txt
+    # COPY, which forces the multi-GB torch and embedding-model layers to rebuild.
+    # Failing here costs a second; failing after the build costs gigabytes of cache.
     verify_omega()
     image = stock_image_tag()
     existing = _docker_image_id(image)
     if existing is not None and not rebuild:
         return image, existing
-    if rebuild and existing is not None:
-        subprocess.run(
-            ["docker", "image", "rm", "--force", image],
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            check=True,
-        )
+    # The existing image is deliberately NOT removed before rebuilding. Deleting it
+    # frees no build cache, and it would discard the last-known-good image if the
+    # rebuild fails. `docker build` re-tags in place on success and leaves the prior
+    # image intact on failure.
     subprocess.run(
         ["docker", "build", "-t", image, str(ROOT / "OmegaClaw-Core")],
         check=True,
@@ -341,8 +458,12 @@ def run_episode(
         raise ValueError("timeout must be positive")
 
     contract = EpisodeContract(max_reasoning_loops=max_loops)
-    omega_sha = verify_omega()
-    threadkeeper_sha = verify_threadkeeper()
+    # Both dependencies are verified for commit AND raw bytes before any Docker work
+    # and before the isolated ThreadKeeper witness is constructed or executed.
+    omega_pin = verify_omega()
+    threadkeeper_pin = verify_threadkeeper()
+    omega_sha = omega_pin.commit
+    threadkeeper_sha = threadkeeper_pin.commit
     image, image_id = ensure_stock_image(rebuild=rebuild_image)
     run_id = _new_run_id()
     run_dir = output_dir or (ROOT / "benchmark-runs" / run_id)
@@ -373,7 +494,12 @@ def run_episode(
         "run_id": run_id,
         "status": "preparing",
         "bounded_controller": True,
-        "omega_source_modified": False,
+        # Measured, not asserted: derived from the raw-byte comparison above.
+        "omega_source_modified": not omega_pin.worktree_bytes_match_pin,
+        "omega_commit_matches_pin": omega_pin.commit_matches_pin,
+        "omega_worktree_bytes_match_pin": omega_pin.worktree_bytes_match_pin,
+        "threadkeeper_commit_matches_pin": threadkeeper_pin.commit_matches_pin,
+        "threadkeeper_worktree_bytes_match_pin": threadkeeper_pin.worktree_bytes_match_pin,
         "alpha_git_sha": _alpha_git_sha(),
         "omega_sha": omega_sha,
         "omega_image": image,

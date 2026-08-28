@@ -26,8 +26,14 @@ runner = _load("omegaboi", CONTROLLER / "omegaboi.py")
 
 
 def test_benchmark_dependencies_are_exact_clean_gitlinks() -> None:
-    assert runner.verify_omega() == runner.OMEGA_SHA
-    assert runner.verify_threadkeeper() == runner.THREADKEEPER_SHA
+    omega = runner.verify_omega()
+    threadkeeper = runner.verify_threadkeeper()
+
+    assert omega.commit == runner.OMEGA_SHA
+    assert threadkeeper.commit == runner.THREADKEEPER_SHA
+    for pin in (omega, threadkeeper):
+        assert pin.commit_matches_pin is True
+        assert pin.worktree_bytes_match_pin is True
 
 
 def test_default_runner_contract_keeps_stock_iterative_ceiling() -> None:

@@ -97,6 +97,58 @@ git -C external/ThreadKeeper status --short
 
 Both commands should print nothing.
 
+### 4a. Windows only: restore LF line endings in the pinned checkouts
+
+**Do this before building anything.** Git for Windows sets `core.autocrlf=true` in its
+system configuration, which rewrites text files to CRLF as it checks them out. That
+silently corrupts the pinned upstream trees.
+
+The most visible symptom is that OmegaClaw's `entrypoint.sh` gets the shebang
+`#!/usr/bin/env bash` followed by a carriage return. Linux then looks for a program
+literally named `bash\r`, does not find one, and the container exits with code **127**:
+
+```text
+/usr/bin/env: 'bash\r': No such file or directory
+```
+
+`git status` cannot see this. Git normalizes CRLF back to LF when comparing, so a
+corrupted checkout reports perfectly clean. It also makes the Docker build far more
+expensive, because the rewritten `requirements.txt` misses its build-cache key and
+forces the multi-gigabyte PyTorch and embedding-model layers to rebuild.
+
+Configure both pinned dependencies to preserve LF, then restore the pinned bytes:
+
+```powershell
+git -C OmegaClaw-Core config core.autocrlf false
+git -C OmegaClaw-Core config core.eol lf
+git -C OmegaClaw-Core rm --cached -rq .
+git -C OmegaClaw-Core reset --hard HEAD
+
+git -C external/ThreadKeeper config core.autocrlf false
+git -C external/ThreadKeeper config core.eol lf
+git -C external/ThreadKeeper rm --cached -rq .
+git -C external/ThreadKeeper reset --hard HEAD
+```
+
+This changes no upstream commit and creates no commit. It only rewrites the working
+tree from the pins you already have.
+
+Verify the bytes now match the pinned blobs:
+
+```powershell
+git -C OmegaClaw-Core ls-files --eol entrypoint.sh
+```
+
+You want `i/lf` and `w/lf`. If it prints `w/crlf`, the restore did not take effect.
+
+You do not have to remember this. `controller/omegaboi.py` verifies the raw bytes of
+every tracked file against its pinned blob before any Docker build or ThreadKeeper
+execution, and refuses to run with the exact repair commands in the error message.
+
+The repository's own `.gitattributes` cannot prevent this. Git resolves attributes
+from the repository owning a file, so it governs AlphaClaw's files but has no reach
+into the pinned submodules.
+
 ## 5. Install the same local test tools CI uses
 
 This installs test/lint tooling only. It does not call a model provider.

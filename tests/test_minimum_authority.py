@@ -41,7 +41,13 @@ def test_benchmark_does_not_carry_an_omega_source_transformer() -> None:
     source = (CONTROLLER / "omegaboi.py").read_text(encoding="utf-8")
     assert "apply_profile" not in source
     assert "shutil.copytree" not in source
-    assert "omega_source_modified\": False" in source
+    # The claim is measured against the pinned blobs, never asserted as a literal.
+    # A hardcoded False reported an unmodified tree while the checkout carried
+    # CRLF-rewritten bytes, so the constant form is now forbidden outright.
+    assert 'omega_source_modified": False' not in source
+    assert (
+        '"omega_source_modified": not omega_pin.worktree_bytes_match_pin' in source
+    )
 
 
 def test_native_runtime_configuration_bounds_fresh_stock_container() -> None:
