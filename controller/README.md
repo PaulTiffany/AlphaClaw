@@ -212,6 +212,68 @@ response.txt
 
 The manifest records the exact Omega SHA, ThreadKeeper SHA, Alpha commit, Docker image ID, episode contract, provider/model, gateway state, usage by phase, and termination reason.
 
+## First live bounded canary — 2026-08-28
+
+The first real-provider episode. Facts below are taken from that run's receipts; the
+run directory itself is evidence, not source, and is not committed.
+
+| | |
+|---|---|
+| Run ID | `20260828T163256Z-4082212669` |
+| Alpha commit | `f68ddab6ed6b350ed388b2a6a1cbee2b2beb21f7` |
+| Pinned Omega | `3d711e4b9f5254ae94f31123ca242f60cfd97d29` — commit and raw bytes both verified |
+| Pinned ThreadKeeper | `a64de99e10f9f8078d25bff511b44fd71819e931` — commit and raw bytes both verified |
+| Stock image | `sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a`, unchanged |
+| Provider / model | ASICloud / `minimax/minimax-m3` |
+| Typed bounds | `maxNewInputLoops: 1`, `maxWakeLoops: 0`, `maxHistory: 0`, `wakeupInterval: 960` |
+| Status | `completed`, `termination_reason: responded` |
+| Response | `ORANGE` |
+
+Exactly two provider calls, split by phase:
+
+```text
+boot     1 call    1432 input / 134 output
+episode  1 call    1915 input /  82 output
+```
+
+Stock Omega emitted two startup channel messages before the handoff:
+
+```text
+OmegaClaw version=unknown
+No new input received. Standing by.
+```
+
+### Live validation of the boot-turn-completion barrier
+
+Measured byte offsets in that run's `container.log`:
+
+```text
+188654  first numeric CHARS_SENT
+194057  boot-originated send: No new input received. Standing by.
+194272  next numeric loop boundary
+195719  alphaclaw_human_ingress
+```
+
+That is `readiness < unique boot send < boot-turn barrier < Alpha handoff`.
+
+The first real-provider run directly confirmed the race discovered during PR #33
+review: a unique boot-originated `send` can occur after provider transport completion
+but before the boot turn finishes. The relative boot-turn-completion barrier captured
+that message as startup traffic before Alpha handoff, preventing false episode
+completion.
+
+### Evidence boundary: POLLRDHUP
+
+`POLLRDHUP` is **not persisted in this run's receipts** — it appears zero times across
+every artifact, because it is emitted host-side by the pinned `Autotests/mock` RPC
+logger and the controller persists only the container's output.
+
+The receipts therefore establish only that it did not prevent successful response
+capture: `status=completed`, `termination_reason=responded`, `response.txt=ORANGE`,
+`fatal_error=null`. They do not establish when it occurred, so it is not characterised
+here as teardown-only. Whether to persist controller stderr alongside `container.log`
+is left as a separate future decision.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
