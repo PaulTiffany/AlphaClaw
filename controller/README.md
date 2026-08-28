@@ -385,6 +385,100 @@ Nothing here claims Omega perceived image bytes, and image-bearing runs are not
 one-call benchmarks: each costs one sensory, one boot and one episode call across two
 providers. The bounded claim remains one post-handoff reasoning call.
 
+## Controlled benchmark suite protocol
+
+Six matched families, each yielding three conditions from one underlying task: a text
+control, an image-only condition, and an image+text condition sharing the exact same
+image bytes. Eighteen end-to-end cases while holding task content constant.
+
+Stimuli and ground truth come from `scripts/make_benchmark_suite.py` (stdlib only,
+zlib level 0 for byte determinism). Digests are pinned in `benchmark/items.json` and
+in the test suite.
+
+| Item | Family | Probe | Answer |
+|---|---|---|---|
+| `ocr_count` | OCR + count | perception | `M45` |
+| `colour_count` | colour + count | perception | `32` |
+| `spatial_relation` | spatial relation | perception | `RED` |
+| `number_arithmetic` | visible-number arithmetic | **resident reasoning** | `19` |
+| `distractor_selection` | distractor / visual selection | perception | `RED` |
+| `multi_fact_composition` | multi-fact relation + composition | perception | `Q932` |
+
+`number_arithmetic` is deliberately a resident-reasoning probe rather than pure
+perception; its matched text control separates arithmetic failure from sensory failure.
+
+Every exact-answer rule states its formatting contract explicitly -- uppercase, digits
+only, no spaces, no other text. An under-specified contract previously produced
+`K7 3` against an expected `K73`, which was a stimulus defect rather than a model
+failure.
+
+### Frozen sensory boundary and its scoring limitation
+
+`ingress/openrouter_image.py` is **not modified** for this benchmark. Its handoff has
+no dedicated count field, so counts arrive as free-form prose or as an entity label.
+That is a property of the system under test, recorded rather than repaired mid
+experiment.
+
+`scripts/score_handoff.py` is therefore pre-registered and deterministic. No
+LLM-as-judge, no post-hoc human correction. Rules:
+
+- **token** -- correct iff the exact case-sensitive token occurs in a literal
+  observation or an entity label.
+- **shape presence** -- correct iff colour and shape occur in the *same* assertion
+  string.
+- **count** -- correct iff the expected digit or number-word occurs in the *same*
+  assertion string as the colour and shape mention.
+- **relation** -- scored only through a fixed map of pre-declared predicate forms over
+  the structured relation fields, with right-hand forms inverted. Anything unmapped is
+  `unknown`.
+- Facts the scorer cannot decide deterministically are `unknown` and never inferred.
+
+Only literal observations and entity labels are read. Interpretations and uncertainty
+are the model's commentary, not asserted observations.
+
+Two figures are always reported together:
+
+- **atomic-fact accuracy** = correct / scoreable facts
+- **scoring coverage** = scoreable / all expected facts
+
+### Sensory-model screening and the pre-registered selection rule
+
+Screening uses explicit model identifiers only. `openrouter/free` is rejected as a
+benchmark condition: it is a nondeterministic router, and two byte-identical
+perception requests were observed reaching two different models with different
+contract compliance. The exact sensory model is part of the experimental condition and
+belongs in the receipt.
+
+Three free candidates, six images, two repeats: 36 OpenRouter calls, no ASICloud, no
+Omega, no containers. Selection happens **before** any downstream result is observed:
+
+1. highest schema-compliant atomic-fact yield -- correct / all expected facts, where a
+   request failure or non-schema response contributes zero correct facts
+2. tie -> highest schema-compliance rate
+3. tie -> highest repeat stability
+4. tie -> lowest mean output tokens
+5. residual tie -> lexicographically lowest exact model id
+
+A model is **not** excluded for failing schema on some images. That failure is
+benchmark evidence and is already penalised by rule 1.
+
+### Fixed resident reasoning condition
+
+The end-to-end tranche fixes provider `asicloud`, model `minimax/minimax-m3`,
+`maxNewInputLoops: 1`, `maxWakeLoops: 0`, `maxHistory: 0`, and one externally metered
+post-handoff reasoning call. Readiness, the boot-turn barrier, drain ordering, the
+gateway and Docker hardening are unchanged.
+
+This is a held-constant condition, not a benchmark-tuning target. No stimulus, rule or
+scoring function references it; tests assert that. Resident-model comparison would be a
+separate experiment and would confound this architecture benchmark.
+
+### Experimental caps
+
+Eighteen bounded runs, at most 36 ASICloud calls (18 boot, 18 episode), 106,776 input
+and 18,612 output tokens. These are hard caps, not targets. No confidence reruns, no
+retry-until-pass, no post-failure prompt tuning. Failures stay in the denominator.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
