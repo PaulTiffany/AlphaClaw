@@ -41,6 +41,9 @@ def test_default_runner_contract_keeps_stock_iterative_ceiling() -> None:
     assert runner.EpisodeContract().max_reasoning_loops == 50
 
 
+BOUNDS_PATH = Path("/tmp/fixture/omega-bounds.yaml")
+
+
 def test_docker_command_runs_stock_omega_with_runtime_configuration_only() -> None:
     contract = runner.EpisodeContract(max_reasoning_loops=7)
     command = runner._docker_run_command(
@@ -51,6 +54,7 @@ def test_docker_command_runs_stock_omega_with_runtime_configuration_only() -> No
         model="asi1-ultra",
         contract=contract,
         timeout=90,
+        bounds_path=BOUNDS_PATH,
     )
 
     assert "TEST_SERVER_IP=host.docker.internal" in command
@@ -58,13 +62,21 @@ def test_docker_command_runs_stock_omega_with_runtime_configuration_only() -> No
     assert "provider=OpenAIAPI" in command
     assert "openaiapi_url=http://host.docker.internal:12345/v1/" in command
     assert "model=asi1-ultra" in command
-    assert "maxNewInputLoops=7" in command
-    assert "maxWakeLoops=0" in command
-    assert "maxHistory=0" in command
-    assert "wakeupInterval=150" in command
+    # The numeric bounds now travel as YAML-typed config, not as untyped argv.
+    assert f"config={runner.OMEGA_BOUNDS_CONTAINER_PATH}" in command
+    assert contract.bounds_config(wakeup_interval=150) == {
+        "maxNewInputLoops": 7,
+        "maxWakeLoops": 0,
+        "maxHistory": 0,
+        "wakeupInterval": 150,
+    }
     assert "securityPolicyPath=/PeTTa/repos/OmegaClaw-Core/profile/policy.yaml" in command
-    assert "-v" not in command
+    # There is still no benchmark memory volume. The only mount is the read-only
+    # bounds file; nothing writable and no named volume is attached.
     assert "--volume" not in command
+    mounts = [command[i + 1] for i, arg in enumerate(command) if arg == "-v"]
+    assert mounts == [f"{BOUNDS_PATH}:{runner.OMEGA_BOUNDS_CONTAINER_PATH}:ro"]
+    assert all(mount.endswith(":ro") for mount in mounts)
 
 
 def test_stock_image_tag_is_bound_to_pinned_omega_sha() -> None:

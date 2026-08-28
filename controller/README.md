@@ -55,7 +55,7 @@ Fifty is a ceiling, not a target. The container is destroyed after the first use
 The contract has three witnesses:
 
 1. Alpha includes the bounded episode clause in its inert JSON handoff.
-2. Stock Omega receives `maxNewInputLoops=N`, `maxWakeLoops=0`, and `maxHistory=0` through its native configuration path.
+2. Stock Omega receives `maxNewInputLoops=N`, `maxWakeLoops=0`, `maxHistory=0` and `wakeupInterval` through its native configuration path, as a minimal YAML file mounted read-only and selected with Omega's own `config=` argument.
 3. The host provider gateway refuses to forward post-handoff provider call `N + 1`.
 
 The model is told the bound. The model does not enforce the bound.
@@ -163,7 +163,33 @@ alphaclaw-omega-stock:<pinned-sha-prefix>
 
 from OmegaClaw's own Dockerfile. Later runs reuse that exact local image unless `--rebuild-image` is explicitly requested.
 
-There is no benchmark memory volume. Each fresh container gets its own disposable writable layer, and `maxHistory=0` removes persistent-history recall from the prompt.
+There is no benchmark memory volume. Each fresh container gets its own disposable writable layer, and `maxHistory=0` removes persistent-history recall from the prompt while leaving the current `HUMAN-MSG` input intact -- that input reaches the model outside the `HISTORY` field.
+
+## Why the bounds are a config file, not command-line arguments
+
+Omega's `src/config.py` applies no type coercion to command-line or environment
+overrides (`dict[kv[0]] = kv[1]`), while its config file is parsed with
+`yaml.safe_load`. `src/config.metta` passes the resolved value straight to
+`src/loop.metta`, which uses these parameters arithmetically. A numeric bound passed
+on argv therefore arrives as a string and kills the agent's main thread with
+`Arithmetic: `'0'/0' is not a function`. Environment overrides cannot work either:
+`entrypoint.sh` scrubs everything outside its `SAFE_VARS` allowlist.
+
+The controller therefore writes a minimal YAML file per episode into the run
+directory, mounts it read-only at `/etc/alphaclaw-bounds.yaml` (outside the tmpfs
+mounts, which would shadow it), and selects it with `config=`. Selecting a config
+file replaces Omega's own `config.yaml` wholesale, so the file is kept minimal:
+every omitted key resolves from the in-source default at its `(configure key default)`
+site, and those defaults match the pinned `config.yaml`.
+
+What the bounds do and do not claim:
+
+- `maxNewInputLoops` bounds prompted reasoning turns per new-input activation, not raw loop ticks.
+- `maxHistory=0` suppresses prior recalled history; the current input is preserved.
+- `maxWakeLoops=0` suppresses wake-driven prompted work.
+- Provider calls are bounded separately by the external metering gateway.
+- Skill executions are not provider calls: one prompted turn may request up to five
+  skills, so no one-tool ceiling is claimed.
 
 Outputs include:
 

@@ -60,11 +60,18 @@ def test_native_runtime_configuration_bounds_fresh_stock_container() -> None:
         model="model",
         contract=contract,
         timeout=120,
+        bounds_path=Path("/tmp/fixture/omega-bounds.yaml"),
     )
 
-    assert "maxNewInputLoops=3" in command
-    assert "maxWakeLoops=0" in command
-    assert "maxHistory=0" in command
+    # Bounds are still native Omega runtime configuration; they are supplied through
+    # Omega's own config= file selector because argv overrides are untyped.
+    assert f"config={runner.OMEGA_BOUNDS_CONTAINER_PATH}" in command
+    assert contract.bounds_config(wakeup_interval=180) == {
+        "maxNewInputLoops": 3,
+        "maxWakeLoops": 0,
+        "maxHistory": 0,
+        "wakeupInterval": 180,
+    }
     assert "provider=OpenAIAPI" in command
     assert "securityPolicyPath=/PeTTa/repos/OmegaClaw-Core/profile/policy.yaml" in command
     assert "--rm" in command
@@ -91,9 +98,14 @@ def test_recursive_self_improvement_cannot_self_authorize_authority_growth() -> 
     assert "recursive proposal} \\neq \\text{recursive authorization" in philosophy
     assert "certified} \\neq \\text{authorized} \\neq \\text{worth doing" in philosophy
     assert "No high-consequence actuator without an independently authorized gate" in philosophy
-    assert "maxNewInputLoops=" in controller_source
-    assert "maxWakeLoops=" in controller_source
-    assert "maxHistory=" in controller_source
+    # The numeric bounds are declared by the episode contract and delivered to stock
+    # Omega as a typed config file the controller mounts read-only.
+    contract_source = (CONTROLLER / "episode_contract.py").read_text(encoding="utf-8")
+    assert "maxNewInputLoops" in contract_source
+    assert "maxWakeLoops" in contract_source
+    assert "maxHistory" in contract_source
+    assert "OMEGA_BOUNDS_CONTAINER_PATH" in controller_source
+    assert "bounds_yaml" in controller_source
 
 
 def test_chad_philosophy_preserves_operator_slack_and_fallibility() -> None:
