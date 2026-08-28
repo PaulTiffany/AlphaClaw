@@ -781,6 +781,75 @@ committed decomposition and the committed evidence disagree.
 | provider availability | 0 |
 | passed | 17 |
 
+## Protocol Amendment v2.2 -- B2 composition replay
+
+Protocol v2 preregistered B2 as an image+text condition with **zero sensory calls**, but
+the replay tooling could only re-deliver a *raw* handoff. A preflight before any B2
+inference found the condition was not executable as written:
+
+- `.json` without `--text` routes to `text_passthrough`, so the envelope carries the
+  handoff **and no human instruction** -- exact-match grading is then unsatisfiable,
+  because the resident is never told what to answer;
+- `.json` with `--text` reaches `route_image_with_text`, which requires an image, would
+  demand an OpenRouter key, and would run perception -- all forbidden at
+  `sensory_calls: 0`.
+
+Empirically this is not a theoretical gap: Condition A's `image_only` runs used the same
+bare-handoff envelope shape and produced prose acknowledgements, **0/6** exact tokens.
+
+No inference call was made to discover this, and none was made for the amendment.
+
+### The clarified byte-identity invariant
+
+It is **wrong** to claim the whole B2 replay input equals the raw B1 handoff. For an
+image+text replay the invariant is:
+
+- sensory constituent == the exact frozen B1 repeat-0 handoff;
+- text constituent == the exact frozen benchmark instruction;
+- combined payload == a deterministic composition of those two constituents;
+- composed payload == byte-identical to what the **live** image+text route would produce
+  if handed that same handoff.
+
+This clarifies the intervention boundary. It is not permission to alter either
+constituent: both are digest-checked, and a single changed byte in either one raises
+before any provider call.
+
+### Mechanical equivalence proof
+
+`scripts/amendment_v2_2.py` composes `{"human_text": text, "sensory_handoff": handoff}`
+with the same `json.dumps(..., ensure_ascii=False, sort_keys=True)` rules the live route
+uses. Tests prove, offline with an injected fake runner that returns the frozen handoff:
+
+| item | handoff sha256 | text sha256 | composed sha256 | payload == live | envelope == live |
+|---|---|---|---|---|---|
+| `ocr_count` | `d55183d4…` | `2111a904…` | `57a3a785…` | yes | yes |
+| `distractor_selection` | `b6d1cd82…` | `d6bc2d90…` | `dae9694c…` | yes | yes |
+| `multi_fact_composition` | `e41d1d2e…` | `c4736682…` | `ea819081…` | yes | yes |
+
+Same text + same symbolic handoff produces the same combined payload and the same Alpha
+envelope, without a sensory call. The stimuli are regenerated deterministically inside
+the test, so the proof never silently skips.
+
+`d6bc2d90…` is independently corroborated: it is the `text_sha256` Condition A recorded
+on its `distractor_selection` image+text run, so the replayed instruction is provably
+the same bytes that condition delivered.
+
+### Scope and provenance
+
+Composition lives in replay tooling. **Normal live ingress is unchanged** -- a test
+asserts `route_image_with_text` still refuses a non-image input, so arbitrary JSON is
+never silently treated as a multimodal replay.
+
+Every B2 record carries `replayed_from`, `origin_run_id`, `original_image_sha256`,
+`sensory_model`, `handoff_payload_sha256`, `human_text_sha256`,
+`composed_payload_sha256`, `is_native_text_condition: false` and
+`sensory_inference: false`. Recording a replay as native text, or as having perceived,
+raises.
+
+B2 items, the v2.1 repeat-0 rule, the B1 artifact and its handoff bytes, the task text,
+the sensory and resident models, the scorer, the expected answers, the bounds, the
+ASICloud caps and B2 grading are unchanged.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
