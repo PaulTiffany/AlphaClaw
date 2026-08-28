@@ -33,7 +33,7 @@ foreach ($rawLine in Get-Content -LiteralPath $EnvFile) {
     $value = $line.Substring($separator + 1).Trim()
 
     if ($name -notmatch '^[A-Za-z_][A-Za-z0-9_]*$') {
-        throw "Invalid environment variable name on line $lineNumber: $name"
+        throw "Invalid environment variable name on line ${lineNumber}: $name"
     }
 
     if ($value.Length -ge 2) {
