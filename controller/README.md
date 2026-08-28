@@ -541,6 +541,81 @@ availability failures, usable model observations, and availability rate. For
 Screening v1 that is 36 attempted, 24 availability failures, 12 usable observations,
 availability rate 0.667.
 
+## Protocol v2 -- preregistered model-variety tranche
+
+### Chronology
+
+- **v1** established the controlled six-item benchmark, the frozen sensory boundary,
+  the deterministic scorer, and a three-candidate sensory screen with a selection rule.
+- **v1.1** added provider-availability recovery only.
+- **v2** adds explicit model-variety experimental conditions and replay provenance.
+
+v2 is preregistered **before any Qwen sensory, paid-Gemma resident, or new ASICloud
+benchmark result exists**.
+
+### The question
+
+Does AlphaClaw's bounded architecture continue to behave sensibly when reasonable
+explicit sensory and resident models are substituted while the tasks and architecture
+are held fixed? This decomposes the architecture rather than re-running the whole
+system and wondering why a result moved. It is not a leaderboard.
+
+### Named conditions
+
+Sensory primary `dots-studio/dots-3-note-preview:free`; sensory alternate
+`qwen/qwen3.7-flash`; resident primary ASICloud `minimax/minimax-m3`; resident
+alternate OpenRouter `google/gemma-4-26b-a4b-it`.
+
+These are **experimental conditions, not tournament candidates**. The v1/v1.1
+selection rules remain historically intact but do not select among v2 conditions.
+Barred: `openrouter/free` and both exhausted free Gemma endpoints. There is no
+automatic fallback and no substitute model: an unavailable named condition is
+recorded as evidence.
+
+| ID | Sensory | Resident | Items | Sensory | Boot | Episode | Grading | Question |
+|---|---|---|---|---|---|---|---|---|
+| A | dots (free) | ASICloud MiniMax M3 | all six, matched conditions | 12 | 18 | 18 | exact-match; transformation for image-only | Does the bounded architecture work end to end under the sponsored condition? |
+| B1 | qwen3.7-flash | none | six images x2 repeats | 12 | 0 | 0 | frozen 21-fact scorer + coverage | Is the frozen sensory boundary portable across a distinct sensory-model family? |
+| B2 | replayed B1 handoffs | ASICloud MiniMax M3 | `ocr_count`, `distractor_selection`, `multi_fact_composition` | 0 | 3 | 3 | exact-match | Does an alternate sensory model produce a symbolic handoff **sufficient for the same fixed MiniMax resident reasoner**? |
+| C | replayed dots handoffs | OpenRouter gemma-4-26b-a4b-it | `number_arithmetic` text control; `ocr_count` image+text; `number_arithmetic` image+text | 0 | 3 | 3 | exact-match | Same symbolic evidence -> different resident model |
+
+Item lists for B2 and C are fixed above, before any v2 result exists.
+
+### Replay semantics
+
+**A replay is not a native text benchmark condition.** Mechanically it routes through
+`.json` text passthrough, so the ingress receipt correctly records
+`route: text_passthrough`, `sensory_inference: false`, and the digest of the replay
+JSON. That receipt is accurate for the replay event and is **never rewritten** to
+pretend perception occurred.
+
+Every replay record additionally carries `replayed_from`, `origin_run_id`,
+`original_image_sha256`, `sensory_model` and `handoff_payload_sha256`.
+
+Byte identity is required between the original symbolic payload, the replay input
+payload, and the payload embedded in the resulting Alpha envelope. **If byte identity
+fails the condition is invalid and must stop before provider inference.**
+
+### Caps
+
+ASICloud rises from the v1 cap of 36 to **42 calls** -- condition A 36, condition B2 6
+-- with at most 124,572 input and 21,714 output tokens, derived from the v1 receipt
+maxima. Condition C bills OpenRouter, not the sponsored allocation.
+
+OpenRouter: 18 paid calls (B1 sensory 12, C resident 6) and 12 free (condition A).
+Projected worst case about **$0.0054** from current catalog pricing -- a projection,
+not a guaranteed invoice.
+
+No retry-until-pass. Availability failures remain evidence.
+
+### Unchanged by v2
+
+The six items and their image, rule and answer digests; the ground truth; the sensory
+`SYSTEM_PROMPT` and normalisation; the scorer and its scoring-coverage semantics; the
+Alpha envelope; stock pinned Omega; the bounds; boot readiness; the boot-turn barrier;
+drain ordering; gateway accounting; and the v1/v1.1 failure classification. The v1 and
+v1.1 artifacts are not modified.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.

@@ -1,0 +1,160 @@
+{
+  "caps": {
+    "asicloud_max_calls": 42,
+    "asicloud_max_input_tokens": 124572,
+    "asicloud_max_output_tokens": 21714,
+    "asicloud_per_condition": {
+      "A": 36,
+      "B2": 6,
+      "total": 42
+    },
+    "asicloud_previous_cap": 36,
+    "cost_note": "Projection from current catalog pricing, not a guaranteed invoice.",
+    "openrouter": {
+      "free": 12,
+      "paid": 18
+    },
+    "projected_openrouter_cost_usd": 0.0054
+  },
+  "chronology": {
+    "preregistered_before": "any Qwen sensory, paid-Gemma resident, or new ASICloud benchmark result",
+    "v1": "controlled six-item benchmark, frozen boundary, scorer, sensory screen",
+    "v1.1": "provider-availability recovery only",
+    "v2": "explicit model-variety conditions and replay provenance"
+  },
+  "conditions": [
+    {
+      "boot_calls": 18,
+      "condition_id": "A",
+      "episode_calls": 18,
+      "grading_target": "exact-match for text control and image+text; sensory transformation for image-only",
+      "items": "all six items across the existing matched conditions",
+      "name": "Primary Alpha benchmark",
+      "question": "Does the bounded architecture work end to end under the sponsored HyperSprint condition?",
+      "resident_billing": "asicloud",
+      "resident_model": "minimax/minimax-m3",
+      "resident_provider": "asicloud",
+      "sensory_calls": 12,
+      "sensory_model": "dots-studio/dots-3-note-preview:free",
+      "uses_replay": false
+    },
+    {
+      "boot_calls": 0,
+      "condition_id": "B1",
+      "episode_calls": 0,
+      "grading_target": "frozen 21-atomic-fact sensory scorer and scoring coverage",
+      "items": "all six images, two repeats",
+      "name": "Sensory substitution",
+      "question": "Is the frozen sensory boundary portable across a distinct sensory-model family?",
+      "resident_billing": null,
+      "resident_model": null,
+      "resident_provider": null,
+      "sensory_calls": 12,
+      "sensory_model": "qwen/qwen3.7-flash",
+      "uses_replay": false
+    },
+    {
+      "boot_calls": 3,
+      "condition_id": "B2",
+      "episode_calls": 3,
+      "grading_target": "exact-match under the already-frozen task contracts",
+      "items": [
+        "ocr_count",
+        "distractor_selection",
+        "multi_fact_composition"
+      ],
+      "name": "Alternate sensory handoff downstream",
+      "question": "Does an alternate sensory model produce a symbolic handoff sufficient for the same fixed MiniMax resident reasoner?",
+      "replay_source": "B1",
+      "resident_billing": "asicloud",
+      "resident_model": "minimax/minimax-m3",
+      "resident_provider": "asicloud",
+      "sensory_calls": 0,
+      "sensory_model": "qwen/qwen3.7-flash",
+      "uses_replay": true
+    },
+    {
+      "boot_calls": 3,
+      "condition_id": "C",
+      "episode_calls": 3,
+      "grading_target": "exact-match",
+      "items": [
+        "number_arithmetic:text_control",
+        "ocr_count:image_text",
+        "number_arithmetic:image_text"
+      ],
+      "name": "Resident substitution",
+      "question": "Same symbolic evidence -> different resident model.",
+      "replay_source": "A",
+      "resident_billing": "openrouter",
+      "resident_model": "google/gemma-4-26b-a4b-it",
+      "resident_provider": "openrouter",
+      "sensory_calls": 0,
+      "sensory_model": "dots-studio/dots-3-note-preview:free",
+      "uses_replay": true
+    }
+  ],
+  "models": {
+    "forbidden": [
+      "google/gemma-4-26b-a4b-it:free",
+      "google/gemma-4-31b-it:free",
+      "openrouter/free"
+    ],
+    "note": "Experimental conditions, not tournament candidates. v1/v1.1 selection rules remain historically intact but do not select among v2 conditions. An unavailable named condition is recorded as evidence and never substituted.",
+    "resident_alternate": {
+      "model": "google/gemma-4-26b-a4b-it",
+      "provider": "openrouter"
+    },
+    "resident_primary": {
+      "model": "minimax/minimax-m3",
+      "provider": "asicloud"
+    },
+    "sensory_alternate": "qwen/qwen3.7-flash",
+    "sensory_primary": "dots-studio/dots-3-note-preview:free"
+  },
+  "policy": {
+    "automatic_fallback_model": false,
+    "availability_failures_are_evidence": true,
+    "retry_until_pass": false,
+    "substitute_on_unavailable": false
+  },
+  "preselected_items": {
+    "B2": [
+      "ocr_count",
+      "distractor_selection",
+      "multi_fact_composition"
+    ],
+    "C": [
+      [
+        "number_arithmetic",
+        "text_control"
+      ],
+      [
+        "ocr_count",
+        "image_text"
+      ],
+      [
+        "number_arithmetic",
+        "image_text"
+      ]
+    ]
+  },
+  "protocol_version": "v2",
+  "replay": {
+    "byte_identity_required_between": [
+      "original symbolic payload",
+      "replay input payload",
+      "payload embedded in the resulting Alpha envelope"
+    ],
+    "is_native_text_condition": false,
+    "on_identity_failure": "condition is invalid; stop before provider inference",
+    "receipt_semantics": "route=text_passthrough, sensory_inference=false, source digest of the replay JSON. Accurate for the replay event; never rewritten to pretend sensory inference occurred.",
+    "required_provenance_fields": [
+      "replayed_from",
+      "origin_run_id",
+      "original_image_sha256",
+      "sensory_model",
+      "handoff_payload_sha256"
+    ]
+  }
+}
