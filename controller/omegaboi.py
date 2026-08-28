@@ -13,11 +13,13 @@ import hashlib
 import importlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
 import time
 import uuid
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -42,6 +44,9 @@ HOST_ALIAS = "host.docker.internal"
 OMEGA_PROVIDER = "OpenAIAPI"
 OMEGA_BOUNDS_CONTAINER_PATH = "/etc/alphaclaw-bounds.yaml"
 OMEGA_BOUNDS_FILENAME = "omega-bounds.yaml"
+# Upstream's documented boot-readiness signal. The numeric count is required: the
+# bare "CHARS_SENT:" string also appears in the MeTTa source dump during startup.
+OMEGA_BOOT_READY_PATTERN = re.compile(r"CHARS_SENT: [0-9]+")
 
 
 def _git_output(*args: str, cwd: Path = ROOT) -> str:
@@ -322,23 +327,38 @@ def _wait_for_agent(server: Any, process: subprocess.Popen[str], timeout: float)
     raise TimeoutError("OmegaBoi did not connect to the benchmark channel")
 
 
-def _wait_for_log_marker(
+def _wait_for_boot_readiness(
     path: Path,
-    marker: str,
     process: subprocess.Popen[str],
     timeout: float,
 ) -> None:
+    """Wait for stock Omega to finish booting and enter its real iteration loop.
+
+    Upstream documents the first runtime `CHARS_SENT:` line carrying a byte count as
+    the end of initChannels/initMemory and the start of real iterations. The numeric
+    anchor is required, not cosmetic: the bare string also appears in the MeTTa source
+    dump emitted during startup, so matching it without a count fires early.
+
+    This replaces a wait on a fixed loop-iteration marker, which had no handoff
+    meaning: that marker is just the loop's second tick, roughly a second after boot,
+    and it fires whether or not anything was ever injected.
+    """
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if process.poll() is not None:
-            raise RuntimeError(f"OmegaBoi container exited during startup with code {process.returncode}")
+            raise RuntimeError(
+                f"OmegaBoi container exited during startup with code {process.returncode}"
+            )
         try:
-            if marker in path.read_text(encoding="utf-8", errors="replace"):
+            if OMEGA_BOOT_READY_PATTERN.search(path.read_text(encoding="utf-8", errors="replace")):
                 return
         except OSError:
             pass
         time.sleep(0.05)
-    raise TimeoutError(f"OmegaBoi did not reach expected stock loop marker: {marker}")
+    raise TimeoutError(
+        "stock Omega did not reach its first metered iteration "
+        f"(no {OMEGA_BOOT_READY_PATTERN.pattern!r} in the container log)"
+    )
 
 
 def _drain_messages(server: Any) -> list[str]:
@@ -357,20 +377,36 @@ def _wait_for_response(
     *,
     gateway: MeteredProviderGateway,
     timeout: float,
-) -> tuple[str | None, str]:
+    baseline: Sequence[str] = (),
+) -> tuple[str | None, str, list[str]]:
+    """Wait for a genuinely new post-injection channel message.
+
+    Stock Omega emits boot-time traffic of its own -- a version banner, for instance --
+    which must never be mistaken for the episode response. Anything drained before
+    injection is passed in as `baseline` and skipped here, so a late duplicate of a
+    pre-injection message cannot satisfy episode completion.
+
+    Timeout, container exit and provider-budget exhaustion all remain explicit
+    termination outcomes rather than silent successes.
+    """
+    ignored: list[str] = []
+    known = set(baseline)
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if gateway.fatal_message:
             raise RuntimeError(f"provider metering failed: {gateway.fatal_message}")
         if gateway.budget_exhausted:
-            return None, "episode_provider_budget_exhausted"
+            return None, "episode_provider_budget_exhausted", ignored
         reply = server.getLastMessage()
         if reply:
-            return reply, "responded"
+            if reply in known:
+                ignored.append(reply)
+                continue
+            return reply, "responded", ignored
         if process.poll() is not None:
-            return None, f"container_exited_{process.returncode}"
+            return None, f"container_exited_{process.returncode}", ignored
         time.sleep(0.05)
-    return None, "timeout"
+    return None, "timeout", ignored
 
 
 def _docker_run_command(
@@ -583,35 +619,34 @@ def run_episode(
         )
 
         _wait_for_agent(server, process, min(timeout, 120.0))
+
+        # Readiness and provider-call completion are different events, so both are
+        # waited on. The log marker says stock boot finished and the real iteration
+        # loop started; the gateway says the boot provider call actually completed and
+        # was metered. Neither implies the other.
+        _wait_for_boot_readiness(container_log, process, min(timeout, 180.0))
         if not gateway.wait_for_boot_call(min(timeout, 180.0)):
             if gateway.fatal_message:
                 raise RuntimeError(f"stock Omega boot provider call failed: {gateway.fatal_message}")
             raise TimeoutError("stock Omega produced no metered boot provider call")
 
-        # The current provider request was reserved as boot before its response
-        # existed. Classify all future requests as episode now, then queue Alpha
-        # synchronously while Omega is still processing that boot response.
+        # Baseline the channel BEFORE injecting. Stock Omega emits its own boot-time
+        # traffic (a version banner among it); capturing that here is what lets the
+        # post-injection wait reject a stale message as episode completion.
+        startup_messages = _drain_messages(server)
+
+        # The boot request was reserved as boot before its response existed. Classify
+        # everything after this point as episode, then hand Alpha over.
         gateway.mark_episode_started()
         if not server.send_message(rendered, timeout=10):
             raise RuntimeError("OmegaBoi benchmark channel rejected the Alpha envelope")
-
-        # An extremely fast episode request may already be waiting at the host
-        # gateway, but it cannot reach the real provider until we release it.
-        # That lets us separate stock boot-time public messages without racing a
-        # post-handoff user response.
-        _wait_for_log_marker(
-            container_log,
-            "(---------iteration 2)",
-            process,
-            min(timeout, 30.0),
-        )
-        startup_messages = _drain_messages(server)
         gateway.release_episode_calls()
 
-        response, termination_reason = _wait_for_response(
+        response, termination_reason, ignored_messages = _wait_for_response(
             server,
             process,
             gateway=gateway,
+            baseline=startup_messages,
             timeout=timeout,
         )
     finally:
@@ -660,6 +695,8 @@ def run_episode(
             "usage_by_phase": phases,
             "provider_gateway": gateway_state,
             "startup_messages": startup_messages,
+            "ignored_stale_messages": ignored_messages,
+            "boot_readiness_signal": OMEGA_BOOT_READY_PATTERN.pattern,
             "response_present": response is not None,
             "ended_at": datetime.now(UTC).isoformat(),
         }
