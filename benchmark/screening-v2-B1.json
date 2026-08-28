@@ -1,0 +1,1764 @@
+{
+  "attempted_calls": 12,
+  "b2_replay_candidates": [
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual_element\", \"label\": \"Blue Squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password mask or a level indicator).\", \"The text 'M4' likely serves as a label, identifier, or code associated with the visual sequence.\", \"The combination suggests a status indicator, perhaps 'Level 4' or 'Mode 4' with 5 units.\"], \"literal\": [\"Five solid blue squares arranged horizontally in a row.\", \"The text 'M4' appears to the right of the squares.\", \"The text 'M4' is in a black, pixelated or blocky font.\", \"The background is white.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"are_left_of\", \"subject\": \"Blue Squares\"}, {\"object\": \"Blue Squares\", \"predicate\": \"is_adjacent_to\", \"subject\": \"M4\"}], \"uncertainty\": [\"The specific meaning of the blue squares is ambiguous (could be dots, blocks, pixels).\", \"The relationship between the squares and 'M4' is not explicitly defined (e.g., is M4 the count? is it a label?).\"], \"unresolved\": [\"What does 'M4' stand for?\", \"What do the blue squares represent in this specific context?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:38:50.861145+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}",
+      "handoff_payload_sha256": "d55183d4daae008f7f034952a7e87e8fd803dbadd9ef3e03444d349f9997b0a3",
+      "item_id": "ocr_count",
+      "repeat_index": 0,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "usable_for_replay": true
+    },
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"geometric_shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 2\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 3\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 4\"}, {\"kind\": \"geometric_shape\", \"label\": \"Red Square\"}], \"interpretations\": [\"The image likely depicts a fraction or ratio, specifically 4/5 or 4 out of 5.\", \"The color coding distinguishes a subset (blue) from the remainder (red).\", \"The increased spacing visually separates the group of four from the single item, possibly indicating a boundary or a 'part-to-whole' relationship.\"], \"literal\": [\"A horizontal arrangement of five small squares on a white background.\", \"The first four squares from the left are colored blue.\", \"The fifth square, positioned to the right, is colored red.\", \"The spacing between the first four blue squares is uniform and tight.\", \"There is a noticeably larger horizontal gap between the fourth blue square and the red square.\"], \"relations\": [{\"object\": \"Blue Square 2\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 1\"}, {\"object\": \"Blue Square 3\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 2\"}, {\"object\": \"Blue Square 4\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 3\"}, {\"object\": \"Red Square\", \"predicate\": \"is separated from\", \"subject\": \"Blue Square 4\"}, {\"object\": \"Sequence\", \"predicate\": \"is the rightmost element\", \"subject\": \"Red Square\"}], \"uncertainty\": [\"The specific mathematical or logical context (e.g., probability, fractions, voting) is not provided.\", \"The significance of the colors blue and red is arbitrary without further context.\"], \"unresolved\": [\"No text labels or numerical values are visible.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:40:20.932787+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}",
+      "handoff_payload_sha256": "b6d1cd82e793179bab42fb838ab8878e414e9b6f5d1a81f1e63033a2cd7e2b7f",
+      "item_id": "distractor_selection",
+      "repeat_index": 0,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "usable_for_replay": true
+    },
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Shape\", \"label\": \"Blue Squares\"}, {\"kind\": \"Shape\", \"label\": \"Red Squares\"}, {\"kind\": \"Text\", \"label\": \"Q9\"}], \"interpretations\": [\"The image appears to be a visual puzzle, captcha, or a data representation code.\", \"The colored squares likely encode information corresponding to the label 'Q9'.\", \"The count of blue squares (3) and red squares (2) may be significant values.\", \"The pixelated font suggests a digital, retro, or low-resolution context.\"], \"literal\": [\"A horizontal arrangement of graphical elements on a white background.\", \"Three solid blue squares are positioned on the left.\", \"Two solid red squares are positioned to the right of the blue squares.\", \"The text 'Q9' is displayed in a black, pixelated font on the right side.\", \"The squares are uniform in size and spacing.\", \"There is a visible gap between the red squares and the text 'Q9'.\"], \"relations\": [{\"object\": \"Red Squares\", \"predicate\": \"precede\", \"subject\": \"Blue Squares\"}, {\"object\": \"Q9\", \"predicate\": \"precede\", \"subject\": \"Red Squares\"}, {\"object\": \"Red Squares\", \"predicate\": \"are adjacent to\", \"subject\": \"Blue Squares\"}], \"uncertainty\": [\"The semantic meaning of the colors (blue vs. red) is unknown.\", \"The relationship between the square counts and 'Q9' is not explicitly defined.\", \"It is unclear if this is a standalone image or part of a larger sequence.\"], \"unresolved\": [\"What is the logic connecting the colors/counts to 'Q9'?\", \"Is 'Q9' a question identifier or a code?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:40:43.205633+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}",
+      "handoff_payload_sha256": "e41d1d2e9c75e279d1c886ab2bb3cbf208271bd9b78e266ce246a80a3ae95237",
+      "item_id": "multi_fact_composition",
+      "repeat_index": 0,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "usable_for_replay": true
+    },
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual_element\", \"label\": \"Blue Squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password field or a level indicator).\", \"The text 'M4' likely denotes a model number, a level, a version, or a specific identifier associated with the visual sequence.\", \"The combination suggests a status indicator, possibly 'Level 4' or 'Model 4' with 5 units.\"], \"literal\": [\"Five solid blue squares arranged horizontally in a row.\", \"The text 'M4' appears to the right of the blue squares.\", \"The text 'M4' is in a black, pixelated or blocky font.\", \"The background is white.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"are_left_of\", \"subject\": \"Blue Squares\"}, {\"object\": \"Blue Squares\", \"predicate\": \"is_adjacent_to\", \"subject\": \"M4\"}], \"uncertainty\": [\"It is unclear if the blue squares represent a specific count (5) or a generic placeholder.\", \"The context of 'M4' is ambiguous without surrounding information (e.g., is it a game level, a product model, a math problem?)\", \"The font style of 'M4' looks like a bitmap font, suggesting a digital or retro interface context.\"], \"unresolved\": [\"What does 'M4' specifically stand for in this context?\", \"What is the function of the blue squares?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:41:02.956254+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}",
+      "handoff_payload_sha256": "1b29ef0ec14238ab77f6d53ca089e85b07f36b80631ccce4afe11bacd28eb93e",
+      "item_id": "ocr_count",
+      "repeat_index": 1,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "usable_for_replay": true
+    },
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 2\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 3\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 4\"}, {\"kind\": \"shape\", \"label\": \"Red Square 1\"}], \"interpretations\": [\"The arrangement likely represents a ratio or fraction, specifically 4 out of 5 items.\", \"The color difference (blue vs. red) distinguishes a subset from the whole.\", \"The spacing suggests a grouping of the four blue items separate from the single red item.\"], \"literal\": [\"A horizontal row of five small squares against a white background.\", \"The first four squares from the left are blue.\", \"The fifth square on the right is red.\", \"There is a slightly larger gap between the fourth (blue) and fifth (red) squares compared to the gaps between the first four blue squares.\"], \"relations\": [{\"object\": \"Blue Square 2\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 1\"}, {\"object\": \"Blue Square 3\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 2\"}, {\"object\": \"Blue Square 4\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 3\"}, {\"object\": \"Red Square 1\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 4\"}, {\"object\": \"blue\", \"predicate\": \"has color\", \"subject\": \"Blue Square 1\"}, {\"object\": \"red\", \"predicate\": \"has color\", \"subject\": \"Red Square 1\"}], \"uncertainty\": [\"The specific context or meaning of the colors (blue/red) is unknown.\", \"The exact mathematical or logical problem this represents is not provided.\"], \"unresolved\": [\"What question or problem this visual evidence is meant to solve.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:42:34.429641+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}",
+      "handoff_payload_sha256": "d76541ac8fb19e2461843e490340b162661350373395852f01ea4a2a481a805e",
+      "item_id": "distractor_selection",
+      "repeat_index": 1,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "usable_for_replay": true
+    },
+    {
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Shape\", \"label\": \"Blue Squares\"}, {\"kind\": \"Shape\", \"label\": \"Red Squares\"}, {\"kind\": \"Text\", \"label\": \"Q9\"}], \"interpretations\": [\"The image appears to be a logic puzzle or captcha.\", \"The colored squares likely represent a sequence or count (3 blue, 2 red).\", \"'Q9' likely identifies the specific problem or question number.\"], \"literal\": [\"Three blue squares aligned horizontally on the left.\", \"Two red squares aligned horizontally in the center.\", \"The text 'Q9' in a pixelated font on the right.\", \"All elements are on a white background.\"], \"relations\": [{\"object\": \"Red Squares\", \"predicate\": \"precede\", \"subject\": \"Blue Squares\"}, {\"object\": \"Q9\", \"predicate\": \"precede\", \"subject\": \"Red Squares\"}, {\"object\": \"3\", \"predicate\": \"count\", \"subject\": \"Blue Squares\"}, {\"object\": \"2\", \"predicate\": \"count\", \"subject\": \"Red Squares\"}], \"uncertainty\": [\"The specific meaning of the color coding (blue vs red) is unknown.\", \"The mathematical or logical relationship between the squares and 'Q9' is not defined.\"], \"unresolved\": [\"What is the rule generating the pattern?\", \"Is 'Q9' a question number or a variable?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:42:54.372312+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}",
+      "handoff_payload_sha256": "37f15fdf83a2edd43cf3d15c3d6375ac3de6cf225da66426b040bcedb7fdb937",
+      "item_id": "multi_fact_composition",
+      "repeat_index": 1,
+      "resolved_model": "qwen/qwen3.7-flash",
+      "sensory_model": "qwen/qwen3.7-flash",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "usable_for_replay": true
+    }
+  ],
+  "calls": [
+    {
+      "condition_id": "B1",
+      "correct": 3,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual_element\", \"label\": \"Blue Squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password mask or a level indicator).\", \"The text 'M4' likely serves as a label, identifier, or code associated with the visual sequence.\", \"The combination suggests a status indicator, perhaps 'Level 4' or 'Mode 4' with 5 units.\"], \"literal\": [\"Five solid blue squares arranged horizontally in a row.\", \"The text 'M4' appears to the right of the squares.\", \"The text 'M4' is in a black, pixelated or blocky font.\", \"The background is white.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"are_left_of\", \"subject\": \"Blue Squares\"}, {\"object\": \"Blue Squares\", \"predicate\": \"is_adjacent_to\", \"subject\": \"M4\"}], \"uncertainty\": [\"The specific meaning of the blue squares is ambiguous (could be dots, blocks, pixels).\", \"The relationship between the squares and 'M4' is not explicitly defined (e.g., is M4 the count? is it a label?).\"], \"unresolved\": [\"What does 'M4' stand for?\", \"What do the blue squares represent in this specific context?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:38:50.861145+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}",
+      "handoff_payload_sha256": "d55183d4daae008f7f034952a7e87e8fd803dbadd9ef3e03444d349f9997b0a3",
+      "input_tokens": 220,
+      "item_id": "ocr_count",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "visual_element",
+              "label": "Blue Squares"
+            },
+            {
+              "kind": "text_label",
+              "label": "M4"
+            }
+          ],
+          "interpretations": [
+            "The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password mask or a level indicator).",
+            "The text 'M4' likely serves as a label, identifier, or code associated with the visual sequence.",
+            "The combination suggests a status indicator, perhaps 'Level 4' or 'Mode 4' with 5 units."
+          ],
+          "literal": [
+            "Five solid blue squares arranged horizontally in a row.",
+            "The text 'M4' appears to the right of the squares.",
+            "The text 'M4' is in a black, pixelated or blocky font.",
+            "The background is white."
+          ],
+          "relations": [
+            {
+              "object": "M4",
+              "predicate": "are_left_of",
+              "subject": "Blue Squares"
+            },
+            {
+              "object": "Blue Squares",
+              "predicate": "is_adjacent_to",
+              "subject": "M4"
+            }
+          ],
+          "uncertainty": [
+            "The specific meaning of the blue squares is ambiguous (could be dots, blocks, pixels).",
+            "The relationship between the squares and 'M4' is not explicitly defined (e.g., is M4 the count? is it a label?)."
+          ],
+          "unresolved": [
+            "What does 'M4' stand for?",
+            "What do the blue squares represent in this specific context?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:38:50.861145+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "ocr_count.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890"
+        }
+      },
+      "output_tokens": 813,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 3,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 813,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+        "timestamp": "2026-08-28T20:38:50.861310+00:00"
+      },
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T20:38:33.032867+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "token",
+            "value": "M4"
+          },
+          "type": "token",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 5
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 4,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"shape\", \"label\": \"Red Square 1\"}, {\"kind\": \"shape\", \"label\": \"Red Square 2\"}, {\"kind\": \"shape\", \"label\": \"Red Square 3\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 2\"}], \"interpretations\": [\"The image depicts a simple categorical grouping or counting visualization.\", \"The red squares likely represent a count of 3 for one category.\", \"The blue squares likely represent a count of 2 for a second category.\"], \"literal\": [\"A horizontal arrangement of five small squares on a white background.\", \"The first three squares from the left are colored red.\", \"The next two squares to the right are colored blue.\", \"There is a slightly larger horizontal gap between the third red square and the first blue square compared to the gaps between adjacent squares of the same color.\"], \"relations\": [{\"object\": \"Red Square 2\", \"predicate\": \"is adjacent to\", \"subject\": \"Red Square 1\"}, {\"object\": \"Red Square 3\", \"predicate\": \"is adjacent to\", \"subject\": \"Red Square 2\"}, {\"object\": \"Blue Square 1\", \"predicate\": \"is separated from\", \"subject\": \"Red Square 3\"}, {\"object\": \"Blue Square 2\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 1\"}, {\"object\": \"Blue Square 1\", \"predicate\": \"is to the left of\", \"subject\": \"Red Square 3\"}], \"uncertainty\": [\"The semantic meaning of the colors (red vs. blue) is not provided.\", \"The context or purpose of this visual representation is unknown.\"], \"unresolved\": [\"What data or concept do these colored squares represent?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:39:16.282038+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"colour_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79\"}}",
+      "handoff_payload_sha256": "a803b2f284100c5068cad6f1fd2163a425236d9939b9b30108ee2dfbb9ddb48c",
+      "input_tokens": 220,
+      "item_id": "colour_count",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "shape",
+              "label": "Red Square 1"
+            },
+            {
+              "kind": "shape",
+              "label": "Red Square 2"
+            },
+            {
+              "kind": "shape",
+              "label": "Red Square 3"
+            },
+            {
+              "kind": "shape",
+              "label": "Blue Square 1"
+            },
+            {
+              "kind": "shape",
+              "label": "Blue Square 2"
+            }
+          ],
+          "interpretations": [
+            "The image depicts a simple categorical grouping or counting visualization.",
+            "The red squares likely represent a count of 3 for one category.",
+            "The blue squares likely represent a count of 2 for a second category."
+          ],
+          "literal": [
+            "A horizontal arrangement of five small squares on a white background.",
+            "The first three squares from the left are colored red.",
+            "The next two squares to the right are colored blue.",
+            "There is a slightly larger horizontal gap between the third red square and the first blue square compared to the gaps between adjacent squares of the same color."
+          ],
+          "relations": [
+            {
+              "object": "Red Square 2",
+              "predicate": "is adjacent to",
+              "subject": "Red Square 1"
+            },
+            {
+              "object": "Red Square 3",
+              "predicate": "is adjacent to",
+              "subject": "Red Square 2"
+            },
+            {
+              "object": "Blue Square 1",
+              "predicate": "is separated from",
+              "subject": "Red Square 3"
+            },
+            {
+              "object": "Blue Square 2",
+              "predicate": "is adjacent to",
+              "subject": "Blue Square 1"
+            },
+            {
+              "object": "Blue Square 1",
+              "predicate": "is to the left of",
+              "subject": "Red Square 3"
+            }
+          ],
+          "uncertainty": [
+            "The semantic meaning of the colors (red vs. blue) is not provided.",
+            "The context or purpose of this visual representation is unknown."
+          ],
+          "unresolved": [
+            "What data or concept do these colored squares represent?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:39:16.282038+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "colour_count.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79"
+        }
+      },
+      "output_tokens": 1121,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 4,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 1121,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+        "timestamp": "2026-08-28T20:39:16.282074+00:00"
+      },
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T20:38:50.862484+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 3
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 2
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 2,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Shape\", \"label\": \"Red Square\"}, {\"kind\": \"Shape\", \"label\": \"Blue Square\"}, {\"kind\": \"Surface\", \"label\": \"Background\"}], \"interpretations\": [\"The image depicts a simple spatial arrangement of two colored geometric shapes.\", \"The red and blue squares likely represent distinct items in a sequence or comparison.\", \"The layout suggests a binary relationship or a 'before/after' or 'left/right' distinction.\"], \"literal\": [\"A white rectangular canvas.\", \"A solid red square positioned on the left side.\", \"A solid blue square positioned on the right side.\", \"The squares are horizontally aligned at approximately the same vertical level.\", \"There is a large white space separating the two squares.\", \"No text or other graphical elements are present.\"], \"relations\": [{\"object\": \"Blue Square\", \"predicate\": \"is located to the left of\", \"subject\": \"Red Square\"}, {\"object\": \"Red Square\", \"predicate\": \"is located to the right of\", \"subject\": \"Blue Square\"}, {\"object\": \"Background\", \"predicate\": \"is on\", \"subject\": \"Red Square\"}, {\"object\": \"Background\", \"predicate\": \"is on\", \"subject\": \"Blue Square\"}], \"uncertainty\": [\"The specific context or purpose of the image is not provided.\", \"The relative sizes of the squares appear similar but exact dimensions are unknown.\", \"The significance of the colors (red vs blue) is ambiguous without further context.\"], \"unresolved\": [\"What is the relationship or interaction intended between the red and blue squares?\", \"Is this part of a larger diagram or a standalone test image?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:39:39.403115+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"spatial_relation.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99\"}}",
+      "handoff_payload_sha256": "3f83a9870857098e4ba41897ae75235439cef4948f3230bf9485a88bb1aab2cc",
+      "input_tokens": 220,
+      "item_id": "spatial_relation",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "Shape",
+              "label": "Red Square"
+            },
+            {
+              "kind": "Shape",
+              "label": "Blue Square"
+            },
+            {
+              "kind": "Surface",
+              "label": "Background"
+            }
+          ],
+          "interpretations": [
+            "The image depicts a simple spatial arrangement of two colored geometric shapes.",
+            "The red and blue squares likely represent distinct items in a sequence or comparison.",
+            "The layout suggests a binary relationship or a 'before/after' or 'left/right' distinction."
+          ],
+          "literal": [
+            "A white rectangular canvas.",
+            "A solid red square positioned on the left side.",
+            "A solid blue square positioned on the right side.",
+            "The squares are horizontally aligned at approximately the same vertical level.",
+            "There is a large white space separating the two squares.",
+            "No text or other graphical elements are present."
+          ],
+          "relations": [
+            {
+              "object": "Blue Square",
+              "predicate": "is located to the left of",
+              "subject": "Red Square"
+            },
+            {
+              "object": "Red Square",
+              "predicate": "is located to the right of",
+              "subject": "Blue Square"
+            },
+            {
+              "object": "Background",
+              "predicate": "is on",
+              "subject": "Red Square"
+            },
+            {
+              "object": "Background",
+              "predicate": "is on",
+              "subject": "Blue Square"
+            }
+          ],
+          "uncertainty": [
+            "The specific context or purpose of the image is not provided.",
+            "The relative sizes of the squares appear similar but exact dimensions are unknown.",
+            "The significance of the colors (red vs blue) is ambiguous without further context."
+          ],
+          "unresolved": [
+            "What is the relationship or interaction intended between the red and blue squares?",
+            "Is this part of a larger diagram or a standalone test image?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:39:39.403115+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "spatial_relation.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99"
+        }
+      },
+      "output_tokens": 924,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 2,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 924,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+        "timestamp": "2026-08-28T20:39:39.403129+00:00"
+      },
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T20:39:16.282709+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "object_colour": "blue",
+            "object_shape": "square",
+            "predicate": "left_of",
+            "subject_colour": "red",
+            "subject_shape": "square",
+            "type": "relation"
+          },
+          "type": "relation",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 2,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"numeric_literal\", \"label\": \"12\"}, {\"kind\": \"numeric_literal\", \"label\": \"7\"}], \"interpretations\": [\"This looks like a math problem, possibly subtraction (12 minus 7), although the minus sign is missing.\", \"It could be a sequence or a pair of values.\"], \"literal\": [\"The image shows the number 12 on the left.\", \"The image shows the number 7 on the right.\", \"The text is black and pixelated against a white background.\", \"There is a large horizontal space between the two numbers.\"], \"relations\": [{\"object\": \"7\", \"predicate\": \"is_left_of\", \"subject\": \"12\"}], \"uncertainty\": [\"The relationship between the numbers is not explicitly stated (e.g., no operator like - or +).\", \"The context is missing; it is unclear if this is a puzzle, a label, or a calculation.\"], \"unresolved\": [\"Is there a missing operator?\", \"What is the purpose of this image?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:39:53.469027+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"number_arithmetic.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb\"}}",
+      "handoff_payload_sha256": "cee49a762b084206e3b8f5fd4f050b0625eb8aa70efa33f1cdfd807dce5962e3",
+      "input_tokens": 220,
+      "item_id": "number_arithmetic",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "numeric_literal",
+              "label": "12"
+            },
+            {
+              "kind": "numeric_literal",
+              "label": "7"
+            }
+          ],
+          "interpretations": [
+            "This looks like a math problem, possibly subtraction (12 minus 7), although the minus sign is missing.",
+            "It could be a sequence or a pair of values."
+          ],
+          "literal": [
+            "The image shows the number 12 on the left.",
+            "The image shows the number 7 on the right.",
+            "The text is black and pixelated against a white background.",
+            "There is a large horizontal space between the two numbers."
+          ],
+          "relations": [
+            {
+              "object": "7",
+              "predicate": "is_left_of",
+              "subject": "12"
+            }
+          ],
+          "uncertainty": [
+            "The relationship between the numbers is not explicitly stated (e.g., no operator like - or +).",
+            "The context is missing; it is unclear if this is a puzzle, a label, or a calculation."
+          ],
+          "unresolved": [
+            "Is there a missing operator?",
+            "What is the purpose of this image?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:39:53.469027+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "number_arithmetic.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb"
+        }
+      },
+      "output_tokens": 643,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 2,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 643,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+        "timestamp": "2026-08-28T20:39:53.469044+00:00"
+      },
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T20:39:39.403378+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "number",
+            "value": 12
+          },
+          "type": "number",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "type": "number",
+            "value": 7
+          },
+          "type": "number",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 4,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"geometric_shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 2\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 3\"}, {\"kind\": \"geometric_shape\", \"label\": \"Blue Square 4\"}, {\"kind\": \"geometric_shape\", \"label\": \"Red Square\"}], \"interpretations\": [\"The image likely depicts a fraction or ratio, specifically 4/5 or 4 out of 5.\", \"The color coding distinguishes a subset (blue) from the remainder (red).\", \"The increased spacing visually separates the group of four from the single item, possibly indicating a boundary or a 'part-to-whole' relationship.\"], \"literal\": [\"A horizontal arrangement of five small squares on a white background.\", \"The first four squares from the left are colored blue.\", \"The fifth square, positioned to the right, is colored red.\", \"The spacing between the first four blue squares is uniform and tight.\", \"There is a noticeably larger horizontal gap between the fourth blue square and the red square.\"], \"relations\": [{\"object\": \"Blue Square 2\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 1\"}, {\"object\": \"Blue Square 3\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 2\"}, {\"object\": \"Blue Square 4\", \"predicate\": \"is adjacent to\", \"subject\": \"Blue Square 3\"}, {\"object\": \"Red Square\", \"predicate\": \"is separated from\", \"subject\": \"Blue Square 4\"}, {\"object\": \"Sequence\", \"predicate\": \"is the rightmost element\", \"subject\": \"Red Square\"}], \"uncertainty\": [\"The specific mathematical or logical context (e.g., probability, fractions, voting) is not provided.\", \"The significance of the colors blue and red is arbitrary without further context.\"], \"unresolved\": [\"No text labels or numerical values are visible.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:40:20.932787+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}",
+      "handoff_payload_sha256": "b6d1cd82e793179bab42fb838ab8878e414e9b6f5d1a81f1e63033a2cd7e2b7f",
+      "input_tokens": 220,
+      "item_id": "distractor_selection",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "geometric_shape",
+              "label": "Blue Square 1"
+            },
+            {
+              "kind": "geometric_shape",
+              "label": "Blue Square 2"
+            },
+            {
+              "kind": "geometric_shape",
+              "label": "Blue Square 3"
+            },
+            {
+              "kind": "geometric_shape",
+              "label": "Blue Square 4"
+            },
+            {
+              "kind": "geometric_shape",
+              "label": "Red Square"
+            }
+          ],
+          "interpretations": [
+            "The image likely depicts a fraction or ratio, specifically 4/5 or 4 out of 5.",
+            "The color coding distinguishes a subset (blue) from the remainder (red).",
+            "The increased spacing visually separates the group of four from the single item, possibly indicating a boundary or a 'part-to-whole' relationship."
+          ],
+          "literal": [
+            "A horizontal arrangement of five small squares on a white background.",
+            "The first four squares from the left are colored blue.",
+            "The fifth square, positioned to the right, is colored red.",
+            "The spacing between the first four blue squares is uniform and tight.",
+            "There is a noticeably larger horizontal gap between the fourth blue square and the red square."
+          ],
+          "relations": [
+            {
+              "object": "Blue Square 2",
+              "predicate": "is adjacent to",
+              "subject": "Blue Square 1"
+            },
+            {
+              "object": "Blue Square 3",
+              "predicate": "is adjacent to",
+              "subject": "Blue Square 2"
+            },
+            {
+              "object": "Blue Square 4",
+              "predicate": "is adjacent to",
+              "subject": "Blue Square 3"
+            },
+            {
+              "object": "Red Square",
+              "predicate": "is separated from",
+              "subject": "Blue Square 4"
+            },
+            {
+              "object": "Sequence",
+              "predicate": "is the rightmost element",
+              "subject": "Red Square"
+            }
+          ],
+          "uncertainty": [
+            "The specific mathematical or logical context (e.g., probability, fractions, voting) is not provided.",
+            "The significance of the colors blue and red is arbitrary without further context."
+          ],
+          "unresolved": [
+            "No text labels or numerical values are visible."
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:40:20.932787+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "distractor_selection.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc"
+        }
+      },
+      "output_tokens": 1164,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 4,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 1164,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+        "timestamp": "2026-08-28T20:40:20.932800+00:00"
+      },
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T20:39:53.469618+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 4
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 1
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 5,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Shape\", \"label\": \"Blue Squares\"}, {\"kind\": \"Shape\", \"label\": \"Red Squares\"}, {\"kind\": \"Text\", \"label\": \"Q9\"}], \"interpretations\": [\"The image appears to be a visual puzzle, captcha, or a data representation code.\", \"The colored squares likely encode information corresponding to the label 'Q9'.\", \"The count of blue squares (3) and red squares (2) may be significant values.\", \"The pixelated font suggests a digital, retro, or low-resolution context.\"], \"literal\": [\"A horizontal arrangement of graphical elements on a white background.\", \"Three solid blue squares are positioned on the left.\", \"Two solid red squares are positioned to the right of the blue squares.\", \"The text 'Q9' is displayed in a black, pixelated font on the right side.\", \"The squares are uniform in size and spacing.\", \"There is a visible gap between the red squares and the text 'Q9'.\"], \"relations\": [{\"object\": \"Red Squares\", \"predicate\": \"precede\", \"subject\": \"Blue Squares\"}, {\"object\": \"Q9\", \"predicate\": \"precede\", \"subject\": \"Red Squares\"}, {\"object\": \"Red Squares\", \"predicate\": \"are adjacent to\", \"subject\": \"Blue Squares\"}], \"uncertainty\": [\"The semantic meaning of the colors (blue vs. red) is unknown.\", \"The relationship between the square counts and 'Q9' is not explicitly defined.\", \"It is unclear if this is a standalone image or part of a larger sequence.\"], \"unresolved\": [\"What is the logic connecting the colors/counts to 'Q9'?\", \"Is 'Q9' a question identifier or a code?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:40:43.205633+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}",
+      "handoff_payload_sha256": "e41d1d2e9c75e279d1c886ab2bb3cbf208271bd9b78e266ce246a80a3ae95237",
+      "input_tokens": 220,
+      "item_id": "multi_fact_composition",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "Shape",
+              "label": "Blue Squares"
+            },
+            {
+              "kind": "Shape",
+              "label": "Red Squares"
+            },
+            {
+              "kind": "Text",
+              "label": "Q9"
+            }
+          ],
+          "interpretations": [
+            "The image appears to be a visual puzzle, captcha, or a data representation code.",
+            "The colored squares likely encode information corresponding to the label 'Q9'.",
+            "The count of blue squares (3) and red squares (2) may be significant values.",
+            "The pixelated font suggests a digital, retro, or low-resolution context."
+          ],
+          "literal": [
+            "A horizontal arrangement of graphical elements on a white background.",
+            "Three solid blue squares are positioned on the left.",
+            "Two solid red squares are positioned to the right of the blue squares.",
+            "The text 'Q9' is displayed in a black, pixelated font on the right side.",
+            "The squares are uniform in size and spacing.",
+            "There is a visible gap between the red squares and the text 'Q9'."
+          ],
+          "relations": [
+            {
+              "object": "Red Squares",
+              "predicate": "precede",
+              "subject": "Blue Squares"
+            },
+            {
+              "object": "Q9",
+              "predicate": "precede",
+              "subject": "Red Squares"
+            },
+            {
+              "object": "Red Squares",
+              "predicate": "are adjacent to",
+              "subject": "Blue Squares"
+            }
+          ],
+          "uncertainty": [
+            "The semantic meaning of the colors (blue vs. red) is unknown.",
+            "The relationship between the square counts and 'Q9' is not explicitly defined.",
+            "It is unclear if this is a standalone image or part of a larger sequence."
+          ],
+          "unresolved": [
+            "What is the logic connecting the colors/counts to 'Q9'?",
+            "Is 'Q9' a question identifier or a code?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:40:43.205633+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "multi_fact_composition.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753"
+        }
+      },
+      "output_tokens": 1023,
+      "provider_error": null,
+      "repeat_index": 0,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 5,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 1023,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+        "timestamp": "2026-08-28T20:40:43.205648+00:00"
+      },
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T20:40:20.933201+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "token",
+            "value": "Q9"
+          },
+          "type": "token",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 3
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 2
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 3,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual_element\", \"label\": \"Blue Squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password field or a level indicator).\", \"The text 'M4' likely denotes a model number, a level, a version, or a specific identifier associated with the visual sequence.\", \"The combination suggests a status indicator, possibly 'Level 4' or 'Model 4' with 5 units.\"], \"literal\": [\"Five solid blue squares arranged horizontally in a row.\", \"The text 'M4' appears to the right of the blue squares.\", \"The text 'M4' is in a black, pixelated or blocky font.\", \"The background is white.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"are_left_of\", \"subject\": \"Blue Squares\"}, {\"object\": \"Blue Squares\", \"predicate\": \"is_adjacent_to\", \"subject\": \"M4\"}], \"uncertainty\": [\"It is unclear if the blue squares represent a specific count (5) or a generic placeholder.\", \"The context of 'M4' is ambiguous without surrounding information (e.g., is it a game level, a product model, a math problem?)\", \"The font style of 'M4' looks like a bitmap font, suggesting a digital or retro interface context.\"], \"unresolved\": [\"What does 'M4' specifically stand for in this context?\", \"What is the function of the blue squares?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:41:02.956254+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}",
+      "handoff_payload_sha256": "1b29ef0ec14238ab77f6d53ca089e85b07f36b80631ccce4afe11bacd28eb93e",
+      "input_tokens": 220,
+      "item_id": "ocr_count",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "visual_element",
+              "label": "Blue Squares"
+            },
+            {
+              "kind": "text_label",
+              "label": "M4"
+            }
+          ],
+          "interpretations": [
+            "The blue squares likely represent a sequence, a progress bar, or a visual indicator (like a password field or a level indicator).",
+            "The text 'M4' likely denotes a model number, a level, a version, or a specific identifier associated with the visual sequence.",
+            "The combination suggests a status indicator, possibly 'Level 4' or 'Model 4' with 5 units."
+          ],
+          "literal": [
+            "Five solid blue squares arranged horizontally in a row.",
+            "The text 'M4' appears to the right of the blue squares.",
+            "The text 'M4' is in a black, pixelated or blocky font.",
+            "The background is white."
+          ],
+          "relations": [
+            {
+              "object": "M4",
+              "predicate": "are_left_of",
+              "subject": "Blue Squares"
+            },
+            {
+              "object": "Blue Squares",
+              "predicate": "is_adjacent_to",
+              "subject": "M4"
+            }
+          ],
+          "uncertainty": [
+            "It is unclear if the blue squares represent a specific count (5) or a generic placeholder.",
+            "The context of 'M4' is ambiguous without surrounding information (e.g., is it a game level, a product model, a math problem?)",
+            "The font style of 'M4' looks like a bitmap font, suggesting a digital or retro interface context."
+          ],
+          "unresolved": [
+            "What does 'M4' specifically stand for in this context?",
+            "What is the function of the blue squares?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:41:02.956254+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "ocr_count.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890"
+        }
+      },
+      "output_tokens": 883,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 3,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 883,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+        "timestamp": "2026-08-28T20:41:02.956298+00:00"
+      },
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T20:40:43.206033+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "token",
+            "value": "M4"
+          },
+          "type": "token",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 5
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 4,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"geometric shape\", \"label\": \"Red Square 1\"}, {\"kind\": \"geometric shape\", \"label\": \"Red Square 2\"}, {\"kind\": \"geometric shape\", \"label\": \"Red Square 3\"}, {\"kind\": \"geometric shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"geometric shape\", \"label\": \"Blue Square 2\"}], \"interpretations\": [\"The image displays a set of five distinct items grouped by color.\", \"There is a clear visual separation between the red group (3 items) and the blue group (2 items).\", \"This could represent a binary classification, a count of two different types of objects, or a simple data visualization.\"], \"literal\": [\"A horizontal arrangement of five small squares on a white background.\", \"The first three squares on the left are filled with solid red color.\", \"The next two squares on the right are filled with solid blue color.\", \"There is a small, uniform gap between the three red squares.\", \"There is a slightly larger gap between the third red square and the first blue square.\", \"There is a small, uniform gap between the two blue squares.\"], \"relations\": [{\"object\": \"Red Square 2\", \"predicate\": \"is next to\", \"subject\": \"Red Square 1\"}, {\"object\": \"Red Square 3\", \"predicate\": \"is next to\", \"subject\": \"Red Square 2\"}, {\"object\": \"Blue Square 1\", \"predicate\": \"is separated from\", \"subject\": \"Red Square 3\"}, {\"object\": \"Blue Square 2\", \"predicate\": \"is next to\", \"subject\": \"Blue Square 1\"}, {\"object\": \"red\", \"predicate\": \"has color\", \"subject\": \"Red Square 1\"}, {\"object\": \"blue\", \"predicate\": \"has color\", \"subject\": \"Blue Square 1\"}], \"uncertainty\": [\"The context or meaning of the colors is not provided.\", \"The scale or size of the squares relative to a real-world object is unknown.\", \"It is unclear if the order matters or if it is just a collection.\"], \"unresolved\": [\"What do the red and blue squares represent?\", \"Is there a specific logical relationship between the groups beyond color?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:41:31.930847+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"colour_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79\"}}",
+      "handoff_payload_sha256": "e9e6002c78c82fbf0e5e16cc79d4569339b362e49482849a8b5e36240618edd4",
+      "input_tokens": 220,
+      "item_id": "colour_count",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "geometric shape",
+              "label": "Red Square 1"
+            },
+            {
+              "kind": "geometric shape",
+              "label": "Red Square 2"
+            },
+            {
+              "kind": "geometric shape",
+              "label": "Red Square 3"
+            },
+            {
+              "kind": "geometric shape",
+              "label": "Blue Square 1"
+            },
+            {
+              "kind": "geometric shape",
+              "label": "Blue Square 2"
+            }
+          ],
+          "interpretations": [
+            "The image displays a set of five distinct items grouped by color.",
+            "There is a clear visual separation between the red group (3 items) and the blue group (2 items).",
+            "This could represent a binary classification, a count of two different types of objects, or a simple data visualization."
+          ],
+          "literal": [
+            "A horizontal arrangement of five small squares on a white background.",
+            "The first three squares on the left are filled with solid red color.",
+            "The next two squares on the right are filled with solid blue color.",
+            "There is a small, uniform gap between the three red squares.",
+            "There is a slightly larger gap between the third red square and the first blue square.",
+            "There is a small, uniform gap between the two blue squares."
+          ],
+          "relations": [
+            {
+              "object": "Red Square 2",
+              "predicate": "is next to",
+              "subject": "Red Square 1"
+            },
+            {
+              "object": "Red Square 3",
+              "predicate": "is next to",
+              "subject": "Red Square 2"
+            },
+            {
+              "object": "Blue Square 1",
+              "predicate": "is separated from",
+              "subject": "Red Square 3"
+            },
+            {
+              "object": "Blue Square 2",
+              "predicate": "is next to",
+              "subject": "Blue Square 1"
+            },
+            {
+              "object": "red",
+              "predicate": "has color",
+              "subject": "Red Square 1"
+            },
+            {
+              "object": "blue",
+              "predicate": "has color",
+              "subject": "Blue Square 1"
+            }
+          ],
+          "uncertainty": [
+            "The context or meaning of the colors is not provided.",
+            "The scale or size of the squares relative to a real-world object is unknown.",
+            "It is unclear if the order matters or if it is just a collection."
+          ],
+          "unresolved": [
+            "What do the red and blue squares represent?",
+            "Is there a specific logical relationship between the groups beyond color?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:41:31.930847+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "colour_count.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79"
+        }
+      },
+      "output_tokens": 1257,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 4,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 1257,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+        "timestamp": "2026-08-28T20:41:31.930877+00:00"
+      },
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T20:41:02.956776+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 3
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 2
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 2,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Geometric Shape\", \"label\": \"Red Square\"}, {\"kind\": \"Geometric Shape\", \"label\": \"Blue Square\"}, {\"kind\": \"Canvas\", \"label\": \"Background\"}], \"interpretations\": [\"The image displays a simple spatial arrangement of two colored geometric shapes.\", \"The red and blue squares likely represent distinct entities or data points in a comparison.\", \"The layout suggests a binary state or a relationship between two opposing or separate elements.\"], \"literal\": [\"A white rectangular background.\", \"A solid red square positioned on the left side.\", \"A solid blue square positioned on the right side.\", \"The two squares are horizontally aligned at approximately the same vertical level.\", \"There is a large white space separating the two squares.\"], \"relations\": [{\"object\": \"Blue Square\", \"predicate\": \"is located to the left of\", \"subject\": \"Red Square\"}, {\"object\": \"Red Square\", \"predicate\": \"is located to the right of\", \"subject\": \"Blue Square\"}, {\"object\": \"Background\", \"predicate\": \"is rendered on\", \"subject\": \"Red Square\"}, {\"object\": \"Background\", \"predicate\": \"is rendered on\", \"subject\": \"Blue Square\"}], \"uncertainty\": [\"The exact dimensions or scale of the squares are not provided.\", \"The semantic meaning of the colors (red vs blue) is context-dependent and not defined here.\", \"The purpose of the arrangement (e.g., UI element, logic gate, simple diagram) is unknown.\"], \"unresolved\": [\"What is the relationship or interaction intended between the red and blue squares?\", \"Is there a specific coordinate system or scale implied?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:41:54.418779+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"spatial_relation.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99\"}}",
+      "handoff_payload_sha256": "66c3b4bf85e7f7569afc491110a1fac114d317a65d0c9e8c45296f6f5668be2f",
+      "input_tokens": 220,
+      "item_id": "spatial_relation",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "Geometric Shape",
+              "label": "Red Square"
+            },
+            {
+              "kind": "Geometric Shape",
+              "label": "Blue Square"
+            },
+            {
+              "kind": "Canvas",
+              "label": "Background"
+            }
+          ],
+          "interpretations": [
+            "The image displays a simple spatial arrangement of two colored geometric shapes.",
+            "The red and blue squares likely represent distinct entities or data points in a comparison.",
+            "The layout suggests a binary state or a relationship between two opposing or separate elements."
+          ],
+          "literal": [
+            "A white rectangular background.",
+            "A solid red square positioned on the left side.",
+            "A solid blue square positioned on the right side.",
+            "The two squares are horizontally aligned at approximately the same vertical level.",
+            "There is a large white space separating the two squares."
+          ],
+          "relations": [
+            {
+              "object": "Blue Square",
+              "predicate": "is located to the left of",
+              "subject": "Red Square"
+            },
+            {
+              "object": "Red Square",
+              "predicate": "is located to the right of",
+              "subject": "Blue Square"
+            },
+            {
+              "object": "Background",
+              "predicate": "is rendered on",
+              "subject": "Red Square"
+            },
+            {
+              "object": "Background",
+              "predicate": "is rendered on",
+              "subject": "Blue Square"
+            }
+          ],
+          "uncertainty": [
+            "The exact dimensions or scale of the squares are not provided.",
+            "The semantic meaning of the colors (red vs blue) is context-dependent and not defined here.",
+            "The purpose of the arrangement (e.g., UI element, logic gate, simple diagram) is unknown."
+          ],
+          "unresolved": [
+            "What is the relationship or interaction intended between the red and blue squares?",
+            "Is there a specific coordinate system or scale implied?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:41:54.418779+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "spatial_relation.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99"
+        }
+      },
+      "output_tokens": 899,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 2,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 899,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+        "timestamp": "2026-08-28T20:41:54.418802+00:00"
+      },
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T20:41:31.931505+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "object_colour": "blue",
+            "object_shape": "square",
+            "predicate": "left_of",
+            "subject_colour": "red",
+            "subject_shape": "square",
+            "type": "relation"
+          },
+          "type": "relation",
+          "verdict": "unknown"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 2,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"number\", \"label\": \"12\"}, {\"kind\": \"number\", \"label\": \"7\"}], \"interpretations\": [\"This appears to be a mathematical expression, likely subtraction (12 - 7) or a comparison.\", \"The layout resembles a simple arithmetic problem found in educational materials.\"], \"literal\": [\"The image shows the number '12' on the left.\", \"The image shows the number '7' on the right.\", \"There is a large horizontal space between the two numbers.\", \"The background is white.\", \"The text is black.\"], \"relations\": [{\"object\": \"7\", \"predicate\": \"is_left_of\", \"subject\": \"12\"}], \"uncertainty\": [\"The operator between the numbers is missing or implied.\", \"It is unclear if this is a subtraction problem (12 minus 7) or a comparison (12 greater than 7).\"], \"unresolved\": [\"What is the intended operation or relationship between 12 and 7?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:42:08.416390+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"number_arithmetic.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb\"}}",
+      "handoff_payload_sha256": "19546d02f9ed2a1b83c84d05d032eddd061a43d710d7fd2a8ccd8e25087b81b3",
+      "input_tokens": 220,
+      "item_id": "number_arithmetic",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "number",
+              "label": "12"
+            },
+            {
+              "kind": "number",
+              "label": "7"
+            }
+          ],
+          "interpretations": [
+            "This appears to be a mathematical expression, likely subtraction (12 - 7) or a comparison.",
+            "The layout resembles a simple arithmetic problem found in educational materials."
+          ],
+          "literal": [
+            "The image shows the number '12' on the left.",
+            "The image shows the number '7' on the right.",
+            "There is a large horizontal space between the two numbers.",
+            "The background is white.",
+            "The text is black."
+          ],
+          "relations": [
+            {
+              "object": "7",
+              "predicate": "is_left_of",
+              "subject": "12"
+            }
+          ],
+          "uncertainty": [
+            "The operator between the numbers is missing or implied.",
+            "It is unclear if this is a subtraction problem (12 minus 7) or a comparison (12 greater than 7)."
+          ],
+          "unresolved": [
+            "What is the intended operation or relationship between 12 and 7?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:42:08.416390+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "number_arithmetic.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb"
+        }
+      },
+      "output_tokens": 626,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 2,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 626,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+        "timestamp": "2026-08-28T20:42:08.416409+00:00"
+      },
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T20:41:54.419131+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "number",
+            "value": 12
+          },
+          "type": "number",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "type": "number",
+            "value": 7
+          },
+          "type": "number",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 4,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"shape\", \"label\": \"Blue Square 1\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 2\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 3\"}, {\"kind\": \"shape\", \"label\": \"Blue Square 4\"}, {\"kind\": \"shape\", \"label\": \"Red Square 1\"}], \"interpretations\": [\"The arrangement likely represents a ratio or fraction, specifically 4 out of 5 items.\", \"The color difference (blue vs. red) distinguishes a subset from the whole.\", \"The spacing suggests a grouping of the four blue items separate from the single red item.\"], \"literal\": [\"A horizontal row of five small squares against a white background.\", \"The first four squares from the left are blue.\", \"The fifth square on the right is red.\", \"There is a slightly larger gap between the fourth (blue) and fifth (red) squares compared to the gaps between the first four blue squares.\"], \"relations\": [{\"object\": \"Blue Square 2\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 1\"}, {\"object\": \"Blue Square 3\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 2\"}, {\"object\": \"Blue Square 4\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 3\"}, {\"object\": \"Red Square 1\", \"predicate\": \"is left of\", \"subject\": \"Blue Square 4\"}, {\"object\": \"blue\", \"predicate\": \"has color\", \"subject\": \"Blue Square 1\"}, {\"object\": \"red\", \"predicate\": \"has color\", \"subject\": \"Red Square 1\"}], \"uncertainty\": [\"The specific context or meaning of the colors (blue/red) is unknown.\", \"The exact mathematical or logical problem this represents is not provided.\"], \"unresolved\": [\"What question or problem this visual evidence is meant to solve.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:42:34.429641+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}",
+      "handoff_payload_sha256": "d76541ac8fb19e2461843e490340b162661350373395852f01ea4a2a481a805e",
+      "input_tokens": 220,
+      "item_id": "distractor_selection",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "shape",
+              "label": "Blue Square 1"
+            },
+            {
+              "kind": "shape",
+              "label": "Blue Square 2"
+            },
+            {
+              "kind": "shape",
+              "label": "Blue Square 3"
+            },
+            {
+              "kind": "shape",
+              "label": "Blue Square 4"
+            },
+            {
+              "kind": "shape",
+              "label": "Red Square 1"
+            }
+          ],
+          "interpretations": [
+            "The arrangement likely represents a ratio or fraction, specifically 4 out of 5 items.",
+            "The color difference (blue vs. red) distinguishes a subset from the whole.",
+            "The spacing suggests a grouping of the four blue items separate from the single red item."
+          ],
+          "literal": [
+            "A horizontal row of five small squares against a white background.",
+            "The first four squares from the left are blue.",
+            "The fifth square on the right is red.",
+            "There is a slightly larger gap between the fourth (blue) and fifth (red) squares compared to the gaps between the first four blue squares."
+          ],
+          "relations": [
+            {
+              "object": "Blue Square 2",
+              "predicate": "is left of",
+              "subject": "Blue Square 1"
+            },
+            {
+              "object": "Blue Square 3",
+              "predicate": "is left of",
+              "subject": "Blue Square 2"
+            },
+            {
+              "object": "Blue Square 4",
+              "predicate": "is left of",
+              "subject": "Blue Square 3"
+            },
+            {
+              "object": "Red Square 1",
+              "predicate": "is left of",
+              "subject": "Blue Square 4"
+            },
+            {
+              "object": "blue",
+              "predicate": "has color",
+              "subject": "Blue Square 1"
+            },
+            {
+              "object": "red",
+              "predicate": "has color",
+              "subject": "Red Square 1"
+            }
+          ],
+          "uncertainty": [
+            "The specific context or meaning of the colors (blue/red) is unknown.",
+            "The exact mathematical or logical problem this represents is not provided."
+          ],
+          "unresolved": [
+            "What question or problem this visual evidence is meant to solve."
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:42:34.429641+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "distractor_selection.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc"
+        }
+      },
+      "output_tokens": 1182,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 4,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 1182,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+        "timestamp": "2026-08-28T20:42:34.429660+00:00"
+      },
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T20:42:08.416644+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 4
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 1
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    },
+    {
+      "condition_id": "B1",
+      "correct": 5,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff_payload": "{\"observation\": {\"entities\": [{\"kind\": \"Shape\", \"label\": \"Blue Squares\"}, {\"kind\": \"Shape\", \"label\": \"Red Squares\"}, {\"kind\": \"Text\", \"label\": \"Q9\"}], \"interpretations\": [\"The image appears to be a logic puzzle or captcha.\", \"The colored squares likely represent a sequence or count (3 blue, 2 red).\", \"'Q9' likely identifies the specific problem or question number.\"], \"literal\": [\"Three blue squares aligned horizontally on the left.\", \"Two red squares aligned horizontally in the center.\", \"The text 'Q9' in a pixelated font on the right.\", \"All elements are on a white background.\"], \"relations\": [{\"object\": \"Red Squares\", \"predicate\": \"precede\", \"subject\": \"Blue Squares\"}, {\"object\": \"Q9\", \"predicate\": \"precede\", \"subject\": \"Red Squares\"}, {\"object\": \"3\", \"predicate\": \"count\", \"subject\": \"Blue Squares\"}, {\"object\": \"2\", \"predicate\": \"count\", \"subject\": \"Red Squares\"}], \"uncertainty\": [\"The specific meaning of the color coding (blue vs red) is unknown.\", \"The mathematical or logical relationship between the squares and 'Q9' is not defined.\"], \"unresolved\": [\"What is the rule generating the pattern?\", \"Is 'Q9' a question number or a variable?\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T20:42:54.372312+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"qwen/qwen3.7-flash\", \"resolved_model\": \"qwen/qwen3.7-flash\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}",
+      "handoff_payload_sha256": "37f15fdf83a2edd43cf3d15c3d6375ac3de6cf225da66426b040bcedb7fdb937",
+      "input_tokens": 220,
+      "item_id": "multi_fact_composition",
+      "normalized_handoff": {
+        "observation": {
+          "entities": [
+            {
+              "kind": "Shape",
+              "label": "Blue Squares"
+            },
+            {
+              "kind": "Shape",
+              "label": "Red Squares"
+            },
+            {
+              "kind": "Text",
+              "label": "Q9"
+            }
+          ],
+          "interpretations": [
+            "The image appears to be a logic puzzle or captcha.",
+            "The colored squares likely represent a sequence or count (3 blue, 2 red).",
+            "'Q9' likely identifies the specific problem or question number."
+          ],
+          "literal": [
+            "Three blue squares aligned horizontally on the left.",
+            "Two red squares aligned horizontally in the center.",
+            "The text 'Q9' in a pixelated font on the right.",
+            "All elements are on a white background."
+          ],
+          "relations": [
+            {
+              "object": "Red Squares",
+              "predicate": "precede",
+              "subject": "Blue Squares"
+            },
+            {
+              "object": "Q9",
+              "predicate": "precede",
+              "subject": "Red Squares"
+            },
+            {
+              "object": "3",
+              "predicate": "count",
+              "subject": "Blue Squares"
+            },
+            {
+              "object": "2",
+              "predicate": "count",
+              "subject": "Red Squares"
+            }
+          ],
+          "uncertainty": [
+            "The specific meaning of the color coding (blue vs red) is unknown.",
+            "The mathematical or logical relationship between the squares and 'Q9' is not defined."
+          ],
+          "unresolved": [
+            "What is the rule generating the pattern?",
+            "Is 'Q9' a question number or a variable?"
+          ]
+        },
+        "provenance": {
+          "observed_at": "2026-08-28T20:42:54.372312+00:00",
+          "provider": "OpenRouter",
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        "schema_version": 1,
+        "source": {
+          "filename": "multi_fact_composition.png",
+          "kind": "image",
+          "mime_type": "image/png",
+          "sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753"
+        }
+      },
+      "output_tokens": 951,
+      "provider_error": null,
+      "repeat_index": 1,
+      "request_success": true,
+      "requested_model": "qwen/qwen3.7-flash",
+      "resolved_model": "qwen/qwen3.7-flash",
+      "schema_conformant": true,
+      "scoreable": 5,
+      "sensory_trace": {
+        "input_tokens": 220,
+        "model": "qwen/qwen3.7-flash",
+        "node_role": "multimodal_ingress",
+        "output_tokens": 951,
+        "provider": "OpenRouter",
+        "requested_model": "qwen/qwen3.7-flash",
+        "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+        "timestamp": "2026-08-28T20:42:54.372333+00:00"
+      },
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T20:42:34.430090+00:00",
+      "verdicts": [
+        {
+          "fact": {
+            "type": "token",
+            "value": "Q9"
+          },
+          "type": "token",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "blue",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 3
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_presence"
+          },
+          "type": "shape_presence",
+          "verdict": "correct"
+        },
+        {
+          "fact": {
+            "colour": "red",
+            "shape": "square",
+            "type": "shape_count",
+            "value": 2
+          },
+          "type": "shape_count",
+          "verdict": "correct"
+        }
+      ]
+    }
+  ],
+  "condition_id": "B1",
+  "hallucinated_fact_count": null,
+  "hallucinated_fact_note": "Not implemented in the frozen scorer. Computing it now would require a new scoring rule invented after results existed, which the protocol forbids.",
+  "metrics": {
+    "atomic_fact_accuracy": 1.0,
+    "atomic_fact_yield": 0.9523809523809523,
+    "by_fact_type": {
+      "number": {
+        "correct": 4,
+        "expected": 4,
+        "scoreable": 4
+      },
+      "relation": {
+        "correct": 0,
+        "expected": 2,
+        "scoreable": 0
+      },
+      "shape_count": {
+        "correct": 14,
+        "expected": 14,
+        "scoreable": 14
+      },
+      "shape_presence": {
+        "correct": 18,
+        "expected": 18,
+        "scoreable": 18
+      },
+      "token": {
+        "correct": 4,
+        "expected": 4,
+        "scoreable": 4
+      }
+    },
+    "calls": 12,
+    "correct_facts": 40,
+    "expected_facts": 42,
+    "mean_input_tokens": 220,
+    "mean_output_tokens": 957.1666666666666,
+    "repeat_stability": 1.0,
+    "request_failures": 0,
+    "schema_compliance_rate": 1.0,
+    "scoreable_facts": 40,
+    "scoring_coverage": 0.9523809523809523,
+    "total_input_tokens": 2640,
+    "total_output_tokens": 11486
+  },
+  "protocol_version": "v2",
+  "question": "Is the frozen sensory boundary portable across a distinct sensory-model family?",
+  "repeat_selection_for_B2": {
+    "action": "both repeats preserved; no repeat selected",
+    "note": "Protocol v2 encodes no rule for which B1 repeat feeds B2. Selecting one post hoc would be an invented rule. B2 must not run until this is preregistered.",
+    "specified_by_protocol_v2": false
+  },
+  "repeats": 2,
+  "requested_model": "qwen/qwen3.7-flash",
+  "resolved_models": [
+    "qwen/qwen3.7-flash"
+  ],
+  "schema_version": 1
+}
