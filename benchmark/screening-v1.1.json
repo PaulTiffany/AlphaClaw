@@ -1,0 +1,1062 @@
+{
+  "amendment": "v1.1",
+  "amendment_scope": "provider-availability recovery only",
+  "linkage": {
+    "amendment_commit": "4f68c432cf8e7b38e1508ad7941182a22f241f9a",
+    "original_artifact": "screening.json",
+    "original_artifact_sha256": "c1b39cbe17d0039f59bb9b1aa2b215696602986e4602e66be356b6b6a35b7efb",
+    "protocol_commit": "c78c08fce81c5b96d21bb19d3b693d4c4c15feac"
+  },
+  "note": "The original HTTP-429 attempts remain reported as availability failures in Screening v1. A replacement observation supersedes its cell for comparative scoring only when it reached model inference and produced an experimental outcome. HTTP-429 failures are not evidence of visual or model incapability.",
+  "original_availability_report": {
+    "per_model": {
+      "dots-studio/dots-3-note-preview:free": {
+        "attempted": 12,
+        "availability_failures": 0,
+        "availability_rate": 0.0,
+        "experimental_failures": 1,
+        "usable_observations": 12
+      },
+      "google/gemma-4-26b-a4b-it:free": {
+        "attempted": 12,
+        "availability_failures": 12,
+        "availability_rate": 1.0,
+        "experimental_failures": 0,
+        "usable_observations": 0
+      },
+      "google/gemma-4-31b-it:free": {
+        "attempted": 12,
+        "availability_failures": 12,
+        "availability_rate": 1.0,
+        "experimental_failures": 0,
+        "usable_observations": 0
+      }
+    },
+    "totals": {
+      "attempted": 36,
+      "availability_failures": 24,
+      "availability_rate": 0.6666666666666666,
+      "experimental_failures": 1,
+      "usable_observations": 12
+    }
+  },
+  "recovered_calls": [
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:12.107341+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:12.374115+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:12.571099+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "relation",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:13.181803+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 2,
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:13.720374+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:13.867564+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 5,
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:14.127677+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:14.275115+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:14.484005+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "relation",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:14.707744+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 2,
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:14.881556+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.072659+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 5,
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.249027+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.424160+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.572137+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "relation",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.836122+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 2,
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:15.994432+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 0,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:16.161943+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 5,
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:16.333857+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:16.554457+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 3,
+      "expected_source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:16.751946+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 3,
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "relation",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 2,
+      "expected_source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:17.293422+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 2,
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "number",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 4,
+      "expected_source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:17.449584+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 4,
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    },
+    {
+      "correct": 0,
+      "expected": 5,
+      "expected_source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "handoff": null,
+      "input_tokens": 0,
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-31b-it:free",
+      "original_v1_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "output_tokens": 0,
+      "repeat_index": 1,
+      "replacement_error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "replacement_failure_class": "availability",
+      "replacement_timestamp": "2026-08-28T20:01:17.611998+00:00",
+      "request_success": false,
+      "resolved_model": null,
+      "schema_conformant": false,
+      "scoreable": 5,
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "supersedes": false,
+      "verdicts": [
+        {
+          "type": "token",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_presence",
+          "verdict": "incorrect"
+        },
+        {
+          "type": "shape_count",
+          "verdict": "incorrect"
+        }
+      ]
+    }
+  ],
+  "recovered_cells": [
+    {
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 0
+    },
+    {
+      "item_id": "ocr_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "colour_count",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "spatial_relation",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "number_arithmetic",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "distractor_selection",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    },
+    {
+      "item_id": "multi_fact_composition",
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_index": 1
+    }
+  ],
+  "recovery_availability": {
+    "attempted": 24,
+    "availability_failures": 24,
+    "availability_rate": 1.0,
+    "usable_observations": 0
+  },
+  "schema_version": 1
+}
