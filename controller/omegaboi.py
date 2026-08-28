@@ -770,9 +770,11 @@ def run_episode(
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    source = parser.add_mutually_exclusive_group(required=True)
-    source.add_argument("--text")
-    source.add_argument("--input-file", type=Path)
+    # Not mutually exclusive: supplying both composes ONE human-mediated input whose
+    # image and text components travel in a single Alpha envelope. prepare() rejects
+    # the empty case.
+    parser.add_argument("--text")
+    parser.add_argument("--input-file", type=Path)
     parser.add_argument("--provider", choices=tuple(UPSTREAMS), required=True)
     parser.add_argument("--model")
     parser.add_argument("--sensory-model", default=openrouter_image.DEFAULT_MODEL)
