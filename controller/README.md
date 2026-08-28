@@ -689,6 +689,98 @@ Scope is replay-source selection only. Stimuli, the Qwen and MiniMax conditions,
 B2 item list, the scorer, the sensory boundary, the B1 results, the replay bytes and
 the ASICloud caps are unchanged.
 
+## Protocol v2 Condition A -- result (frozen)
+
+The primary Alpha tranche: sensory `dots-studio/dots-3-note-preview:free`, resident
+ASICloud `minimax/minimax-m3`, six deterministic items across three matched conditions,
+`--max-loops 1`. **18 bounded runs, 18 executed, zero reruns.** Frozen at
+`benchmark/benchmark-v2-A.json`.
+
+| item | text control | image only (sensory) | image + text |
+|---|---|---|---|
+| `ocr_count` | PASS `M45` | 3/3 facts | PASS `M45` |
+| `colour_count` | PASS `32` | 4/4 facts | PASS `32` |
+| `spatial_relation` | PASS `RED` | 2/3 facts (1 unknown) | PASS `RED` |
+| `number_arithmetic` | PASS `19` | 2/2 facts | PASS `19` |
+| `distractor_selection` | PASS `RED` | 4/4 facts | **FAIL** -- no response |
+| `multi_fact_composition` | PASS `Q932` | 5/5 facts | PASS `Q932` |
+
+Text-control exact match **6/6**. Image+text exact match **5/6**. Image-only schema
+compliance **6/6**, atomic-fact yield **20/21**, accuracy over scoreable facts
+**20/20**, scoring coverage **20/21**. Every one of the 18 runs obeyed **1 boot + 1
+episode**: 36 ASICloud calls (cap 42), 72,804 in / 7,092 out; 12 sensory calls, 1,800
+in / 18,974 out, requested and resolved as the preregistered model on every call.
+
+### The one failure, not rounded up
+
+`distractor_selection` image+text is a **benchmark failure**, class **output-contract**:
+
+- sensory handoff correct, 4/4 -- sensing was not the broken link
+- expected final answer `RED`
+- Omega's episode content contained `RED`
+- it was emitted as an unknown skill call, not via `send`:
+  `(RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))`
+- no valid channel message was produced, no response artifact exists
+- the run timed out; exact match FAIL
+
+The intended answer is recoverable from the container log. That does **not** make it a
+pass, and it was not upgraded.
+
+### Lifecycle observation, not a bound violation
+
+That run logged 896 raw idle loop ticks (iterations 4-896, 21:12:26Z-21:27:26Z) while
+the controller waited out its 900 s response window. The chronology matters and the
+first reading of it was wrong: **the ticks did not follow a successful response.** The
+two runs that did respond ended at 5 ticks each and were torn down immediately. Long
+ticking occurred only in the run that never emitted a response.
+
+During that interval prompted reasoning turns stayed bounded, boot calls stayed 1,
+episode calls stayed 1, and **provider calls after the episode were 0**. Raw loop ticks
+are not prompted reasoning turns; `maxNewInputLoops: 1` bounds the latter and did.
+So this is an orchestration/lifecycle observation -- not a recursive-bound violation,
+not additional model reasoning, not a provider-budget violation. Timeout, teardown and
+controller behaviour are deliberately **unchanged** in this results tranche.
+
+### Cross-model scorer-vocabulary limitation
+
+`spatial_relation` scored `unknown` on its relation fact in both image conditions,
+because dots produced `is located to the left of` -- the **same form Qwen produced in
+B1**, and still absent from the frozen deterministic relation lexicon. Two unrelated
+sensory-model families independently landed on a phrasing the scorer cannot decide.
+
+That is recorded as **cross-model evidence of a scorer-vocabulary coverage limitation**,
+not as a corrected sensory result. The lexicon was **not** broadened in v2; the verdicts
+remain `unknown` and coverage remains 20/21. Any normalisation belongs to a future
+scorer/protocol version.
+
+### Derived analysis, and two classifier bugs found after the runs
+
+`scripts/analyze_condition_a.py` derives the decomposition from the frozen artifact. It
+is pure, offline and read-only: tests assert it has no network, container or write path,
+and that it never mutates a run mapping. Two bugs in that derived layer were found and
+corrected **after** the experimental runs:
+
+1. `unknown` scorer verdicts were misclassified as sensory failures (sensory 2 -> 0).
+2. A run that met its exact-match criterion was still assigned a failure class.
+
+An `unknown` verdict is undecidable, not wrong -- excluded from accuracy, reported as
+reduced coverage, exactly as ruled for B1. Only the derived classification changed to
+match its already-declared semantics. **Raw provider receipts, exact-match verdicts and
+frozen sensory-scorer verdicts are byte-identical, no run was re-executed, and no
+additional provider call was made.** `--verify` recomputes every class and fails if the
+committed decomposition and the committed evidence disagree.
+
+### Failure decomposition
+
+| class | count |
+|---|---|
+| sensory | 0 |
+| reasoning/composition | 0 |
+| output-contract | **1** |
+| infrastructure | 0 |
+| provider availability | 0 |
+| passed | 17 |
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.

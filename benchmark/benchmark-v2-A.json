@@ -1,0 +1,2797 @@
+{
+  "attempted_runs": 18,
+  "condition_id": "A",
+  "derived_analysis": {
+    "analyzer": "scripts/analyze_condition_a.py",
+    "corrections_after_the_experimental_runs": [
+      {
+        "affected_runs": [
+          "spatial_relation/image_only",
+          "spatial_relation/image_text"
+        ],
+        "bug": 1,
+        "description": "`unknown` scorer verdicts were initially misclassified as sensory failures",
+        "effect_on_derived_counts": "sensory 2 -> 0, passed 15 -> 17"
+      },
+      {
+        "affected_runs": [
+          "spatial_relation/image_text"
+        ],
+        "bug": 2,
+        "description": "a run that met its exact-match criterion was still being assigned a failure class",
+        "effect_on_derived_counts": "spatial_relation/image_text relabelled from `sensory` to passed"
+      },
+      {
+        "affected_runs": [
+          "all text_control runs"
+        ],
+        "bug": 3,
+        "description": "sensory-call total counted all 18 runs instead of only the 12 that issued a sensory call",
+        "effect_on_derived_counts": "reported sensory calls 18 -> 12; token totals unchanged (the 6 text-control runs contributed 0/0)"
+      }
+    ],
+    "nature": "DERIVED classification only; raw receipts, exact-match verdicts and frozen-scorer verdicts are immutable inputs",
+    "pass_semantics": "A run meeting its exact-match criterion is a pass and is never assigned a failure class.",
+    "reruns_or_additional_inference": "none; no run was re-executed and no additional provider call was made",
+    "sensory_failure_semantics": "A sensory failure is a non-conformant schema or a frozen-scorer INCORRECT verdict. An `unknown` verdict is undecidable: excluded from accuracy, reported as reduced coverage, and never counted as a sensory failure. Same ruling as condition B1.",
+    "unchanged_by_the_corrections": [
+      "raw provider receipts (usage.jsonl, provider_usage.jsonl, manifest usage_by_phase)",
+      "exact-match verdicts (6/6 text control, 5/6 image+text)",
+      "frozen sensory-scorer verdicts and aggregate metrics",
+      "stimuli, prompts, sensory boundary, scorer, bounds, barrier, gateway",
+      "the distractor_selection image+text run, which remains a benchmark failure"
+    ]
+  },
+  "failure_decomposition": {
+    "infrastructure": 0,
+    "output_contract": 1,
+    "provider_availability": 0,
+    "reasoning_composition": 0,
+    "sensory": 0
+  },
+  "frozen_scorer_observation": {
+    "detail": "Both dots-studio/dots-3-note-preview:free (Condition A) and qwen/qwen3.7-flash (condition B1) independently produced the relation form \"is located to the left of\", which is absent from the frozen deterministic relation lexicon. The verdict remains `unknown` in every case and scoring coverage remains 20/21 for image-only.",
+    "disposition": "any relation normalisation belongs to a future scorer/protocol version",
+    "finding": "cross-model evidence of a scorer-vocabulary coverage limitation",
+    "lexicon_broadened_in_v2": false,
+    "not": "a corrected sensory result"
+  },
+  "generated_at": "2026-08-28T21:28:13.184296+00:00",
+  "lifecycle_observations": [
+    {
+      "boot_calls": 1,
+      "classification": "orchestration/lifecycle observation -- NOT a recursive-bound violation and NOT a task failure",
+      "condition": "image_text",
+      "correction_to_initial_framing": "The ticks did NOT follow a completed response. Receipts show the opposite: the two runs that DID respond ended at 5 ticks each and were torn down immediately (20260828T211110Z-7f845bdd13, 20260828T212738Z-454afd8238). Prolonged ticking occurred only in the single run where Omega never emitted a channel message, so it is a consequence of the missing response, not something that happened after one.",
+      "episode_calls": 1,
+      "finding": "Stock Omega emitted 896 raw idle loop ticks (iterations 4-896, 21:12:26Z-21:27:26Z) while the controller waited out its 900 s response window. Raw loop ticks are NOT prompted reasoning turns; maxNewInputLoops=1 bounds the latter and did so correctly.",
+      "id": "idle-iteration-ticks",
+      "idle_interval_utc": [
+        "2026-08-28T21:12:26Z",
+        "2026-08-28T21:27:26Z"
+      ],
+      "item_id": "distractor_selection",
+      "last_provider_call_utc": "2026-08-28T21:12:24.949941+00:00",
+      "note": "missing_required_response is true for this run, but it is scored under the failure decomposition as output_contract, not attributed to the idle ticks. Controller teardown behaviour is deliberately UNCHANGED in this tranche.",
+      "protocol_violation": false,
+      "provider_calls_during_idle_interval": 0,
+      "run_id": "20260828T211157Z-f2ed870c3f",
+      "violation_checks": {
+        "corrupted_receipt_or_accounting": false,
+        "extra_provider_call": false,
+        "failed_teardown_affecting_later_runs": false,
+        "missing_required_response": true
+      }
+    }
+  ],
+  "protocol_version": "v2",
+  "resident_model": "minimax/minimax-m3",
+  "resident_provider": "asicloud",
+  "runs": [
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "M45",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "ocr_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T20:59:07.329542+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "26b2e8be69e857206ad2d0fe1e91c9ff5ce94ead04264efdb59b61f7aabc62de"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T205845Z-41107c9b7f",
+        "started_at": "2026-08-28T20:58:45.646159+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3461,
+          "output_tokens": 134
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 55
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2029,
+            "output_tokens": 79
+          }
+        }
+      },
+      "payload": "The token M4 is shown. There are 5 blue squares. Reply with the token shown, then the number of squares. Use uppercase for the token and digits only for the count. Reply with no spaces and no other text.",
+      "response": "M45\n",
+      "run_id": "20260828T205845Z-41107c9b7f",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "26b2e8be69e857206ad2d0fe1e91c9ff5ce94ead04264efdb59b61f7aabc62de",
+      "started_at": "2026-08-28T20:58:37.831201+00:00"
+    },
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "32",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "colour_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T20:59:40.889434+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "04ad0483ca71edafdb42f77131ebcce0fac446395ce07fa27d8b6469252b966b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T205916Z-f770ea413b",
+        "started_at": "2026-08-28T20:59:16.546230+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3412,
+          "output_tokens": 320
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 224
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1980,
+            "output_tokens": 96
+          }
+        }
+      },
+      "payload": "There are 3 red squares and 2 blue squares. Reply with the number of red squares then the number of blue squares. Use digits only. Reply with no spaces and no other text.",
+      "response": "32\n",
+      "run_id": "20260828T205916Z-f770ea413b",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "04ad0483ca71edafdb42f77131ebcce0fac446395ce07fa27d8b6469252b966b",
+      "started_at": "2026-08-28T20:59:07.406910+00:00"
+    },
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "spatial_relation",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:00:06.596549+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "fc91dec6e41f095d01de73243267999841152be60921016743754c1a2ee51407"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T205948Z-404c5a928b",
+        "started_at": "2026-08-28T20:59:49.008451+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Acknowledged. Standing by for your input."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3378,
+          "output_tokens": 148
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 52
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1946,
+            "output_tokens": 96
+          }
+        }
+      },
+      "payload": "A red square is on the left and a blue square is on the right. Reply with the colour word of the leftmost square. Use uppercase. Reply with no spaces and no other text.",
+      "response": "RED\n",
+      "run_id": "20260828T205948Z-404c5a928b",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "fc91dec6e41f095d01de73243267999841152be60921016743754c1a2ee51407",
+      "started_at": "2026-08-28T20:59:40.970556+00:00"
+    },
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "number_arithmetic",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:00:35.701993+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210015Z-5d7e344412",
+        "started_at": "2026-08-28T21:00:15.220296+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3782,
+          "output_tokens": 207
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 124
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2350,
+            "output_tokens": 83
+          }
+        }
+      },
+      "payload": "The numbers 12 and 7 are shown. Add the two numbers shown and reply with their sum. Use digits only. Reply with no spaces and no other text.",
+      "response": "19\n",
+      "run_id": "20260828T210015Z-5d7e344412",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "started_at": "2026-08-28T21:00:06.668816+00:00"
+    },
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "distractor_selection",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:01:08.321480+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "71133af1606c3c9a31fcd0696069a73c72ec5fdc1bd313ff39ecdb719556fcf0"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210043Z-27a9d75277",
+        "started_at": "2026-08-28T21:00:43.688965+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3565,
+          "output_tokens": 331
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 116
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2133,
+            "output_tokens": 215
+          }
+        }
+      },
+      "payload": "There are 4 blue squares and 1 red square. Reply with the colour word of the square that appears exactly once. Use uppercase. Reply with no spaces and no other text.",
+      "response": "RED\n",
+      "run_id": "20260828T210043Z-27a9d75277",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "71133af1606c3c9a31fcd0696069a73c72ec5fdc1bd313ff39ecdb719556fcf0",
+      "started_at": "2026-08-28T21:00:35.780887+00:00"
+    },
+    {
+      "condition": "text_control",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "Q932",
+      "failure_class": null,
+      "ingress_route": "text_passthrough",
+      "item_id": "multi_fact_composition",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:01:38.054221+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "664fddd85ac8fc293f5e5c6d44e1370c92bd78405f83c859d57ecf8caee980ac"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210118Z-40b194a5fb",
+        "started_at": "2026-08-28T21:01:18.129028+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3605,
+          "output_tokens": 199
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 142
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2173,
+            "output_tokens": 57
+          }
+        }
+      },
+      "payload": "The token Q9 is shown. There are 3 blue squares and 2 red squares. Reply with the token, then the number of blue squares, then the number of red squares. Use uppercase for the token and digits only for the counts. Reply with no spaces and no other text.",
+      "response": "Q932\n",
+      "run_id": "20260828T210118Z-40b194a5fb",
+      "sensory_model_requested": null,
+      "sensory_model_resolved": null,
+      "sensory_score": null,
+      "sensory_tokens": [
+        0,
+        0
+      ],
+      "source_sha256": "664fddd85ac8fc293f5e5c6d44e1370c92bd78405f83c859d57ecf8caee980ac",
+      "started_at": "2026-08-28T21:01:08.395857+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "ocr_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:02:45.348624+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1900,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+            "timestamp": "2026-08-28T21:02:02.658945+00:00"
+          },
+          "source": "ocr_count.png",
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210147Z-a91e511bf3",
+        "started_at": "2026-08-28T21:02:02.707766+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4344,
+          "output_tokens": 819
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 205
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2912,
+            "output_tokens": 614
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual_indicator\", \"label\": \"five blue squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The five blue squares likely represent a visual metric such as progress, rating, or step count.\", \"The text 'M4' serves as a label, identifier, or category marker associated with the five indicators.\", \"The overall layout resembles a status bar, level indicator, or product specification label.\"], \"literal\": [\"Five solid blue squares are aligned horizontally on the left side of the image.\", \"The text 'M4' is displayed on the right in a black, pixelated font.\", \"The background is white with some minor pixel noise.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"is_positioned_to_the_left_of\", \"subject\": \"five blue squares\"}, {\"object\": \"five\", \"predicate\": \"has_quantity\", \"subject\": \"five blue squares\"}], \"uncertainty\": [\"The exact semantic meaning of the five blue squares (e.g., rating vs. progress) is not explicitly defined.\", \"The context of the label 'M4' (e.g., model name, level ID) is unknown without external information.\", \"The pixelated style of the text 'M4' might be a stylistic choice or due to low-resolution rendering.\"], \"unresolved\": [\"The specific functional relationship between the count of five blue squares and the label 'M4'.\", \"Whether the blue squares represent a static graphic or a dynamic status value.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:02:02.658931+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}",
+      "response": "Observation accepted as text-only evidence (image not directly perceived). Literal: five solid blue squares aligned horizontally on the left, text 'M4' in black pixelated font on the right, white background with minor pixel noise. Given filename 'ocr_count.png', the structured count is 5 blue squares, with 'M4' as the adjacent label. Uncertainty: exact semantics of the 5-square indicator (rating, progress, or static count) and the role of 'M4' (level/model/category ID) are not resolved by the evidence alone; awaiting additional context if needed.\n",
+      "run_id": "20260828T210147Z-a91e511bf3",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 3,
+        "expected": 3,
+        "schema_conformant": true,
+        "scoreable": 3,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "token",
+              "value": "M4"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 5
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1900
+      ],
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "started_at": "2026-08-28T21:01:38.265498+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "colour_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:03:45.082298+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1625,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+            "timestamp": "2026-08-28T21:03:07.906107+00:00"
+          },
+          "source": "colour_count.png",
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210255Z-b5ca535d2b",
+        "started_at": "2026-08-28T21:03:08.045434+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4230,
+          "output_tokens": 572
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 115
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2798,
+            "output_tokens": 457
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"group of three red blocks\", \"label\": \"red squares\"}, {\"kind\": \"group of two blue blocks\", \"label\": \"blue squares\"}], \"interpretations\": [\"The image displays a simple visual pattern or sequence consisting of a group of three red items followed by a group of two blue items.\", \"The grouping by color (three red, two blue) and spatial separation suggests a classification or a count-based representation.\"], \"literal\": [\"Three red squares are aligned horizontally on the left side of the image.\", \"Two blue squares are aligned horizontally on the right side of the image.\", \"There is a distinct horizontal gap separating the red squares from the blue squares.\", \"The background is solid white.\", \"The shapes are simple, solid-colored squares with sharp edges.\"], \"relations\": [{\"object\": \"blue squares\", \"predicate\": \"is positioned to the left of\", \"subject\": \"red squares\"}, {\"object\": \"blue squares\", \"predicate\": \"is separated by a gap from\", \"subject\": \"red squares\"}, {\"object\": \"three\", \"predicate\": \"has cardinality of\", \"subject\": \"red squares\"}, {\"object\": \"two\", \"predicate\": \"has cardinality of\", \"subject\": \"blue squares\"}], \"uncertainty\": [\"The exact context or purpose of the image is unknown; it could represent a simple pattern, a count prompt, a captcha, or part of a logic puzzle.\", \"It is unclear if the squares represent specific real-world objects or are purely abstract geometric shapes.\"], \"unresolved\": [\"No specific question or task is provided for the agent to solve downstream, so the functional goal of this visual input remains undefined.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:03:07.906092+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"colour_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79\"}}",
+      "response": "Evidence received as text-only handoff (not direct perception). Observed: 3 red squares (left), 2 blue squares (right), separated by a horizontal gap on white background. Note inconsistency: the relations block claims \"blue squares is positioned to the left of red squares,\" contradicting the literal description \u2014 flagging for your awareness. Interpretation (3+2 grouping by color) is plausible but not certain; purpose is unknown. What would you like me to do with this evidence?\n",
+      "run_id": "20260828T210255Z-b5ca535d2b",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 4,
+        "expected": 4,
+        "schema_conformant": true,
+        "scoreable": 4,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 3
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 2
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1625
+      ],
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "started_at": "2026-08-28T21:02:45.425172+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "spatial_relation",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:05:07.385499+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1267,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+            "timestamp": "2026-08-28T21:04:04.315310+00:00"
+          },
+          "source": "spatial_relation.png",
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210354Z-39aae6ec49",
+        "started_at": "2026-08-28T21:04:04.371255+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4436,
+          "output_tokens": 1383
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 102
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 3004,
+            "output_tokens": 1281
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"colored geometric shape\", \"label\": \"red square\"}, {\"kind\": \"colored geometric shape\", \"label\": \"blue square\"}, {\"kind\": \"canvas background\", \"label\": \"white background\"}], \"interpretations\": [\"The image presents a simple visual contrast between red (warm) and blue (cool) colors.\", \"The spatial arrangement creates a clear left-to-right binary division.\"], \"literal\": [\"The image features a plain white background.\", \"A small red square is positioned on the left side of the canvas.\", \"A small blue square is positioned on the right side of the canvas.\", \"The two squares are horizontally aligned and separated by a wide gap of white space.\"], \"relations\": [{\"object\": \"blue square\", \"predicate\": \"is located to the left of\", \"subject\": \"red square\"}, {\"object\": \"red square\", \"predicate\": \"is located to the right of\", \"subject\": \"blue square\"}, {\"object\": \"white background\", \"predicate\": \"is placed on\", \"subject\": \"red square\"}, {\"object\": \"white background\", \"predicate\": \"is placed on\", \"subject\": \"blue square\"}, {\"object\": \"blue square\", \"predicate\": \"contrasts in color with\", \"subject\": \"red square\"}], \"uncertainty\": [\"The exact pixel dimensions and precise vertical alignment of the squares are not measurable from a low-level visual inspection alone.\", \"The semantic meaning or purpose of the red and blue squares (e.g., representing states, choices, or coordinates) is unspecified.\"], \"unresolved\": [\"There is no textual information, labels, or legends to define the relationship or function of the colored squares.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:04:04.315280+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"spatial_relation.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99\"}}",
+      "response": "Receipt acknowledged: text-only evidence handoff from external perception tool (AlphaClaw/OpenRouter, model dots-3-note-preview:free) for spatial_relation.png. I did not perceive the image directly \u2014 this is a structured text report.\\n\\nLiteral observations (high confidence):\\n- White canvas background\\n- Red square: left side, small\\n- Blue square: right side, small\\n- Horizontally aligned, separated by white gap\\n\\nInterpretations (not direct perception, treat as model inference):\\n- Warm/cool color contrast\\n- Left-to-right binary division\\n\\n\u26a0\ufe0f Internal inconsistency flagged: the relations field claims \"blue square is located to the left of red square,\" which contradicts the literal field (\"red on left, blue on right\"). Trusting the literal: red is left of blue; blue is right of red. Resolving this requires either re-observation or accepting the literal as authoritative.\\n\\nUnresolved / insufficient evidence:\\n- Exact pixel dimensions and vertical alignment precision\\n- Semantic purpose of the squares (no labels, legend, or context)\\n- Resolution of the relations/literal contradiction\\n\\nAwaiting new user input or episode teardown per bounded-benchmark contract.\n",
+      "run_id": "20260828T210354Z-39aae6ec49",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 0.6666666666666666,
+        "correct": 2,
+        "expected": 3,
+        "schema_conformant": true,
+        "scoreable": 2,
+        "scoring_coverage": 0.6666666666666666,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "object_colour": "blue",
+              "object_shape": "square",
+              "predicate": "left_of",
+              "subject_colour": "red",
+              "subject_shape": "square",
+              "type": "relation"
+            },
+            "verdict": "unknown"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1267
+      ],
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "started_at": "2026-08-28T21:03:45.173496+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "number_arithmetic",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:06:05.942895+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 2118,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+            "timestamp": "2026-08-28T21:05:34.138142+00:00"
+          },
+          "source": "number_arithmetic.png",
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210517Z-2365edb907",
+        "started_at": "2026-08-28T21:05:34.188504+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4253,
+          "output_tokens": 480
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 119
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2821,
+            "output_tokens": 361
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"text block\", \"label\": \"12 7\"}, {\"kind\": \"number\", \"label\": \"12\"}, {\"kind\": \"number\", \"label\": \"7\"}], \"interpretations\": [\"The image represents the numbers 12 and 7, likely part of a sequence, coordinate pair, or a CAPTCHA code.\", \"The heavy pixelation indicates a low-resolution rendering or a cropped crop of a larger image.\"], \"literal\": [\"The image contains pixelated black characters on a light grey background.\", \"The visible characters are '1', '2', a space, and a character resembling a pixelated '7'.\", \"The text reads '12 7' with a clear gap separating the two parts.\"], \"relations\": [{\"object\": \"7\", \"predicate\": \"is_to_the_left_of\", \"subject\": \"12\"}, {\"object\": \"12\", \"predicate\": \"contains\", \"subject\": \"12 7\"}, {\"object\": \"7\", \"predicate\": \"contains\", \"subject\": \"12 7\"}], \"uncertainty\": [\"The final character is pixelated, making it slightly ambiguous whether it is a '7' or another symbol like a question mark '?', though '7' is the most likely candidate.\", \"The exact semantic context of the numbers is unknown.\"], \"unresolved\": [\"The purpose of the image (e.g., CAPTCHA, dataset sample, mathematical snippet) is not explicitly defined within the visual bounds.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:05:34.138121+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"number_arithmetic.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb\"}}",
+      "response": "Observed evidence from number_arithmetic.png: pixelated text reads \"12 7\" with high confidence on \"12\" and moderate confidence on \"7\" (could be \"?\"). Given the arithmetic filename and the two-number layout, the most likely intent is a subtraction expression \"12 \u2212 7\". Per the contract, I cannot perceive the image directly; this is based solely on the human-mediated text observation.\n",
+      "run_id": "20260828T210517Z-2365edb907",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 2,
+        "expected": 2,
+        "schema_conformant": true,
+        "scoreable": 2,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "number",
+              "value": 12
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "type": "number",
+              "value": 7
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        2118
+      ],
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "started_at": "2026-08-28T21:05:07.482241+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "distractor_selection",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:07:06.881388+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1855,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+            "timestamp": "2026-08-28T21:06:30.444454+00:00"
+          },
+          "source": "distractor_selection.png",
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210616Z-9508c21d34",
+        "started_at": "2026-08-28T21:06:30.499251+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4200,
+          "output_tokens": 690
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 42
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2768,
+            "output_tokens": 648
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"visual element\", \"label\": \"blue square\"}, {\"kind\": \"visual element\", \"label\": \"red square\"}, {\"kind\": \"background\", \"label\": \"white background\"}], \"interpretations\": [\"The visual pattern shows a sequence of four blue elements followed by one red element, likely representing a count, a status indicator, or a sequence of states.\", \"The larger gap before the red square suggests a separation between two groups or a transition to a different state.\"], \"literal\": [\"Four blue squares are aligned horizontally in a row on the left side of the image.\", \"A single red square is positioned to the right of the blue squares, separated by a wider gap.\", \"The background is solid white.\", \"All squares are of similar size and shape, forming a horizontal line.\"], \"relations\": [{\"object\": \"red square\", \"predicate\": \"precedes\", \"subject\": \"blue squares\"}, {\"object\": \"red square\", \"predicate\": \"aligned horizontally with\", \"subject\": \"blue squares\"}, {\"object\": \"blue squares\", \"predicate\": \"separated by a larger gap from\", \"subject\": \"red square\"}], \"uncertainty\": [\"The semantic meaning of the blue and red colors is not defined in the image (e.g., red could mean stop, error, or next phase; blue could mean completed steps).\", \"The context of the image (e.g., is it part of a user interface, a logic puzzle, or a diagram?) is unknown.\"], \"unresolved\": [\"What the sequence of blue and red squares represents semantically.\", \"The significance of the larger gap before the red square.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:06:30.444425+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}",
+      "response": "Received text-described evidence for distractor_selection.png (not direct image perception; payload is fixed text only).\\n\\nLiteral observations: 4 blue squares aligned horizontally on the left; 1 red square to the right, separated by a wider gap; solid white background; similar square sizes forming one row.\\n\\nInterpretations (speculative, not in evidence): a count, status indicator, or state transition \u2014 semantic meaning of blue/red and the gap is undefined.\\n\\nUncertainty: role of colors, significance of the larger gap, and broader context (UI, puzzle, diagram, etc.) are unresolved in the evidence.\\n\\nWhat would you like me to do with this?\n",
+      "run_id": "20260828T210616Z-9508c21d34",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 4,
+        "expected": 4,
+        "schema_conformant": true,
+        "scoreable": 4,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 4
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 1
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1855
+      ],
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "started_at": "2026-08-28T21:06:06.033488+00:00"
+    },
+    {
+      "condition": "image_only",
+      "controller_error": null,
+      "exact_match": null,
+      "exit_code": 0,
+      "expected_answer": null,
+      "failure_class": null,
+      "ingress_route": "multimodal_inference",
+      "item_id": "multi_fact_composition",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:08:21.231233+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1644,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+            "timestamp": "2026-08-28T21:07:28.046770+00:00"
+          },
+          "source": "multi_fact_composition.png",
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210715Z-ddf3913a08",
+        "started_at": "2026-08-28T21:07:28.103898+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4402,
+          "output_tokens": 664
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 45
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2970,
+            "output_tokens": 619
+          }
+        }
+      },
+      "payload": "{\"observation\": {\"entities\": [{\"kind\": \"colored visual element\", \"label\": \"three blue squares\"}, {\"kind\": \"colored visual element\", \"label\": \"two red squares\"}, {\"kind\": \"alphanumeric text\", \"label\": \"pixelated text 'Q9'\"}, {\"kind\": \"background\", \"label\": \"white background\"}], \"interpretations\": [\"The image presents a sequence of colored blocks followed by an alphanumeric label, resembling a visual code or CAPTCHA.\", \"The sequence order from left to right is: three blue squares, two red squares, and the text 'Q9'.\"], \"literal\": [\"Three solid blue squares are aligned horizontally on the left side of the image.\", \"Two solid red squares are aligned horizontally in the middle of the image.\", \"On the right side, there is pixelated black text that resembles 'Q9' or '09'.\", \"The background of the entire image is plain white.\"], \"relations\": [{\"object\": \"two red squares\", \"predicate\": \"is positioned to the left of\", \"subject\": \"three blue squares\"}, {\"object\": \"pixelated text 'Q9'\", \"predicate\": \"is positioned to the left of\", \"subject\": \"two red squares\"}, {\"object\": \"three blue squares\", \"predicate\": \"contains\", \"subject\": \"image\"}, {\"object\": \"two red squares\", \"predicate\": \"contains\", \"subject\": \"image\"}, {\"object\": \"pixelated text 'Q9'\", \"predicate\": \"contains\", \"subject\": \"image\"}], \"uncertainty\": [\"The exact character of the pixelated text is ambiguous; it could be read as 'Q9', '09', or a similar alphanumeric pair.\", \"The semantic relationship between the count of colored squares and the text label 'Q9' is not explicitly defined and is open to interpretation.\"], \"unresolved\": [\"The purpose of the sequence (e.g., if it represents a specific code, color-count mapping, or puzzle) remains unresolved without further context.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:07:28.046745+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}",
+      "response": "Acknowledged. Treating payload as text-only evidence from an external perception tool; I am not directly perceiving the image.\\n\\nKey points from the evidence:\\n- Literal: 3 blue squares, 2 red squares, pixelated text resembling \"Q9\" or \"09\", white background.\\n- Inconsistency: `relations` describe order as (text \"Q9\") \u2192 (2 red squares) \u2192 (3 blue squares) left-to-right, but `interpretations` state (3 blue) \u2192 (2 red) \u2192 \"Q9\". Flagging this conflict.\\n- Uncertainty: text is ambiguous between \"Q9\" and \"09\"; semantic purpose of the sequence is unresolved.\\n\\nObservation \u2260 interpretation. Please clarify: (a) the true left-to-right order, (b) whether \"Q9\" vs \"09\" is intended, and (c) the task this sequence represents (count map, code, puzzle?). Awaiting further human-mediated input.\n",
+      "run_id": "20260828T210715Z-ddf3913a08",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 5,
+        "expected": 5,
+        "schema_conformant": true,
+        "scoreable": 5,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "token",
+              "value": "Q9"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 3
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 2
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1644
+      ],
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "started_at": "2026-08-28T21:07:06.913947+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "M45",
+      "failure_class": null,
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "ocr_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:09:33.126498+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1064,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+            "timestamp": "2026-08-28T21:08:40.228951+00:00"
+          },
+          "source": "ocr_count.png",
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "text_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210830Z-dd42e14259",
+        "started_at": "2026-08-28T21:08:40.282482+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Ready for your next task. What would you like to work on?"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4133,
+          "output_tokens": 317
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 215
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2701,
+            "output_tokens": 102
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Reply with the token shown, then the number of squares. Use uppercase for the token and digits only for the count. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"visual_symbol\", \"label\": \"blue squares\"}, {\"kind\": \"text_label\", \"label\": \"M4\"}], \"interpretations\": [\"The blue squares likely represent a sequence, progress bar, or a set of slots/indicators.\", \"The text 'M4' serves as a label, identifier, or code, possibly referring to a model, level, or category.\"], \"literal\": [\"Five solid blue squares are aligned horizontally on the left side of the image.\", \"The text 'M4' is displayed in a black, pixelated/blocky font on the right side.\", \"The background is white with minor pixelation artifacts.\"], \"relations\": [{\"object\": \"M4\", \"predicate\": \"is_positioned_to_the_left_of\", \"subject\": \"blue squares\"}, {\"object\": \"M4\", \"predicate\": \"is_horizontally_aligned_with\", \"subject\": \"blue squares\"}], \"uncertainty\": [\"The semantic meaning of the blue squares (e.g., if they represent a count, status, or specific value) is context-dependent.\", \"The exact domain or purpose of the 'M4' label cannot be determined without external context.\"], \"unresolved\": [\"The overall context or source of the image is unknown.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:08:40.228929+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"ocr_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890\"}}}",
+      "response": "M45\n",
+      "run_id": "20260828T210830Z-dd42e14259",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 3,
+        "expected": 3,
+        "schema_conformant": true,
+        "scoreable": 3,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "token",
+              "value": "M4"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 5
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1064
+      ],
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "started_at": "2026-08-28T21:08:21.263833+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "32",
+      "failure_class": null,
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "colour_count",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:10:24.490832+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 2472,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+            "timestamp": "2026-08-28T21:10:02.437997+00:00"
+          },
+          "source": "colour_count.png",
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "text_sha256": "da1964cacc4f9eeccf1e8a7efbf6bfa4338ac6580b0f98a4d1894cabb333fd09"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T210943Z-3e96d71727",
+        "started_at": "2026-08-28T21:10:02.497283+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4455,
+          "output_tokens": 176
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 129
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 3023,
+            "output_tokens": 47
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Reply with the number of red squares then the number of blue squares. Use digits only. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"group of colored shapes\", \"label\": \"red squares\"}, {\"kind\": \"group of colored shapes\", \"label\": \"blue squares\"}], \"interpretations\": [\"The image displays two distinct groups of colored blocks, with the red group having a cardinality of three and the blue group having a cardinality of two.\", \"The layout suggests a comparative sequence, possibly representing a simple mathematical visual aid showing a comparison between quantity 3 and quantity 2.\"], \"literal\": [\"Three red squares are aligned horizontally on the left side of the image.\", \"Two blue squares are aligned horizontally on the right side of the image.\", \"There is a clear gap separating the group of red squares from the group of blue squares.\", \"The background is a solid light color, providing high contrast to the red and blue shapes.\"], \"relations\": [{\"object\": \"blue squares\", \"predicate\": \"is positioned to the left of\", \"subject\": \"red squares\"}, {\"object\": \"three\", \"predicate\": \"has cardinality\", \"subject\": \"red squares\"}, {\"object\": \"two\", \"predicate\": \"has cardinality\", \"subject\": \"blue squares\"}, {\"object\": \"red\", \"predicate\": \"has color\", \"subject\": \"red squares\"}, {\"object\": \"blue\", \"predicate\": \"has color\", \"subject\": \"blue squares\"}], \"uncertainty\": [\"The exact context or intended use of this image is unknown; it could be part of a counting test, a dataset sample, or a visual pattern puzzle.\", \"The precise shade of red and blue cannot be determined beyond standard primary color approximations due to image compression.\"], \"unresolved\": [\"The semantic meaning of the specific count difference (3 vs 2) remains context-dependent and unresolved without further prompt information.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:10:02.437947+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"colour_count.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79\"}}}",
+      "response": "32\n",
+      "run_id": "20260828T210943Z-3e96d71727",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 4,
+        "expected": 4,
+        "schema_conformant": true,
+        "scoreable": 4,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 3
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 2
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        2472
+      ],
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "started_at": "2026-08-28T21:09:33.263815+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "spatial_relation",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:11:02.589507+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1339,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+            "timestamp": "2026-08-28T21:10:42.901825+00:00"
+          },
+          "source": "spatial_relation.png",
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "text_sha256": "5ffc09fe4a72b3a44a9a4ecfb26389e427981a093cc68795b1f37f5f726c313b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T211032Z-5a1ea1067c",
+        "started_at": "2026-08-28T21:10:42.976878+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4241,
+          "output_tokens": 188
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 105
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2809,
+            "output_tokens": 83
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Reply with the colour word of the leftmost square. Use uppercase. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"colored geometric shape\", \"label\": \"red square\"}, {\"kind\": \"colored geometric shape\", \"label\": \"blue square\"}, {\"kind\": \"canvas / background\", \"label\": \"white background\"}], \"interpretations\": [\"The composition is minimalist, focusing on the contrast between the two primary colors (red and blue) and their spatial separation (left vs. right).\", \"The image likely represents a binary choice, a comparison, or a simple spatial mapping of two distinct entities.\"], \"literal\": [\"The image features a plain white background.\", \"A small, solid red square is positioned on the left side of the frame.\", \"A small, solid blue square is positioned on the right side of the frame.\", \"The two squares are aligned horizontally and separated by a significant amount of white space.\"], \"relations\": [{\"object\": \"blue square\", \"predicate\": \"is located to the left of\", \"subject\": \"red square\"}, {\"object\": \"red square\", \"predicate\": \"is located to the right of\", \"subject\": \"blue square\"}, {\"object\": \"blue square\", \"predicate\": \"is separated by white space from\", \"subject\": \"red square\"}], \"uncertainty\": [\"The exact pixel coordinates, sizes, and precise alignment of the squares cannot be determined without pixel-level analysis.\", \"The semantic meaning or intended use of the image is unknown.\"], \"unresolved\": [\"There is no text, labels, or additional visual cues to define a specific relationship or hierarchy between the red and blue squares.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:10:42.901808+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"spatial_relation.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99\"}}}",
+      "response": "RED\n",
+      "run_id": "20260828T211032Z-5a1ea1067c",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 0.6666666666666666,
+        "correct": 2,
+        "expected": 3,
+        "schema_conformant": true,
+        "scoreable": 2,
+        "scoring_coverage": 0.6666666666666666,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "object_colour": "blue",
+              "object_shape": "square",
+              "predicate": "left_of",
+              "subject_colour": "red",
+              "subject_shape": "square",
+              "type": "relation"
+            },
+            "verdict": "unknown"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1339
+      ],
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "started_at": "2026-08-28T21:10:24.575689+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": null,
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "number_arithmetic",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:11:36.971263+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 680,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+            "timestamp": "2026-08-28T21:11:17.079167+00:00"
+          },
+          "source": "number_arithmetic.png",
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T211110Z-7f845bdd13",
+        "started_at": "2026-08-28T21:11:17.141101+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4297,
+          "output_tokens": 185
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 134
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2865,
+            "output_tokens": 51
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Add the two numbers shown and reply with their sum. Use digits only. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"number\", \"label\": \"12\"}, {\"kind\": \"number\", \"label\": \"7\"}], \"interpretations\": [\"The image likely represents a pair of numbers, specifically '12' and '7', separated by a space.\", \"The pixelation suggests a low-resolution crop, possibly from a CAPTCHA, a scanned document, or a digit dataset.\"], \"literal\": [\"The image contains pixelated black text on a white background.\", \"The text displays the numbers '1', '2', followed by a space, and then a character resembling '7' or a pixelated question mark '?'.\", \"The overall string reads as '12 7' or '12 ?'.\"], \"relations\": [{\"object\": \"7\", \"predicate\": \"appears_before\", \"subject\": \"12\"}], \"uncertainty\": [\"The exact identity of the second character is slightly ambiguous due to pixelation; it strongly resembles a '7' but could be a stylized question mark or another digit.\", \"The spacing between '12' and the second character suggests they are separate values, but their semantic relationship (e.g., coordinates, a range, a simple sequence) is not clear from the image alone.\"], \"unresolved\": [\"The context or source of the image is unknown.\", \"The semantic meaning of the numbers '12' and '7' (or '?') is not defined.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:11:17.079132+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"number_arithmetic.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb\"}}}",
+      "response": "19\n",
+      "run_id": "20260828T211110Z-7f845bdd13",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 2,
+        "expected": 2,
+        "schema_conformant": true,
+        "scoreable": 2,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "number",
+              "value": 12
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "type": "number",
+              "value": 7
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        680
+      ],
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "started_at": "2026-08-28T21:11:02.692643+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "exact_match": false,
+      "exit_code": 2,
+      "expected_answer": "RED",
+      "failure_class": "output_contract",
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "distractor_selection",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:27:28.000386+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1556,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+            "timestamp": "2026-08-28T21:12:10.221402+00:00"
+          },
+          "source": "distractor_selection.png",
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": false,
+        "run_id": "20260828T211157Z-f2ed870c3f",
+        "started_at": "2026-08-28T21:12:10.274683+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "terminated_without_response",
+        "termination_reason": "timeout",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4069,
+          "output_tokens": 127
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 83
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2637,
+            "output_tokens": 44
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Reply with the colour word of the square that appears exactly once. Use uppercase. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"colored geometric shape\", \"label\": \"blue square\"}, {\"kind\": \"colored geometric shape\", \"label\": \"red square\"}], \"interpretations\": [\"The visual presents a simple sequence of four blue blocks followed by one red block, likely representing a pattern, count, or code.\"], \"literal\": [\"Four blue squares are aligned horizontally in a continuous sequence.\", \"A single red square is positioned to the right of the blue squares, separated by a small gap.\", \"The background is a solid, light-colored canvas.\"], \"relations\": [{\"object\": \"red square\", \"predicate\": \"is positioned to the left of\", \"subject\": \"blue square\"}, {\"object\": \"red square\", \"predicate\": \"forms a horizontal row with\", \"subject\": \"blue square\"}], \"uncertainty\": [\"The exact semantic meaning of the sequence (e.g., if it represents a specific code, a mathematical sequence, or a state indicator) cannot be determined without further context.\"], \"unresolved\": [\"The context or purpose of the image is not provided, leaving the meaning of the color transition unresolved.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:12:10.221384+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"distractor_selection.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc\"}}}",
+      "response": null,
+      "run_id": "20260828T211157Z-f2ed870c3f",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 4,
+        "expected": 4,
+        "schema_conformant": true,
+        "scoreable": 4,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 4
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 1
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1556
+      ],
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "started_at": "2026-08-28T21:11:37.006061+00:00"
+    },
+    {
+      "condition": "image_text",
+      "controller_error": null,
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "Q932",
+      "failure_class": null,
+      "ingress_route": "multimodal_inference_with_text",
+      "item_id": "multi_fact_composition",
+      "manifest": {
+        "alpha_git_sha": "012fa0f5ef7ef3ecee7c77fb2486a940388eafab",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-28T21:28:13.114235+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "multimodal_inference_with_text",
+          "sensory_inference": true,
+          "sensory_trace": {
+            "input_tokens": 150,
+            "model": "dots-studio/dots-3-note-preview:free",
+            "node_role": "multimodal_ingress",
+            "output_tokens": 1454,
+            "provider": "OpenRouter",
+            "requested_model": "dots-studio/dots-3-note-preview:free",
+            "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+            "timestamp": "2026-08-28T21:27:51.222461+00:00"
+          },
+          "source": "multi_fact_composition.png",
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "text_sha256": "c473668281ecb5df3c173dd89c0d6378a405fd5b15cf8833f12be7a3f6a49024"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260828T212738Z-454afd8238",
+        "started_at": "2026-08-28T21:27:51.335675+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "No new input received. Ready for instructions."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4541,
+          "output_tokens": 152
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 79
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 3109,
+            "output_tokens": 73
+          }
+        }
+      },
+      "payload": "{\"human_text\": \"Reply with the token, then the number of blue squares, then the number of red squares. Use uppercase for the token and digits only for the counts. Reply with no spaces and no other text.\", \"sensory_handoff\": {\"observation\": {\"entities\": [{\"kind\": \"colored geometric shape\", \"label\": \"three blue squares\"}, {\"kind\": \"colored geometric shape\", \"label\": \"two red squares\"}, {\"kind\": \"alphanumeric text\", \"label\": \"pixelated text 'Q9'\"}], \"interpretations\": [\"The sequence of colored blocks followed by alphanumeric text suggests a coded pattern, a visual puzzle, or a label representing quantities and a specific identifier.\", \"The blue squares represent a count of three, and the red squares represent a count of two, possibly indicating a ratio, combination, or sequence step.\"], \"literal\": [\"Three solid blue squares are aligned horizontally on the left side of the image.\", \"Two solid red squares are aligned horizontally in the middle of the image.\", \"Black pixelated text resembling 'Q9' or '09' is located on the right side of the image.\", \"The elements are arranged in a horizontal sequence: blue squares, red squares, then the text.\"], \"relations\": [{\"object\": \"two red squares\", \"predicate\": \"precedes\", \"subject\": \"three blue squares\"}, {\"object\": \"pixelated text 'Q9'\", \"predicate\": \"precedes\", \"subject\": \"two red squares\"}, {\"object\": \"blue\", \"predicate\": \"has color\", \"subject\": \"three blue squares\"}, {\"object\": \"red\", \"predicate\": \"has color\", \"subject\": \"two red squares\"}], \"uncertainty\": [\"The pixelated text is slightly blurry, making it somewhat ambiguous whether it reads 'Q9', '09', or another similar alphanumeric combination.\", \"The overall context or function of this visual sequence (e.g., whether it is part of a CAPTCHA, a game interface, or a logic puzzle) is not clear from the image alone.\"], \"unresolved\": [\"The semantic relationship between the counts of colored squares (3 blue, 2 red) and the text 'Q9' remains unresolved without further context.\"]}, \"provenance\": {\"observed_at\": \"2026-08-28T21:27:51.222445+00:00\", \"provider\": \"OpenRouter\", \"requested_model\": \"dots-studio/dots-3-note-preview:free\", \"resolved_model\": \"dots-studio/dots-3-note-preview:free\"}, \"schema_version\": 1, \"source\": {\"filename\": \"multi_fact_composition.png\", \"kind\": \"image\", \"mime_type\": \"image/png\", \"sha256\": \"63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753\"}}}",
+      "response": "Q932\n",
+      "run_id": "20260828T212738Z-454afd8238",
+      "sensory_model_requested": "dots-studio/dots-3-note-preview:free",
+      "sensory_model_resolved": "dots-studio/dots-3-note-preview:free",
+      "sensory_score": {
+        "atomic_fact_accuracy": 1.0,
+        "atomic_fact_yield": 1.0,
+        "correct": 5,
+        "expected": 5,
+        "schema_conformant": true,
+        "scoreable": 5,
+        "scoring_coverage": 1.0,
+        "verdicts": [
+          {
+            "fact": {
+              "type": "token",
+              "value": "Q9"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "blue",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 3
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_presence"
+            },
+            "verdict": "correct"
+          },
+          {
+            "fact": {
+              "colour": "red",
+              "shape": "square",
+              "type": "shape_count",
+              "value": 2
+            },
+            "verdict": "correct"
+          }
+        ]
+      },
+      "sensory_tokens": [
+        150,
+        1454
+      ],
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "started_at": "2026-08-28T21:27:28.088796+00:00"
+    }
+  ],
+  "schema_version": 1,
+  "sensory_model": "dots-studio/dots-3-note-preview:free"
+}
