@@ -479,6 +479,68 @@ Eighteen bounded runs, at most 36 ASICloud calls (18 boot, 18 episode), 106,776 
 and 18,612 output tokens. These are hard caps, not targets. No confidence reruns, no
 retry-until-pass, no post-failure prompt tuning. Failures stay in the denominator.
 
+## Screening v1 result and Protocol Amendment v1.1
+
+### Screening v1 -- what it establishes, narrowly
+
+Run against protocol commit `c78c08fce81c5b96d21bb19d3b693d4c4c15feac`. The artifact
+`benchmark/screening.json` is preserved unmodified.
+
+- 36 calls were attempted, exactly as preregistered.
+- `dots-studio/dots-3-note-preview:free` produced **11 schema-conformant and correct
+  runs out of 12**, with one genuine schema-contract failure on `spatial_relation`
+  (`handoff field 'literal_observations' must be an array of strings`).
+- Both Gemma candidates produced **0 usable observations**: all 24 requests failed
+  with upstream HTTP 429.
+- The preregistered selector mechanically returns `dots-studio/dots-3-note-preview:free`
+  at criterion 1 (atomic-fact yield 0.9286 against 0.0000 and 0.0000).
+
+That selector result is **formally correct under Protocol v1**, but the comparative
+evidence is incomplete because the competing arms were unavailable. **No claim is made
+that dots outperformed either Gemma model.** They were not measured.
+
+`repeat_stability = 1.0` for both Gemma models is **not interpretable as performance**:
+both repeats are identical failure vectors.
+
+### Amendment v1.1 -- provider-availability handling only
+
+Changes only how provider-availability failures are handled. Stimuli, ground truth,
+sensory prompt and boundary, scorer, candidate model identifiers, the
+two-successful-observations target, the model-selection hierarchy, the reasoning
+condition and all downstream design are unchanged, and tests assert this.
+
+Predeclared rules:
+
+1. A failed call is preserved as an availability event and never disappears.
+2. Availability failures are distinguished from model, schema and task failures.
+3. A model x item x repeat cell that failed on availability may receive a replacement
+   measurement after an availability wait.
+4. **At most one** replacement attempt per availability-failed cell under v1.1.
+5. Cells that produced any usable experimental outcome -- a model response, a schema
+   failure, a wrong answer -- are **not** eligible and are never retried.
+6. No substitution of another model or provider identity.
+7. Replacements use the exact same image bytes, model id, sensory boundary and
+   scoring protocol.
+8. Screening v1 is immutable; recovery data goes to `benchmark/screening-v1.1.json`
+   with explicit linkage to the protocol commit, the amendment commit, the original
+   artifact and its digest, and the exact cells recovered.
+
+A replacement supersedes its cell for comparative scoring **only** if it reached model
+inference and produced an experimental outcome. A replacement that itself hits an
+availability error supersedes nothing.
+
+The original 24 HTTP-429 attempts remain reported separately as availability failures.
+**HTTP-429 failures are not evidence of visual or model incapability.**
+
+The dots `spatial_relation` schema failure is **not** eligible for recovery: that
+request reached inference and produced a genuine contract failure, which stands as the
+experimental outcome for that cell.
+
+Availability is reported separately from performance: attempted calls, provider
+availability failures, usable model observations, and availability rate. For
+Screening v1 that is 36 attempted, 24 availability failures, 12 usable observations,
+availability rate 0.667.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
