@@ -11,6 +11,7 @@ import importlib.util
 import shutil
 import subprocess
 import sys
+import tempfile
 import uuid
 from pathlib import Path
 
@@ -42,6 +43,14 @@ NGINX_PROBE = (
 )
 
 
+# A real bounds file on disk: the command mounts it, so the Docker-backed probes
+# below need it to exist rather than letting Docker invent an empty directory.
+_CONTRACT = runner.EpisodeContract(max_reasoning_loops=1)
+_BOUNDS_FILE = Path(tempfile.mkdtemp(prefix="alphaclaw-runtime-")) / "omega-bounds.yaml"
+_BOUNDS_FILE.write_text(_CONTRACT.bounds_yaml(wakeup_interval=180), encoding="utf-8")
+_BOUNDS_FILE.chmod(0o644)
+
+
 def _command(**overrides) -> list[str]:
     params = {
         "image": runner.stock_image_tag(),
@@ -49,8 +58,9 @@ def _command(**overrides) -> list[str]:
         "proxy_url": "http://host.docker.internal:9999/v1/",
         "proxy_token": "token",
         "model": "model",
-        "contract": runner.EpisodeContract(max_reasoning_loops=1),
+        "contract": _CONTRACT,
         "timeout": 120.0,
+        "bounds_path": _BOUNDS_FILE,
     }
     params.update(overrides)
     return runner._docker_run_command(**params)

@@ -77,6 +77,60 @@ class EpisodeContract:
             "instructions": list(self.instructions()),
         }
 
+    def bounds_config(self, *, wakeup_interval: int) -> dict[str, int]:
+        """The numeric bounds Omega must receive as YAML-typed configuration.
+
+        Omega's `src/config.py` applies no type coercion to command-line or
+        environment overrides, so a numeric bound supplied that way reaches
+        `src/loop.metta` as a string and fails in `is/2` arithmetic. Only the config
+        file is parsed by `yaml.safe_load`, which yields real integers, so these four
+        values must travel through a config file rather than argv.
+        """
+        if wakeup_interval < 1:
+            raise ValueError("wakeup_interval must be positive")
+        return {
+            "maxNewInputLoops": self.max_reasoning_loops,
+            "maxWakeLoops": self.max_wake_loops,
+            "maxHistory": self.max_history,
+            "wakeupInterval": wakeup_interval,
+        }
+
+    def bounds_yaml(self, *, wakeup_interval: int) -> str:
+        """Render the bounds as a minimal YAML document.
+
+        Deliberately minimal: Omega replaces its whole config file when one is
+        selected, so every key omitted here resolves from the in-source default at
+        its `(configure key default)` site. Those defaults match the pinned
+        config.yaml for every key, so omitting them changes nothing.
+        """
+        bounds = self.bounds_config(wakeup_interval=wakeup_interval)
+        return "".join(f"{key}: {value}\n" for key, value in bounds.items())
+
+    def bounds_semantics(self) -> dict[str, str]:
+        """What the bounds mechanically do -- and what they do not claim."""
+        return {
+            "maxNewInputLoops": (
+                "bounds prompted reasoning turns per new-input activation, "
+                "not raw loop ticks"
+            ),
+            "maxHistory": (
+                "suppresses prior recalled history; the current HUMAN-MSG input is "
+                "delivered outside the HISTORY field and is preserved"
+            ),
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": (
+                "bounded separately and independently by the external metering gateway"
+            ),
+            "skill_executions": (
+                "not equivalent to provider calls: one prompted turn may request up to "
+                "five skills, so no one-tool ceiling is claimed"
+            ),
+        }
+
     def manifest(self) -> dict[str, object]:
         """Receipt-facing view: the handoff plus controller-only authorization bounds."""
-        return {**self.handoff(), "max_boot_calls": self.max_boot_calls}
+        return {
+            **self.handoff(),
+            "max_boot_calls": self.max_boot_calls,
+            "bounds_semantics": self.bounds_semantics(),
+        }

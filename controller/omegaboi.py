@@ -9,6 +9,7 @@ tears the container down after the first post-handoff user response or failure.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib
 import json
 import os
@@ -39,6 +40,8 @@ THREADKEEPER_SHA = "a64de99e10f9f8078d25bff511b44fd71819e931"
 COMM_CHANNEL = "test"
 HOST_ALIAS = "host.docker.internal"
 OMEGA_PROVIDER = "OpenAIAPI"
+OMEGA_BOUNDS_CONTAINER_PATH = "/etc/alphaclaw-bounds.yaml"
+OMEGA_BOUNDS_FILENAME = "omega-bounds.yaml"
 
 
 def _git_output(*args: str, cwd: Path = ROOT) -> str:
@@ -379,8 +382,8 @@ def _docker_run_command(
     model: str,
     contract: EpisodeContract,
     timeout: float,
+    bounds_path: Path,
 ) -> list[str]:
-    wakeup_interval = max(60, int(timeout) + 60)
     return [
         "docker",
         "run",
@@ -399,6 +402,15 @@ def _docker_run_command(
         "-t",
         "--name",
         container_name,
+        # The numeric episode bounds travel as a read-only YAML file selected through
+        # Omega's own `config=` argument, never as command-line overrides. Omega's
+        # src/config.py applies no type coercion to argv, so a numeric bound passed
+        # there arrives in src/loop.metta as a string and dies in is/2 arithmetic.
+        # Only the config file is parsed by yaml.safe_load, which yields real ints.
+        # Mounted outside /tmp, /var/tmp and /run because those are tmpfs and would
+        # shadow the file.
+        "-v",
+        f"{bounds_path}:{OMEGA_BOUNDS_CONTAINER_PATH}:ro",
         "--security-opt",
         "no-new-privileges:true",
         "--init",
@@ -423,10 +435,7 @@ def _docker_run_command(
         "api_token_var=OPENAIAPI_API_KEY",
         f"openaiapi_url={proxy_url}",
         f"model={model}",
-        f"maxNewInputLoops={contract.max_reasoning_loops}",
-        f"maxWakeLoops={contract.max_wake_loops}",
-        f"maxHistory={contract.max_history}",
-        f"wakeupInterval={wakeup_interval}",
+        f"config={OMEGA_BOUNDS_CONTAINER_PATH}",
         "securityPolicyPath=/PeTTa/repos/OmegaClaw-Core/profile/policy.yaml",
         "memoryDirectory=$MEMORY_DIR",
     ]
@@ -502,10 +511,27 @@ def run_episode(
         recorder=recorder,
     )
 
+    # Typed numeric bounds, written beside the receipts and mounted read-only. The
+    # file itself is evidence: the manifest records its digest so a run's declared
+    # bounds can be checked against the bytes Omega actually loaded.
+    wakeup_interval = max(60, int(timeout) + 60)
+    bounds = contract.bounds_config(wakeup_interval=wakeup_interval)
+    bounds_path = run_dir / OMEGA_BOUNDS_FILENAME
+    bounds_path.write_text(
+        contract.bounds_yaml(wakeup_interval=wakeup_interval), encoding="utf-8"
+    )
+    # Stock Omega drops to an unprivileged user before reading configuration.
+    bounds_path.chmod(0o644)
+    bounds_sha256 = hashlib.sha256(bounds_path.read_bytes()).hexdigest()
+
     manifest: dict[str, Any] = {
         "run_id": run_id,
         "status": "preparing",
         "bounded_controller": True,
+        "omega_bounds": bounds,
+        "omega_bounds_source": "yaml_config_file",
+        "omega_bounds_container_path": OMEGA_BOUNDS_CONTAINER_PATH,
+        "omega_bounds_sha256": bounds_sha256,
         # Measured, not asserted: derived from the raw-byte comparison above.
         "omega_source_modified": not omega_pin.worktree_bytes_match_pin,
         "omega_commit_matches_pin": omega_pin.commit_matches_pin,
@@ -549,6 +575,7 @@ def run_episode(
                 model=resolved_model,
                 contract=contract,
                 timeout=timeout,
+                bounds_path=bounds_path,
             ),
             stdout=log_handle,
             stderr=subprocess.STDOUT,
