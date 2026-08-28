@@ -616,6 +616,79 @@ Alpha envelope; stock pinned Omega; the bounds; boot readiness; the boot-turn ba
 drain ordering; gateway accounting; and the v1/v1.1 failure classification. The v1 and
 v1.1 artifacts are not modified.
 
+## Protocol v2 condition B1 -- result, and Amendment v2.1
+
+### B1 result (frozen)
+
+Condition B1 ran against merged main `2995003c649ee0dde8da08237cdabd2a189a4eb2`,
+sensory model `qwen/qwen3.7-flash`, six deterministic images, two repeats, 12
+OpenRouter calls. No resident model, no ASICloud calls, no Omega containers. The
+artifact `benchmark/screening-v2-B1.json` is preserved unmodified.
+
+| Metric | Value |
+|---|---|
+| Attempted / succeeded | 12 / 12 |
+| Schema-compliance rate | 1.0000 |
+| Atomic-fact yield | 0.9524 (40/42) |
+| Atomic-fact accuracy over scoreable | 1.0000 (40/40) |
+| Scoring coverage | 0.9524 |
+| Repeat stability | 1.000 |
+| Tokens in / out | 2,640 / 11,486 |
+| Cost at catalog pricing | ~$0.0016 |
+
+By fact type: token 4/4, shape_presence 18/18, shape_count 14/14, number 4/4,
+relation **0 correct of 0 scoreable, 2 expected**.
+
+Hallucinated-fact count is **not reported**: it is not implemented in the frozen
+scorer, and adding it after results existed would be a post-hoc rule.
+
+**The frozen sensory boundary is portable to a distinct model family.** Requested and
+resolved model were both `qwen/qwen3.7-flash` on every call; there were no request
+failures and no schema failures.
+
+### Semantic plausibility is not mechanically scoreable evidence
+
+Both `spatial_relation` calls asserted the correct spatial fact, in the correct
+direction, in both directions:
+
+```text
+subject='Red Square'   predicate='is located to the left of'   object='Blue Square'
+subject='Blue Square'  predicate='is located to the right of'  object='Red Square'
+```
+
+Neither predicate string appears in the preregistered deterministic mapping, which
+matches predicates exactly. The scorer therefore returned **`unknown`**, and coverage
+fell to 40/42.
+
+That verdict stands. A human reading the wording understands it; the frozen scorer
+does not, and it is not manually upgraded to correct. This is the declared
+distinction between semantic plausibility and mechanically scoreable evidence, and it
+is a property of the scorer's vocabulary rather than of the model's perception. The
+relation lexicon was **not** broadened after seeing Qwen's wording; any richer
+relation normalisation belongs to a future protocol version, not to B1.
+
+### Amendment v2.1 -- B2 replay-source selection
+
+Protocol v2 fixed the B2 item list but never specified which of the two B1 repeats
+supplies the replay handoff. B1 had already been run, so the rule is deliberately
+blind to every result:
+
+> For every B2 item, replay B1 `repeat_index = 0` only.
+
+- If repeat 0 produced a usable schema-conformant handoff, that exact payload is the
+  B2 replay source.
+- If repeat 0 did not, that B2 item is **unavailable** under v2.1.
+- There is **no fall-through to repeat 1**. Repeat 1 is B1 replication evidence only
+  and can never replace repeat 0 for B2.
+
+Selection is independent of score, atomic-fact accuracy, apparent quality and the
+downstream expected answer. Tests assert that repeat 0 is chosen even when repeat 1
+scored better, and that a scoring field never gates selection.
+
+Scope is replay-source selection only. Stimuli, the Qwen and MiniMax conditions, the
+B2 item list, the scorer, the sensory boundary, the B1 results, the replay bytes and
+the ASICloud caps are unchanged.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
