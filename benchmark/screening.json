@@ -1,0 +1,2344 @@
+{
+  "call_metadata": [
+    {
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1146,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:17:40.017509+00:00",
+      "trace_timestamp": "2026-08-28T19:17:51.149261+00:00"
+    },
+    {
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 2164,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:17:51.149528+00:00",
+      "trace_timestamp": "2026-08-28T19:18:08.230070+00:00"
+    },
+    {
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1345,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:18:08.230221+00:00",
+      "trace_timestamp": "2026-08-28T19:18:19.772089+00:00"
+    },
+    {
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 561,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:18:19.772149+00:00",
+      "trace_timestamp": "2026-08-28T19:18:25.156215+00:00"
+    },
+    {
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1766,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:18:25.156425+00:00",
+      "trace_timestamp": "2026-08-28T19:18:40.219980+00:00"
+    },
+    {
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1434,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:18:40.220173+00:00",
+      "trace_timestamp": "2026-08-28T19:18:52.811923+00:00"
+    },
+    {
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1195,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:18:52.812003+00:00",
+      "trace_timestamp": "2026-08-28T19:19:03.562199+00:00"
+    },
+    {
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 1753,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:19:03.562268+00:00",
+      "trace_timestamp": "2026-08-28T19:19:17.750285+00:00"
+    },
+    {
+      "error": "TypeError: handoff field 'literal_observations' must be an array of strings",
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "ok": false,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:19:17.750352+00:00"
+    },
+    {
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 2258,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:19:26.102916+00:00",
+      "trace_timestamp": "2026-08-28T19:19:45.550192+00:00"
+    },
+    {
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 2202,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:19:45.550257+00:00",
+      "trace_timestamp": "2026-08-28T19:20:05.896574+00:00"
+    },
+    {
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "input_tokens": 150,
+      "ok": true,
+      "output_tokens": 2393,
+      "requested_model": "dots-studio/dots-3-note-preview:free",
+      "resolved_model": "dots-studio/dots-3-note-preview:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:20:05.896630+00:00",
+      "trace_timestamp": "2026-08-28T19:20:27.183662+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:20:27.184224+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:20:27.339605+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:20:27.515779+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:20:27.650600+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:20:27.850743+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:20:28.012428+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:20:28.177025+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:20:28.329007+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:20:28.499142+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:20:28.661579+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:20:28.837182+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-26b-a4b-it:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:20:29.429884+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:20:29.573688+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:20:29.715406+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:20:29.870900+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:20:30.026476+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:20:30.184853+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:20:30.337509+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "image_filename": "ocr_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+      "timestamp": "2026-08-28T19:20:31.646751+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "image_filename": "colour_count.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+      "timestamp": "2026-08-28T19:20:32.321801+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "image_filename": "spatial_relation.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+      "timestamp": "2026-08-28T19:20:32.479250+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "image_filename": "number_arithmetic.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+      "timestamp": "2026-08-28T19:20:32.632482+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "image_filename": "distractor_selection.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+      "timestamp": "2026-08-28T19:20:32.799015+00:00"
+    },
+    {
+      "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+      "expected_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "image_filename": "multi_fact_composition.png",
+      "ok": false,
+      "requested_model": "google/gemma-4-31b-it:free",
+      "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+      "timestamp": "2026-08-28T19:20:33.018104+00:00"
+    }
+  ],
+  "candidates": [
+    {
+      "atomic_fact_accuracy": 0.9285714285714286,
+      "atomic_fact_yield": 0.9285714285714286,
+      "by_fact_type": {
+        "number": {
+          "correct": 4,
+          "expected": 4,
+          "scoreable": 4
+        },
+        "relation": {
+          "correct": 1,
+          "expected": 2,
+          "scoreable": 2
+        },
+        "shape_count": {
+          "correct": 14,
+          "expected": 14,
+          "scoreable": 14
+        },
+        "shape_presence": {
+          "correct": 16,
+          "expected": 18,
+          "scoreable": 18
+        },
+        "token": {
+          "correct": 4,
+          "expected": 4,
+          "scoreable": 4
+        }
+      },
+      "calls": 12,
+      "calls_detail": [
+        {
+          "correct": 3,
+          "error": null,
+          "expected": 3,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "visual_symbol",
+                  "label": "blue squares sequence"
+                },
+                {
+                  "kind": "alphanumeric_text",
+                  "label": "text 'M4' with vertical prefix"
+                }
+              ],
+              "interpretations": [
+                "The blue squares likely represent a sequence, bullet points, or placeholders for a visual pattern.",
+                "The text 'M4' (or '1M4') represents an alphanumeric identifier, code, or part of a CAPTCHA challenge.",
+                "The layout suggests a structured label or a segmented visual code where the blue squares represent one part and the text represents another."
+              ],
+              "literal": [
+                "Five solid blue squares aligned horizontally on the left side of the image.",
+                "Black pixelated text on the right side, appearing as a vertical stroke followed by 'M4', reading as '|M4' or '1M4'.",
+                "The background is white with slight pixelation/noise around the edges of the shapes and text."
+              ],
+              "relations": [
+                {
+                  "object": "text 'M4' with vertical prefix",
+                  "predicate": "is positioned to the left of",
+                  "subject": "blue squares sequence"
+                },
+                {
+                  "object": "five blue squares",
+                  "predicate": "consists of",
+                  "subject": "blue squares sequence"
+                }
+              ],
+              "uncertainty": [
+                "The exact meaning of the five blue squares is context-dependent and could represent colors, counts, or abstract symbols.",
+                "The character preceding 'M4' is ambiguous; it could be a vertical bar, the digit '1', or part of the letter 'M' depending on the font rendering.",
+                "The overall purpose of the image (e.g., CAPTCHA, logo, label) is not explicitly clear from the visual elements alone."
+              ],
+              "unresolved": [
+                "The semantic link between the blue squares and the text 'M4' remains unspecified without further context.",
+                "Whether the blue squares represent a count (five) or specific color-coded values is unknown."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:17:51.149233+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "ocr_count.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "ocr_count",
+          "output_tokens": 1146,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 4,
+          "error": null,
+          "expected": 4,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "group of three red blocks",
+                  "label": "red squares"
+                },
+                {
+                  "kind": "group of two blue blocks",
+                  "label": "blue squares"
+                }
+              ],
+              "interpretations": [
+                "The image displays a simple sequence or pattern of colored blocks, split into two groups: a group of three red blocks followed by a group of two blue blocks.",
+                "The arrangement suggests a quantitative comparison or a sequence of colors, possibly representing a count of 3 and 2."
+              ],
+              "literal": [
+                "Three red squares are aligned horizontally on the left side of the image.",
+                "Two blue squares are aligned horizontally on the right side of the image.",
+                "There is a clear horizontal gap separating the group of red squares from the group of blue squares.",
+                "The background is a plain, light-colored surface.",
+                "The red squares are identical in shape and color, placed side-by-side with no gap between them.",
+                "The blue squares are identical in shape and color, placed side-by-side with no gap between them."
+              ],
+              "relations": [
+                {
+                  "object": "blue squares",
+                  "predicate": "located to the left of",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "three",
+                  "predicate": "has count of",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "two",
+                  "predicate": "has count of",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "contiguously",
+                  "predicate": "are grouped together",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "contiguously",
+                  "predicate": "are grouped together",
+                  "subject": "blue squares"
+                }
+              ],
+              "uncertainty": [
+                "The exact context or the question these blocks are meant to answer is not provided in the image.",
+                "It is unclear if the colors red and blue carry specific semantic meaning or if they are just arbitrary distinct colors used for visual separation."
+              ],
+              "unresolved": [
+                "No text, labels, or questions are present in the image to define the exact task or relationship required."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:18:08.230056+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "colour_count.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "colour_count",
+          "output_tokens": 2164,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 3,
+          "error": null,
+          "expected": 3,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "geometric shape / colored block",
+                  "label": "red square"
+                },
+                {
+                  "kind": "geometric shape / colored block",
+                  "label": "blue square"
+                },
+                {
+                  "kind": "canvas / background",
+                  "label": "white background"
+                }
+              ],
+              "interpretations": [
+                "The composition is highly minimalist, featuring only two primary-colored geometric shapes.",
+                "The red square on the left and the blue square on the right create a strong visual contrast due to their opposing color temperatures (warm vs. cool).",
+                "The spatial arrangement suggests a balanced, symmetrical layout with a clear division of the canvas into left and right zones."
+              ],
+              "literal": [
+                "The image consists of a plain white background.",
+                "On the left side, there is a small, solid red square.",
+                "On the right side, there is a small, solid blue square.",
+                "The red square and the blue square are horizontally separated by a wide white space.",
+                "There is no text, borders, or other graphical elements present in the image."
+              ],
+              "relations": [
+                {
+                  "object": "blue square",
+                  "predicate": "is positioned to the left of",
+                  "subject": "red square"
+                },
+                {
+                  "object": "red square",
+                  "predicate": "is positioned to the right of",
+                  "subject": "blue square"
+                },
+                {
+                  "object": "blue square",
+                  "predicate": "contrasts in color with",
+                  "subject": "red square"
+                },
+                {
+                  "object": "white background",
+                  "predicate": "is placed on",
+                  "subject": "red square"
+                },
+                {
+                  "object": "white background",
+                  "predicate": "is placed on",
+                  "subject": "blue square"
+                }
+              ],
+              "uncertainty": [
+                "The exact pixel dimensions and precise vertical alignment of the squares are not measurable without technical image analysis, though they appear roughly on the same horizontal level.",
+                "The symbolic or functional intent of the image (e.g., whether it represents a choice, a binary state, or is purely abstract) is not explicitly defined."
+              ],
+              "unresolved": [
+                "The context in which this image is used remains unknown.",
+                "No additional metadata or labels are embedded in the visual content to clarify the relationship between the red and blue squares beyond their spatial positioning."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:18:19.772073+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "spatial_relation.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "spatial_relation",
+          "output_tokens": 1345,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "relation",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 2,
+          "error": null,
+          "expected": 2,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "number",
+                  "label": "12"
+                },
+                {
+                  "kind": "number",
+                  "label": "7"
+                }
+              ],
+              "interpretations": [
+                "The text represents a pair of numbers, likely '12' and '7', separated by a space.",
+                "The pixelation suggests a low-resolution crop, possibly from a captcha, scanned document, or digital display."
+              ],
+              "literal": [
+                "The image shows pixelated black text on a light, slightly noisy background.",
+                "The visible characters are '1', '2', followed by a space, and then '7', forming the sequence '12  7'."
+              ],
+              "relations": [
+                {
+                  "object": "7",
+                  "predicate": "separated_by_space_from",
+                  "subject": "12"
+                }
+              ],
+              "uncertainty": [
+                "The exact spacing between '12' and '7' is slightly wide but clearly a single space or separator.",
+                "There is some digital noise around the characters, but they are clearly legible as '1', '2', and '7'."
+              ],
+              "unresolved": []
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:18:25.156199+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "number_arithmetic.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "number_arithmetic",
+          "output_tokens": 561,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "correct"
+            },
+            {
+              "type": "number",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 4,
+          "error": null,
+          "expected": 4,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "group of colored shapes",
+                  "label": "four blue squares"
+                },
+                {
+                  "kind": "single colored shape",
+                  "label": "one red square"
+                },
+                {
+                  "kind": "canvas",
+                  "label": "white background"
+                }
+              ],
+              "interpretations": [
+                "The image displays a simple visual sequence of four blue elements followed by one red element.",
+                "The color contrast and spacing suggest a distinction between the group of blue squares and the single red square, possibly representing a count, a state transition, or a classification task."
+              ],
+              "literal": [
+                "Four solid blue squares are aligned horizontally in a row.",
+                "A single solid red square is positioned to the right of the blue squares.",
+                "There is a larger gap between the fourth blue square and the red square compared to the gaps between the blue squares.",
+                "All shapes are set against a plain white background."
+              ],
+              "relations": [
+                {
+                  "object": "one red square",
+                  "predicate": "precedes",
+                  "subject": "four blue squares"
+                },
+                {
+                  "object": "one red square",
+                  "predicate": "aligned horizontally with",
+                  "subject": "four blue squares"
+                },
+                {
+                  "object": "four blue squares",
+                  "predicate": "separated by a wider gap from",
+                  "subject": "one red square"
+                }
+              ],
+              "uncertainty": [
+                "The semantic meaning of the sequence (e.g., if it represents a specific code, a logic puzzle, or a user interface element) is not explicitly defined.",
+                "The exact geometric measurements (pixel sizes and exact gap widths) cannot be determined from a qualitative description."
+              ],
+              "unresolved": [
+                "The context or purpose of the visual sequence remains unknown.",
+                "Whether the red square represents an outlier, a target, or the next step in a pattern is unspecified."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:18:40.219954+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "distractor_selection.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "distractor_selection",
+          "output_tokens": 1766,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 5,
+          "error": null,
+          "expected": 5,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "colored shape group",
+                  "label": "blue squares"
+                },
+                {
+                  "kind": "colored shape group",
+                  "label": "red squares"
+                },
+                {
+                  "kind": "alphanumeric text",
+                  "label": "pixelated text 'Q9'"
+                }
+              ],
+              "interpretations": [
+                "The image displays a sequence of colored blocks followed by a two-character alphanumeric string, commonly found in CAPTCHAs or visual puzzles.",
+                "The color blocks represent counts: three blue and two red, possibly indicating a code or a visual pattern to be continued."
+              ],
+              "literal": [
+                "Three blue squares are aligned horizontally on the left side of the image.",
+                "Two red squares are aligned horizontally in the middle of the image.",
+                "Pixelated black text resembling 'Q9' or '09' is located on the right side of the image.",
+                "The background of the image is plain white."
+              ],
+              "relations": [
+                {
+                  "object": "red squares",
+                  "predicate": "located_to_the_left_of",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "pixelated text 'Q9'",
+                  "predicate": "located_to_the_left_of",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "three",
+                  "predicate": "has_quantity",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "two",
+                  "predicate": "has_quantity",
+                  "subject": "red squares"
+                }
+              ],
+              "uncertainty": [
+                "The exact characters of the pixelated text are unclear and could be interpreted as 'Q9', '09', or similar glyphs.",
+                "The semantic relationship between the colored squares and the text is open to interpretation without additional context."
+              ],
+              "unresolved": [
+                "The exact reading of the pixelated text (e.g., 'Q9' vs '09').",
+                "The underlying rule or pattern connecting the colored squares to the text."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:18:52.811905+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "multi_fact_composition.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 1434,
+          "repeat_index": 0,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 3,
+          "error": null,
+          "expected": 3,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "visual_symbol",
+                  "label": "blue squares"
+                },
+                {
+                  "kind": "text_label",
+                  "label": "M4"
+                }
+              ],
+              "interpretations": [
+                "The blue squares likely serve as a visual separator, bullet points, or a progress indicator.",
+                "The text 'M4' likely represents a section header, module code, or level indicator (e.g., Module 4)."
+              ],
+              "literal": [
+                "Five solid blue squares aligned horizontally in a row.",
+                "The text 'M4' in a black, pixelated/bitmap font positioned to the right of the blue squares.",
+                "A light-colored, slightly noisy background behind the elements."
+              ],
+              "relations": [
+                {
+                  "object": "text 'M4'",
+                  "predicate": "precedes",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "text 'M4'",
+                  "predicate": "are horizontally aligned with",
+                  "subject": "blue squares"
+                }
+              ],
+              "uncertainty": [
+                "The exact semantic meaning of the five blue squares (e.g., rating scale vs. decorative bullets) is unclear without context.",
+                "The overall context of the image (e.g., slide header, document section, UI element) is not fully determinable from the crop alone."
+              ],
+              "unresolved": [
+                "What is the broader document or presentation context of the 'M4' label?"
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:19:03.562182+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "ocr_count.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "ocr_count",
+          "output_tokens": 1195,
+          "repeat_index": 1,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 4,
+          "error": null,
+          "expected": 4,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "group of red blocks",
+                  "label": "red squares"
+                },
+                {
+                  "kind": "group of blue blocks",
+                  "label": "blue squares"
+                }
+              ],
+              "interpretations": [
+                "The image displays two distinct groups of colored blocks: a red group of size 3 and a blue group of size 2.",
+                "The arrangement suggests a comparative sequence, likely representing the quantities 3 and 2."
+              ],
+              "literal": [
+                "Three red squares are aligned horizontally on the left side of the image.",
+                "Two blue squares are aligned horizontally on the right side of the image.",
+                "There is a clear gap separating the group of red squares from the group of blue squares.",
+                "The background is a plain, light-colored surface."
+              ],
+              "relations": [
+                {
+                  "object": "blue squares",
+                  "predicate": "is located to the left of",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "three",
+                  "predicate": "has count of three",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "two",
+                  "predicate": "has count of two",
+                  "subject": "blue squares"
+                }
+              ],
+              "uncertainty": [
+                "The exact context or purpose of the image is unknown (e.g., whether it represents a mathematical equation, a visual puzzle, or a simple pattern).",
+                "The precise pixel dimensions and exact color values are not critical but represent standard red and blue hues."
+              ],
+              "unresolved": [
+                "There is no text, labels, or symbols indicating what these blocks represent or how they should be interpreted mathematically or logically."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:19:17.750269+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "colour_count.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "colour_count",
+          "output_tokens": 1753,
+          "repeat_index": 1,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "TypeError: handoff field 'literal_observations' must be an array of strings",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "spatial_relation",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "relation",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 2,
+          "error": null,
+          "expected": 2,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "text",
+                  "label": "12 7"
+                }
+              ],
+              "interpretations": [
+                "The text represents the numbers twelve and seven, formatted as '12 7'.",
+                "The spacing suggests they are likely two separate numerical values or a pair rather than a single concatenated number."
+              ],
+              "literal": [
+                "The image contains the pixelated black text '12 7' on a light background.",
+                "The characters are low-resolution, blocky, and clearly legible as the digits '1', '2', and '7'.",
+                "There is a distinct space separating the '12' and the '7'."
+              ],
+              "relations": [],
+              "uncertainty": [
+                "The pixelation is high, but the characters are distinct enough to be read as '1', '2', and '7' with high confidence.",
+                "The exact semantic context of the numbers (e.g., whether they represent a coordinate, a math problem, or a random code) is unknown."
+              ],
+              "unresolved": [
+                "The source or purpose of the image (e.g., whether it is a cropped dataset sample, part of a CAPTCHA, or a snippet from a document) is not visually determinable."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:19:45.550175+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "number_arithmetic.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "number_arithmetic",
+          "output_tokens": 2258,
+          "repeat_index": 1,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "correct"
+            },
+            {
+              "type": "number",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 4,
+          "error": null,
+          "expected": 4,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "group of objects",
+                  "label": "four blue squares"
+                },
+                {
+                  "kind": "single object",
+                  "label": "one red square"
+                },
+                {
+                  "kind": "spatial arrangement",
+                  "label": "horizontal sequence"
+                }
+              ],
+              "interpretations": [
+                "The image displays a simple sequence or pattern consisting of a group of four blue squares followed by a single red square.",
+                "The spatial grouping suggests a division between a collective of blue elements and an individual red element.",
+                "The color contrast (blue vs. red) often symbolically represents different states, such as active/inactive, safe/danger, or different categories."
+              ],
+              "literal": [
+                "Four blue squares are aligned horizontally on the left side of the image.",
+                "One red square is aligned horizontally to the right of the blue squares.",
+                "There is a distinct gap separating the fourth blue square from the red square.",
+                "The background is a plain, light grey/white color, providing high contrast to the colored squares."
+              ],
+              "relations": [
+                {
+                  "object": "one red square",
+                  "predicate": "is located to the left of",
+                  "subject": "four blue squares"
+                },
+                {
+                  "object": "one red square",
+                  "predicate": "is separated by a gap from",
+                  "subject": "four blue squares"
+                },
+                {
+                  "object": "four blue squares",
+                  "predicate": "contains",
+                  "subject": "horizontal sequence"
+                },
+                {
+                  "object": "one red square",
+                  "predicate": "contains",
+                  "subject": "horizontal sequence"
+                }
+              ],
+              "uncertainty": [
+                "The exact semantic meaning of the sequence (e.g., whether it represents a numerical ratio of 4 to 1, a status code, or a simple visual pattern) is not explicitly defined.",
+                "The precise geometric measurements (exact pixel sizes of the squares and the gap) cannot be verified without tool-assisted measurement, though they appear visually uniform in height."
+              ],
+              "unresolved": [
+                "The specific context or task this image is intended to support (e.g., a pattern completion task, a counting exercise, or a state representation).",
+                "The symbolic meaning assigned to the colors blue and red in this particular domain."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:20:05.896556+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "distractor_selection.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "distractor_selection",
+          "output_tokens": 2202,
+          "repeat_index": 1,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        },
+        {
+          "correct": 5,
+          "error": null,
+          "expected": 5,
+          "handoff": {
+            "observation": {
+              "entities": [
+                {
+                  "kind": "visual color block",
+                  "label": "blue squares"
+                },
+                {
+                  "kind": "visual color block",
+                  "label": "red squares"
+                },
+                {
+                  "kind": "pixelated text string",
+                  "label": "Q9"
+                }
+              ],
+              "interpretations": [
+                "The image presents a visual sequence of color blocks followed by an alphanumeric code, typical of CAPTCHAs or pattern recognition tests.",
+                "The sequence consists of three blue blocks, two red blocks, and a two-character text string, likely representing a count and a code."
+              ],
+              "literal": [
+                "Three solid blue squares aligned horizontally on the left side of the image.",
+                "Two solid red squares aligned horizontally in the middle, separated by a gap from the blue squares.",
+                "Black pixelated text on the right side, resembling the characters 'Q9' or '09'.",
+                "The background is solid white."
+              ],
+              "relations": [
+                {
+                  "object": "red squares",
+                  "predicate": "located_to_the_left_of",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "Q9",
+                  "predicate": "located_to_the_left_of",
+                  "subject": "red squares"
+                },
+                {
+                  "object": "three",
+                  "predicate": "has_quantity",
+                  "subject": "blue squares"
+                },
+                {
+                  "object": "two",
+                  "predicate": "has_quantity",
+                  "subject": "red squares"
+                }
+              ],
+              "uncertainty": [
+                "The pixelated nature of the font makes the first character ambiguous between 'Q', '0', or 'O', leading to uncertainty on whether the text reads 'Q9' or '09'.",
+                "The semantic relationship between the color counts (3, 2) and the text 'Q9' is open to interpretation without external context."
+              ],
+              "unresolved": [
+                "The specific purpose of the image (e.g., whether it is a puzzle, a captcha, or part of a dataset) cannot be determined purely from visual inspection."
+              ]
+            },
+            "provenance": {
+              "observed_at": "2026-08-28T19:20:27.183636+00:00",
+              "provider": "OpenRouter",
+              "requested_model": "dots-studio/dots-3-note-preview:free",
+              "resolved_model": "dots-studio/dots-3-note-preview:free"
+            },
+            "schema_version": 1,
+            "source": {
+              "filename": "multi_fact_composition.png",
+              "kind": "image",
+              "mime_type": "image/png",
+              "sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753"
+            }
+          },
+          "input_tokens": 150,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 2393,
+          "repeat_index": 1,
+          "request_success": true,
+          "requested_model": "dots-studio/dots-3-note-preview:free",
+          "resolved_model": "dots-studio/dots-3-note-preview:free",
+          "schema_conformant": true,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "correct"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "correct"
+            }
+          ]
+        }
+      ],
+      "correct_facts": 39,
+      "expected_facts": 42,
+      "mean_input_tokens": 137.5,
+      "mean_output_tokens": 1518.0833333333333,
+      "metadata_calls": 12,
+      "model_id": "dots-studio/dots-3-note-preview:free",
+      "repeat_stability": 0.8333333333333334,
+      "repeats": 2,
+      "request_failures": 1,
+      "resolved_models": [
+        "dots-studio/dots-3-note-preview:free"
+      ],
+      "schema_compliance_rate": 0.9166666666666666,
+      "scoreable_facts": 42,
+      "scoring_coverage": 1.0
+    },
+    {
+      "atomic_fact_accuracy": 0.0,
+      "atomic_fact_yield": 0.0,
+      "by_fact_type": {
+        "number": {
+          "correct": 0,
+          "expected": 4,
+          "scoreable": 4
+        },
+        "relation": {
+          "correct": 0,
+          "expected": 2,
+          "scoreable": 2
+        },
+        "shape_count": {
+          "correct": 0,
+          "expected": 14,
+          "scoreable": 14
+        },
+        "shape_presence": {
+          "correct": 0,
+          "expected": 18,
+          "scoreable": 18
+        },
+        "token": {
+          "correct": 0,
+          "expected": 4,
+          "scoreable": 4
+        }
+      },
+      "calls": 12,
+      "calls_detail": [
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "ocr_count",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "colour_count",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "spatial_relation",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "relation",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 2,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "number_arithmetic",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "distractor_selection",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 5,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "ocr_count",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "colour_count",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "spatial_relation",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "relation",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 2,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "number_arithmetic",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "distractor_selection",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-26b-a4b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 5,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-26b-a4b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        }
+      ],
+      "correct_facts": 0,
+      "expected_facts": 42,
+      "mean_input_tokens": 0,
+      "mean_output_tokens": 0,
+      "metadata_calls": 12,
+      "model_id": "google/gemma-4-26b-a4b-it:free",
+      "repeat_stability": 1.0,
+      "repeats": 2,
+      "request_failures": 12,
+      "resolved_models": [],
+      "schema_compliance_rate": 0.0,
+      "scoreable_facts": 42,
+      "scoring_coverage": 1.0
+    },
+    {
+      "atomic_fact_accuracy": 0.0,
+      "atomic_fact_yield": 0.0,
+      "by_fact_type": {
+        "number": {
+          "correct": 0,
+          "expected": 4,
+          "scoreable": 4
+        },
+        "relation": {
+          "correct": 0,
+          "expected": 2,
+          "scoreable": 2
+        },
+        "shape_count": {
+          "correct": 0,
+          "expected": 14,
+          "scoreable": 14
+        },
+        "shape_presence": {
+          "correct": 0,
+          "expected": 18,
+          "scoreable": 18
+        },
+        "token": {
+          "correct": 0,
+          "expected": 4,
+          "scoreable": 4
+        }
+      },
+      "calls": 12,
+      "calls_detail": [
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "ocr_count",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "colour_count",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "spatial_relation",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "relation",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 2,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "number_arithmetic",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "distractor_selection",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 5,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 0,
+          "repeat_index": 0,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "ocr_count",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "colour_count",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "291b75cdb85c3a501d57bb8723ffd5720b09d550ad4ab86686c208bfd5dfbc79",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 3,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "spatial_relation",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 3,
+          "source_sha256": "9b3698376dc3b4cf3cf545f3f3eacc3cac1dcaa2a067f71df0f6067523d44f99",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "relation",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 2,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "number_arithmetic",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 2,
+          "source_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+          "verdicts": [
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "number",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 4,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "distractor_selection",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 4,
+          "source_sha256": "68f0297b321d2f2ca5f82374255bb050a994ad7fc60660ec92b23537be914bcc",
+          "verdicts": [
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        },
+        {
+          "correct": 0,
+          "error": "RuntimeError: OpenRouter ingress failed: HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"google/gemma-4-31b-it:free is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Google AI Studio\",\"is_byok\":false,\"provider_error_code\":\"429\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"Retry shortly, add your own provider key (https://openrouter.ai/settings/integrations), or route to another provider with provider routing: https://openrouter.ai/docs/features/provider-routing\"}},\"user_id\":\"user_390co0YggCbO1NYnyBlS9mNnOe1\"}",
+          "expected": 5,
+          "handoff": null,
+          "input_tokens": 0,
+          "item_id": "multi_fact_composition",
+          "output_tokens": 0,
+          "repeat_index": 1,
+          "request_success": false,
+          "requested_model": "google/gemma-4-31b-it:free",
+          "resolved_model": null,
+          "schema_conformant": false,
+          "scoreable": 5,
+          "source_sha256": "63e1a1ebc4a8e64cff26adeff7155c50720d75b230d3fed4670ba65821bec753",
+          "verdicts": [
+            {
+              "type": "token",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_presence",
+              "verdict": "incorrect"
+            },
+            {
+              "type": "shape_count",
+              "verdict": "incorrect"
+            }
+          ]
+        }
+      ],
+      "correct_facts": 0,
+      "expected_facts": 42,
+      "mean_input_tokens": 0,
+      "mean_output_tokens": 0,
+      "metadata_calls": 12,
+      "model_id": "google/gemma-4-31b-it:free",
+      "repeat_stability": 1.0,
+      "repeats": 2,
+      "request_failures": 12,
+      "resolved_models": [],
+      "schema_compliance_rate": 0.0,
+      "scoreable_facts": 42,
+      "scoring_coverage": 1.0
+    }
+  ],
+  "ground_truth_total_facts": 21,
+  "repeats": 2,
+  "schema_version": 1,
+  "selected_model": "dots-studio/dots-3-note-preview:free",
+  "selection_rule": "1 highest schema-compliant atomic-fact yield (correct / all expected facts; a request failure or non-schema response contributes zero correct facts); 2 tie -> highest schema-compliance rate; 3 tie -> highest repeat stability; 4 tie -> lowest mean output tokens; 5 residual tie -> lexicographically lowest exact model id",
+  "total_attempted_calls": 36
+}
