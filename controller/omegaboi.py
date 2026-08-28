@@ -47,6 +47,11 @@ OMEGA_BOUNDS_FILENAME = "omega-bounds.yaml"
 # Upstream's documented boot-readiness signal. The numeric count is required: the
 # bare "CHARS_SENT:" string also appears in the MeTTa source dump during startup.
 OMEGA_BOOT_READY_PATTERN = re.compile(r"CHARS_SENT: [0-9]+")
+# A runtime loop-iteration boundary. The numeric form is required: the startup source
+# dump contains the unevaluated `(---------iteration $k)` template, which must not
+# satisfy the barrier. No absolute iteration number carries handoff meaning; only the
+# first boundary *after* the observed readiness position is used.
+OMEGA_LOOP_BOUNDARY_PATTERN = re.compile(r"\(-+iteration [0-9]+\)")
 
 
 def _git_output(*args: str, cwd: Path = ROOT) -> str:
@@ -331,17 +336,18 @@ def _wait_for_boot_readiness(
     path: Path,
     process: subprocess.Popen[str],
     timeout: float,
-) -> None:
-    """Wait for stock Omega to finish booting and enter its real iteration loop.
+) -> int:
+    """Wait for stock Omega to enter its real iteration loop; return the log cursor.
 
     Upstream documents the first runtime `CHARS_SENT:` line carrying a byte count as
     the end of initChannels/initMemory and the start of real iterations. The numeric
     anchor is required, not cosmetic: the bare string also appears in the MeTTa source
     dump emitted during startup, so matching it without a count fires early.
 
-    This replaces a wait on a fixed loop-iteration marker, which had no handoff
-    meaning: that marker is just the loop's second tick, roughly a second after boot,
-    and it fires whether or not anything was ever injected.
+    Readiness is emitted at `loop.metta` immediately *before* `llmProviderChat`, so it
+    means "the boot turn has started", not "the boot turn is done". The returned offset
+    is the position just past that line, so the caller can wait for the next loop
+    boundary relative to this exact event rather than to any fixed iteration number.
     """
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
@@ -350,14 +356,60 @@ def _wait_for_boot_readiness(
                 f"OmegaBoi container exited during startup with code {process.returncode}"
             )
         try:
-            if OMEGA_BOOT_READY_PATTERN.search(path.read_text(encoding="utf-8", errors="replace")):
-                return
+            match = OMEGA_BOOT_READY_PATTERN.search(
+                path.read_text(encoding="utf-8", errors="replace")
+            )
+            if match:
+                return match.end()
         except OSError:
             pass
         time.sleep(0.05)
     raise TimeoutError(
         "stock Omega did not reach its first metered iteration "
         f"(no {OMEGA_BOOT_READY_PATTERN.pattern!r} in the container log)"
+    )
+
+
+def _wait_for_boot_turn_complete(
+    path: Path,
+    process: subprocess.Popen[str],
+    timeout: float,
+    *,
+    after: int,
+) -> None:
+    """Wait for the boot turn to finish, relative to the readiness position.
+
+    `src/loop.metta` logs the iteration marker as the first form of an iteration's
+    body, and recurses into the next iteration as the last form of the same `progn`,
+    after `llmProviderChat`, `sread` and skill evaluation. `progn` and `let*` are
+    sequential, so the first loop boundary appearing *after* the readiness line
+    implies the boot turn's provider response returned, was parsed, and any skills it
+    requested -- including a `send` to the test channel -- have already executed.
+
+    That is what makes it safe to drain: boot-originated channel traffic is complete.
+    Readiness alone is not sufficient, because it is logged before the provider call.
+
+    The search starts at `after`, the cursor returned by readiness, so a boundary that
+    lands between host-side waits cannot be missed, and boundaries that preceded
+    readiness cannot satisfy it. No absolute iteration number is used.
+    """
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if process.poll() is not None:
+            raise RuntimeError(
+                "OmegaBoi container exited before completing its boot turn "
+                f"with code {process.returncode}"
+            )
+        try:
+            text = path.read_text(encoding="utf-8", errors="replace")
+            if OMEGA_LOOP_BOUNDARY_PATTERN.search(text, after):
+                return
+        except OSError:
+            pass
+        time.sleep(0.05)
+    raise TimeoutError(
+        "stock Omega did not complete its boot turn "
+        f"(no {OMEGA_LOOP_BOUNDARY_PATTERN.pattern!r} after the readiness position)"
     )
 
 
@@ -624,15 +676,25 @@ def run_episode(
         # waited on. The log marker says stock boot finished and the real iteration
         # loop started; the gateway says the boot provider call actually completed and
         # was metered. Neither implies the other.
-        _wait_for_boot_readiness(container_log, process, min(timeout, 180.0))
+        readiness_cursor = _wait_for_boot_readiness(container_log, process, min(timeout, 180.0))
         if not gateway.wait_for_boot_call(min(timeout, 180.0)):
             if gateway.fatal_message:
                 raise RuntimeError(f"stock Omega boot provider call failed: {gateway.fatal_message}")
             raise TimeoutError("stock Omega produced no metered boot provider call")
 
-        # Baseline the channel BEFORE injecting. Stock Omega emits its own boot-time
-        # traffic (a version banner among it); capturing that here is what lets the
-        # post-injection wait reject a stale message as episode completion.
+        # Provider transport completion is not boot-turn completion: the gateway
+        # releases as soon as the upstream response is metered, while Omega has yet to
+        # parse it or run the skills it requests. A boot response asking for `send`
+        # would otherwise emit a unique channel message after the drain and be mistaken
+        # for the episode response. Wait for the next loop boundary after readiness,
+        # which by loop.metta's sequencing means the boot turn is fully processed.
+        _wait_for_boot_turn_complete(
+            container_log, process, min(timeout, 120.0), after=readiness_cursor
+        )
+
+        # Only now is boot-originated channel traffic complete, so this baseline is
+        # what lets the post-injection wait reject a stale message as episode
+        # completion.
         startup_messages = _drain_messages(server)
 
         # The boot request was reserved as boot before its response existed. Classify
@@ -697,6 +759,7 @@ def run_episode(
             "startup_messages": startup_messages,
             "ignored_stale_messages": ignored_messages,
             "boot_readiness_signal": OMEGA_BOOT_READY_PATTERN.pattern,
+            "boot_turn_complete_signal": OMEGA_LOOP_BOUNDARY_PATTERN.pattern,
             "response_present": response is not None,
             "ended_at": datetime.now(UTC).isoformat(),
         }

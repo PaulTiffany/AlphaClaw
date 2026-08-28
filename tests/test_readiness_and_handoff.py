@@ -220,3 +220,114 @@ def test_tty_and_bounds_mount_are_untouched_by_this_change(tmp_path: Path) -> No
     assert "-i" not in command
     assert f"config={runner.OMEGA_BOUNDS_CONTAINER_PATH}" in command
     assert not [a for a in command if a.startswith(("maxNewInputLoops=", "maxHistory="))]
+
+
+# --- boot-turn-completion barrier -------------------------------------------
+
+BOUNDARY_TEMPLATE = '(progn (log INFO "loop" (---------iteration $k))'
+BOUNDARY_RUNTIME = "2026-08-28 04:46:41 | INFO | loop | (---------iteration 2)"
+
+
+def test_boundary_pattern_rejects_the_source_dump_template() -> None:
+    """The dump carries the unevaluated $k form; only a numeric boundary counts."""
+    assert "iteration $k" in BOUNDARY_TEMPLATE
+    assert not runner.OMEGA_LOOP_BOUNDARY_PATTERN.search(BOUNDARY_TEMPLATE)
+    assert runner.OMEGA_LOOP_BOUNDARY_PATTERN.search(BOUNDARY_RUNTIME)
+
+
+def test_readiness_returns_a_cursor_past_its_own_match(tmp_path: Path) -> None:
+    log = tmp_path / "container.log"
+    log.write_text(SOURCE_DUMP_LINE + "\n" + RUNTIME_LINE + "\n", encoding="utf-8")
+    cursor = runner._wait_for_boot_readiness(log, _FakeProcess(), timeout=1.0)
+    text = log.read_text(encoding="utf-8")
+    assert cursor > 0
+    assert "CHARS_SENT: 4947" not in text[cursor:]
+
+
+def test_barrier_ignores_boundaries_that_preceded_readiness(tmp_path: Path) -> None:
+    """A boundary logged before the readiness event must not satisfy the barrier."""
+    log = tmp_path / "container.log"
+    log.write_text(
+        "2026-08-28 04:46:40 | INFO | loop | (---------iteration 1)\n" + RUNTIME_LINE + "\n",
+        encoding="utf-8",
+    )
+    cursor = runner._wait_for_boot_readiness(log, _FakeProcess(), timeout=1.0)
+    with pytest.raises(TimeoutError, match="did not complete its boot turn"):
+        runner._wait_for_boot_turn_complete(log, _FakeProcess(), timeout=0.3, after=cursor)
+
+
+def test_barrier_accepts_the_first_boundary_after_readiness(tmp_path: Path) -> None:
+    log = tmp_path / "container.log"
+    log.write_text(RUNTIME_LINE + "\n" + BOUNDARY_RUNTIME + "\n", encoding="utf-8")
+    cursor = runner._wait_for_boot_readiness(log, _FakeProcess(), timeout=1.0)
+    runner._wait_for_boot_turn_complete(log, _FakeProcess(), timeout=1.0, after=cursor)
+
+
+def test_barrier_uses_a_cursor_so_a_fast_boundary_cannot_be_missed(tmp_path: Path) -> None:
+    """The boundary may land between host-side waits; the search starts at the cursor."""
+    log = tmp_path / "container.log"
+    log.write_text(RUNTIME_LINE + "\n", encoding="utf-8")
+    cursor = runner._wait_for_boot_readiness(log, _FakeProcess(), timeout=1.0)
+    # Boundary appears only *after* readiness was observed, as it would in a live run.
+    log.write_text(RUNTIME_LINE + "\n" + BOUNDARY_RUNTIME + "\n", encoding="utf-8")
+    runner._wait_for_boot_turn_complete(log, _FakeProcess(), timeout=1.0, after=cursor)
+
+
+def test_barrier_fails_explicitly_when_the_container_exits(tmp_path: Path) -> None:
+    log = tmp_path / "container.log"
+    log.write_text(RUNTIME_LINE + "\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="before completing its boot turn"):
+        runner._wait_for_boot_turn_complete(
+            log, _FakeProcess(returncode=9), timeout=5.0, after=0
+        )
+
+
+def test_readiness_and_boot_turn_completion_are_distinct_barriers() -> None:
+    """Readiness is logged before llmProviderChat; completion is a different event."""
+    assert runner.OMEGA_BOOT_READY_PATTERN.pattern != runner.OMEGA_LOOP_BOUNDARY_PATTERN.pattern
+    source = (CONTROLLER / "omegaboi.py").read_text(encoding="utf-8")
+    body = source.split("def run_episode", 1)[1]
+    assert body.index("_wait_for_boot_readiness(") < body.index("_wait_for_boot_turn_complete(")
+    assert body.index("gateway.wait_for_boot_call(") < body.index("_wait_for_boot_turn_complete(")
+
+
+def test_drain_happens_only_after_the_boot_turn_barrier() -> None:
+    source = (CONTROLLER / "omegaboi.py").read_text(encoding="utf-8")
+    body = source.split("def run_episode", 1)[1]
+    assert body.index("_wait_for_boot_turn_complete(") < body.index("_drain_messages(server)")
+    assert body.index("_drain_messages(server)") < body.index("send_message(rendered")
+
+
+def test_unique_late_boot_send_is_drained_as_startup_traffic() -> None:
+    """The race PR #33 alone did not close.
+
+    A boot response requesting `send` emits a unique channel message. Because the
+    barrier delays the drain until the boot turn is fully processed, that message is
+    captured as startup traffic and can never become the episode response.
+    """
+    boot_send = "starting up, standing by"
+    server = _FakeServer([BANNER, boot_send])
+
+    # Drain now happens after the boot turn completed, so it captures both.
+    baseline = runner._drain_messages(server)
+    assert baseline == [BANNER, boot_send]
+
+    # A late duplicate of either cannot complete the episode; only new traffic can.
+    server = _FakeServer([boot_send, "ORANGE"])
+    reply, reason, ignored = runner._wait_for_response(
+        server, _FakeProcess(), gateway=_FakeGateway(), timeout=2.0, baseline=baseline
+    )
+    assert reply == "ORANGE"
+    assert reason == "responded"
+    assert ignored == [boot_send]
+
+
+def test_only_post_injection_traffic_completes_the_episode() -> None:
+    baseline = [BANNER, "boot chatter"]
+    server = _FakeServer(list(baseline))
+    reply, reason, ignored = runner._wait_for_response(
+        server, _FakeProcess(), gateway=_FakeGateway(), timeout=0.4, baseline=baseline
+    )
+    assert reply is None
+    assert reason == "timeout"
+    assert ignored == baseline
