@@ -36,6 +36,38 @@
   },
   "sections": {
     "V3A": {
+      "attribution_rule": [
+        {
+          "held_fixed": [
+            "resident",
+            "task facts",
+            "turn budget",
+            "Omega substrate"
+          ],
+          "manipulation": "representation change (R1 vs R2/R3/R4)",
+          "may_implicate": "representation effects",
+          "may_not_conclude": "a unique causal source"
+        },
+        {
+          "held_fixed": [
+            "representation",
+            "resident",
+            "task facts",
+            "Omega substrate"
+          ],
+          "manipulation": "turn-budget change (1 vs 2 turns)",
+          "may_implicate": "scheduling / turn budget",
+          "may_not_conclude": "a unique causal source"
+        },
+        {
+          "held_fixed": [
+            "across representations and both turn budgets"
+          ],
+          "manipulation": "repeated correct internal token followed by invalid Omega skill/action emission",
+          "may_implicate": "the output / skill-action interface",
+          "may_not_conclude": "a unique causal source"
+        }
+      ],
       "baseline_turn_budget": 1,
       "call_budget": {
         "asicloud_calls": 20,
@@ -45,6 +77,13 @@
         "runs": 18,
         "sensory_calls": 0
       },
+      "candidate_sources": [
+        "Alpha representation/instruction effects",
+        "resident behaviour",
+        "one-turn scheduling",
+        "stock Omega skill/action-contract interaction",
+        "combinations of the above"
+      ],
       "cases": [
         {
           "case_id": "A1",
@@ -96,6 +135,11 @@
           "source_condition": "A:text_control"
         }
       ],
+      "failure_surface": [
+        "Alpha representation / instruction",
+        "resident model",
+        "stock OmegaClaw skill/action contract"
+      ],
       "held_fixed": [
         "task",
         "task-relevant facts",
@@ -110,12 +154,15 @@
       ],
       "instruction_position_receipt": {
         "module": "scripts/instruction_receipt.py",
+        "omega_context_located_when_observable": true,
         "per_segment_tokens_available": false,
         "records": [
           "exact instruction text",
           "character offsets",
           "order relative to Omega context, human task and symbolic evidence",
           "characters before and after",
+          "stock Omega prompt / skill-action context wherever mechanically locatable",
+          "literal vs JSON-escaped match mode",
           "whole-request tokens where a receipt supplies them"
         ],
         "salience_score_reported": false
@@ -147,6 +194,8 @@
           "reading": "inspect information preservation at the boundary BEFORE attributing any downstream cause"
         }
       ],
+      "no_assumed_cause": "V3-A must NOT assume in advance that a failure such as UNKNOWN_SKILL_CALL \"RED\" is caused by Alpha's symbolic representation. That emission occurs at the stock OmegaClaw skill/action boundary, and Alpha, the resident and the Omega action contract are all live candidates until an experiment isolates one.",
+      "non_attribution_constraint": "Do not claim a unique causal source unless the experiment actually isolates it. Evidence may be reported as consistent with a factor; it may not be reported as the cause. The system under test is the whole seam: Alpha -> resident -> stock Omega.",
       "outcomes": [
         "exact-match response",
         "valid send emission present",

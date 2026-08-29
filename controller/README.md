@@ -1175,6 +1175,29 @@ the same frozen task-instruction bytes; only form differs.
 appear, while a required fact naming the colour `red` is the information the task
 legitimately needs.
 
+**The failure surface spans the whole seam**, not Alpha alone:
+
+```
+Alpha representation / instruction -> resident model -> stock OmegaClaw skill/action contract
+```
+
+V3-A therefore **must not assume in advance** that a failure such as
+`UNKNOWN_SKILL_CALL "RED"` is caused by Alpha's symbolic representation. That emission
+occurs at the stock OmegaClaw skill/action boundary; Alpha, the resident and the Omega
+action contract are all live candidates until an experiment isolates one. The declared
+candidate sources are Alpha representation/instruction effects, resident behaviour,
+one-turn scheduling, stock Omega skill/action-contract interaction, **and combinations
+of those**.
+
+**Attribution rule -- implication, never proof.** A representation change may implicate
+representation effects if outcomes change while resident, task facts, turn budget and
+Omega substrate stay fixed. A turn-budget change may implicate scheduling if outcomes
+change while representation and resident stay fixed. Repeated correct internal tokens
+followed by invalid Omega skill/action emissions may implicate the output/skill
+interface. **Do not claim a unique causal source unless the experiment actually isolates
+it** -- evidence may be reported as consistent with a factor, never as the cause. The
+system under test is the whole seam: Alpha -> resident -> stock Omega.
+
 **Turn budget.** One turn stays the architectural baseline. Two turns is a **diagnostic
 control, not the AlphaClaw population**. No further levels in this tranche.
 

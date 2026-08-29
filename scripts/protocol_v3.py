@@ -131,6 +131,57 @@ V3A_INTERPRETATION_LIMIT = (
     "resident, or one tranche."
 )
 
+#: The system under test is the WHOLE seam, not Alpha alone.
+V3A_FAILURE_SURFACE = (
+    "Alpha representation / instruction",
+    "resident model",
+    "stock OmegaClaw skill/action contract",
+)
+
+#: Candidate sources. V3-A must not assume any of them in advance, and combinations are
+#: first-class candidates rather than a fallback.
+V3A_CANDIDATE_SOURCES = (
+    "Alpha representation/instruction effects",
+    "resident behaviour",
+    "one-turn scheduling",
+    "stock Omega skill/action-contract interaction",
+    "combinations of the above",
+)
+
+#: Stated explicitly because the tempting shortcut is exactly wrong: an
+#: UNKNOWN_SKILL_CALL is emitted by stock Omega's action layer, so reading it as proof of
+#: an Alpha representation defect would assume the conclusion.
+V3A_NO_ASSUMED_CAUSE = (
+    "V3-A must NOT assume in advance that a failure such as UNKNOWN_SKILL_CALL \"RED\" "
+    "is caused by Alpha's symbolic representation. That emission occurs at the stock "
+    "OmegaClaw skill/action boundary, and Alpha, the resident and the Omega action "
+    "contract are all live candidates until an experiment isolates one."
+)
+
+#: What each manipulation may IMPLICATE -- never what it proves.
+V3A_ATTRIBUTION_RULE = (
+    {"manipulation": "representation change (R1 vs R2/R3/R4)",
+     "held_fixed": ["resident", "task facts", "turn budget", "Omega substrate"],
+     "may_implicate": "representation effects",
+     "may_not_conclude": "a unique causal source"},
+    {"manipulation": "turn-budget change (1 vs 2 turns)",
+     "held_fixed": ["representation", "resident", "task facts", "Omega substrate"],
+     "may_implicate": "scheduling / turn budget",
+     "may_not_conclude": "a unique causal source"},
+    {"manipulation": ("repeated correct internal token followed by invalid Omega "
+                      "skill/action emission"),
+     "held_fixed": ["across representations and both turn budgets"],
+     "may_implicate": "the output / skill-action interface",
+     "may_not_conclude": "a unique causal source"},
+)
+
+V3A_NON_ATTRIBUTION_CONSTRAINT = (
+    "Do not claim a unique causal source unless the experiment actually isolates it. "
+    "Evidence may be reported as consistent with a factor; it may not be reported as "
+    "the cause. The system under test is the whole seam: Alpha -> resident -> stock "
+    "Omega."
+)
+
 # --- V3-B ---------------------------------------------------------------------
 
 #: The task family. Depth is induced by the number of sequential reasoning CALLS, while
@@ -348,15 +399,24 @@ def specification() -> dict[str, Any]:
                 "baseline_turn_budget": V3A_BASELINE_TURN_BUDGET,
                 "two_turn_role": "diagnostic control, not the AlphaClaw population",
                 "held_fixed": list(V3A_HELD_FIXED),
+                "failure_surface": list(V3A_FAILURE_SURFACE),
+                "candidate_sources": list(V3A_CANDIDATE_SOURCES),
+                "no_assumed_cause": V3A_NO_ASSUMED_CAUSE,
+                "attribution_rule": list(V3A_ATTRIBUTION_RULE),
+                "non_attribution_constraint": V3A_NON_ATTRIBUTION_CONSTRAINT,
                 "instruction_position_receipt": {
                     "module": "scripts/instruction_receipt.py",
                     "records": ["exact instruction text", "character offsets",
                                 ("order relative to Omega context, human task and "
                                  "symbolic evidence"),
                                 "characters before and after",
+                                ("stock Omega prompt / skill-action context wherever "
+                                 "mechanically locatable"),
+                                "literal vs JSON-escaped match mode",
                                 "whole-request tokens where a receipt supplies them"],
                     "salience_score_reported": False,
                     "per_segment_tokens_available": False,
+                    "omega_context_located_when_observable": True,
                 },
                 "outcomes": ["exact-match response", "valid send emission present",
                              "expected token present internally but not emitted",

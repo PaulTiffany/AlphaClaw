@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -41,8 +42,9 @@ def _load(name: str, path: Path):
 episode_contract = _load("episode_contract_v3", ROOT / "controller" / "episode_contract.py")
 v2 = _load("protocol_v2_v3", SCRIPTS / "protocol_v2.py")
 
+README = ROOT / "controller" / "README.md"
 ARTIFACT = ROOT / "benchmark" / "protocol-v3.json"
-ARTIFACT_SHA = "d183b8f38e89a0380f543642535d02172220951e4922c55cadca847991d47d39"
+ARTIFACT_SHA = "8bd4e85dd04c40a7d69b7328732ba3503063a0b7d10fc5d4f2676e9721e963b8"
 
 V2_DIGESTS = {
     "protocol-v2.json": "b5ee0c3760a9540119526f1c51ac1dc5cc0d6fadc0fe1e378ddf770d3d02557f",
@@ -321,7 +323,11 @@ def test_receipt_locates_every_component_in_a_real_frozen_envelope(
         symbolic_evidence=json.dumps(
             json.loads(a_run["payload"])["sensory_handoff"],
             ensure_ascii=False, sort_keys=True))
-    assert receipt["all_components_found"] is True
+    # the Alpha envelope carries no stock Omega prompt; that context appears only in the
+    # container-side prompt, so here it is correctly recorded as not located.
+    assert receipt["omega_context_located"] is False
+    for component in ("alpha_instruction", "human_task", "symbolic_evidence"):
+        assert receipt["components"][component]["found"] is True, component
     assert receipt["order"] == ["alpha_instruction", "human_task", "symbolic_evidence"]
     assert receipt["alpha_instruction_precedes_human_task"] is True
     assert receipt["components"]["symbolic_evidence"]["matched_form"] == "json_escaped"
@@ -500,3 +506,87 @@ def test_no_new_scorer_is_introduced(spec) -> None:
     assert scoring["new_scorer_introduced"] is False
     assert scoring["llm_judge"] is False
     assert scoring["sensory_scorer"].endswith("unchanged and not broadened")
+
+
+# --- attribution boundary: the seam under test is not Alpha alone ---------------
+
+
+def test_failure_surface_spans_alpha_resident_and_stock_omega(spec) -> None:
+    surface = spec["sections"]["V3A"]["failure_surface"]
+    assert surface == ["Alpha representation / instruction", "resident model",
+                       "stock OmegaClaw skill/action contract"]
+
+
+def test_unknown_skill_call_is_not_assumed_to_be_a_representation_defect(spec) -> None:
+    """The tempting shortcut is exactly the one the design must refuse."""
+    text = spec["sections"]["V3A"]["no_assumed_cause"]
+    assert "must NOT assume in advance" in text
+    assert "UNKNOWN_SKILL_CALL" in text
+    assert "stock OmegaClaw skill/action boundary" in text
+    assert "all live candidates" in text
+
+
+def test_all_four_candidate_sources_and_combinations_are_declared(spec) -> None:
+    sources = " ".join(spec["sections"]["V3A"]["candidate_sources"]).lower()
+    for candidate in ("alpha representation", "resident behaviour",
+                      "one-turn scheduling", "skill/action-contract interaction",
+                      "combinations"):
+        assert candidate in sources, candidate
+
+
+def test_attribution_rule_states_implication_never_proof(spec) -> None:
+    rules = spec["sections"]["V3A"]["attribution_rule"]
+    assert len(rules) == 3
+    for rule in rules:
+        assert rule["may_implicate"]
+        assert rule["may_not_conclude"] == "a unique causal source"
+        assert rule["held_fixed"]
+    manipulations = " ".join(r["manipulation"] for r in rules).lower()
+    assert "representation change" in manipulations
+    assert "turn-budget change" in manipulations
+    assert "invalid omega" in manipulations
+
+
+def test_non_attribution_constraint_is_carried_in_the_preregistration(spec) -> None:
+    constraint = spec["sections"]["V3A"]["non_attribution_constraint"]
+    assert "unless the experiment actually isolates it" in constraint
+    assert "may not be reported as the cause" in constraint
+    assert "Alpha -> resident -> stock Omega" in constraint
+
+
+def test_receipt_preserves_stock_omega_context_when_observable(spec) -> None:
+    receipt = spec["sections"]["V3A"]["instruction_position_receipt"]
+    assert receipt["omega_context_located_when_observable"] is True
+    records = " ".join(receipt["records"]).lower()
+    assert "stock omega prompt / skill-action context" in records
+    assert "literal vs json-escaped match mode" in records
+    assert receipt["salience_score_reported"] is False
+
+
+def test_receipt_locates_omega_context_as_a_first_class_component() -> None:
+    receipt = instruction_receipt.positions(
+        "OMEGA-SKILLS alpha-says do-the-task EVIDENCE",
+        alpha_instruction="alpha-says", human_task="do-the-task",
+        symbolic_evidence="EVIDENCE", omega_context="OMEGA-SKILLS")
+    assert "omega_context" in instruction_receipt.COMPONENTS
+    assert receipt["omega_context_located"] is True
+    assert receipt["order"][0] == "omega_context"
+    assert receipt["omega_context_precedes_human_task"] is True
+    assert receipt["all_components_found"] is True
+
+
+def test_missing_omega_context_is_recorded_not_assumed() -> None:
+    receipt = instruction_receipt.positions("alpha only", alpha_instruction="alpha")
+    assert receipt["omega_context_located"] is False
+    assert receipt["omega_context_precedes_human_task"] is None
+    assert instruction_receipt.distance_summary(receipt)["omega_context_located"] is False
+
+
+def test_readme_v3_section_keeps_the_non_attribution_language() -> None:
+    text = README.read_text(encoding="utf-8")
+    section = text[text.index("## Protocol v3 -- preregistration"):]
+    flat = re.sub(r"\s+", " ", section.replace("*", "")).lower()
+    for phrase in ("alpha -> resident -> stock omega",
+                   "must not assume",
+                   "unique causal source"):
+        assert phrase in flat, phrase

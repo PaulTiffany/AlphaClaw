@@ -21,7 +21,9 @@ import json
 from typing import Any
 
 #: The components located within a resident-facing prompt, in no privileged order.
-COMPONENTS = ("alpha_instruction", "human_task", "symbolic_evidence")
+#: ``omega_context`` is stock OmegaClaw's own prompt / skill-action instructions. It is
+#: part of the failure surface under test and must be located, not assumed away.
+COMPONENTS = ("alpha_instruction", "human_task", "symbolic_evidence", "omega_context")
 
 
 def _escaped(text: str) -> str:
@@ -63,6 +65,7 @@ def positions(
     alpha_instruction: str | None = None,
     human_task: str | None = None,
     symbolic_evidence: str | None = None,
+    omega_context: str | None = None,
     request_tokens: int | None = None,
 ) -> dict[str, Any]:
     """Locate each component inside the exact resident-facing prompt text.
@@ -74,6 +77,7 @@ def positions(
         "alpha_instruction": _locate(prompt, alpha_instruction),
         "human_task": _locate(prompt, human_task),
         "symbolic_evidence": _locate(prompt, symbolic_evidence),
+        "omega_context": _locate(prompt, omega_context),
     }
 
     found = [(name, block["start"]) for name, block in located.items() if block["found"]]
@@ -110,6 +114,13 @@ def positions(
             alpha["start"] < evidence["start"])
     else:
         receipt["alpha_instruction_precedes_symbolic_evidence"] = None
+
+    omega = located["omega_context"]
+    receipt["omega_context_located"] = omega["found"]
+    if omega["found"] and task["found"]:
+        receipt["omega_context_precedes_human_task"] = omega["start"] < task["start"]
+    else:
+        receipt["omega_context_precedes_human_task"] = None
     return receipt
 
 
@@ -117,11 +128,15 @@ def distance_summary(receipt: dict[str, Any]) -> dict[str, Any]:
     """The two figures V3-A actually reasons about, extracted without interpretation."""
     alpha = receipt["components"]["alpha_instruction"]
     task = receipt["components"]["human_task"]
+    omega = receipt["components"]["omega_context"]
     return {
         "alpha_instruction_chars_before": alpha["chars_before"],
         "alpha_instruction_chars_after": alpha["chars_after"],
         "human_task_chars_before": task["chars_before"],
         "human_task_chars_after": task["chars_after"],
+        "omega_context_chars_before": omega["chars_before"],
+        "omega_context_chars_after": omega["chars_after"],
+        "omega_context_located": omega["found"],
         "order": receipt["order"],
         "prompt_chars": receipt["prompt_chars"],
     }
