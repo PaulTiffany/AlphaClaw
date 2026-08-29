@@ -180,26 +180,50 @@ def test_cumulative_asicloud_usage_exhausts_the_allocation_exactly(runs) -> None
     assert a_out + b_out <= v2.ASICLOUD_MAX_OUTPUT_TOKENS
 
 
-def test_condition_c_does_not_draw_on_the_asicloud_allocation() -> None:
-    """The exhausted ASICloud cap does not block C: C bills OpenRouter.
+def test_condition_c_is_on_a_separate_openrouter_ledger() -> None:
+    """Ledger 2. C bills OpenRouter, so it is outside the ASICloud allocation.
 
-    An exhausted allocation means no further ASICloud condition may run without an
-    amendment. It says nothing about a condition on a separate billing path.
+    An exhausted ASICloud allocation means no further ASICloud condition may run without
+    an amendment. It says nothing about a condition metered on a different path.
     """
     frozen = json.loads(
         (ROOT / "benchmark" / "protocol-v2.json").read_text(encoding="utf-8"))
     condition_c = next(c for c in frozen["conditions"] if c["condition_id"] == "C")
 
+    # C's own ledger, as preregistered
     assert condition_c["resident_provider"] == "openrouter"
-    assert condition_c["resident_billing"] == "openrouter"
     assert condition_c["resident_model"] == "google/gemma-4-26b-a4b-it"
+    assert condition_c["resident_billing"] == "openrouter"
     assert condition_c["sensory_calls"] == 0
+    assert condition_c["boot_calls"] == 3
+    assert condition_c["episode_calls"] == 3
+    assert condition_c["boot_calls"] + condition_c["episode_calls"] == 6
+
     # the module constants agree with the frozen artifact
     assert v2.RESIDENT_ALTERNATE_PROVIDER == "openrouter"
     assert v2.RESIDENT_ALTERNATE_MODEL == "google/gemma-4-26b-a4b-it"
-    # C's resident path is not the ASICloud one, so its calls are not counted there
+
+    # ...and that ledger is NOT the ASICloud one
     assert condition_c["resident_provider"] != v2.RESIDENT_PRIMARY_PROVIDER
     assert condition_c["resident_billing"] != "asicloud"
+
+
+def test_condition_c_contributes_zero_to_the_asicloud_allocation() -> None:
+    """C is executable under the existing v2 without raising the ASICloud cap."""
+    frozen = json.loads(
+        (ROOT / "benchmark" / "protocol-v2.json").read_text(encoding="utf-8"))
+    asicloud_calls = sum(
+        c["boot_calls"] + c["episode_calls"]
+        for c in frozen["conditions"] if c.get("resident_billing") == "asicloud")
+    condition_c = next(c for c in frozen["conditions"] if c["condition_id"] == "C")
+    c_calls = condition_c["boot_calls"] + condition_c["episode_calls"]
+
+    # A (36) + B2 (6) already fill the allocation; C adds nothing to it
+    assert asicloud_calls == v2.ASICLOUD_MAX_CALLS == 42
+    assert c_calls == 6
+    assert asicloud_calls + 0 == v2.ASICLOUD_MAX_CALLS
+    # running C does not push the ASICloud ledger past its cap
+    assert asicloud_calls <= v2.ASICLOUD_MAX_CALLS
 
 
 def test_asicloud_cap_was_not_raised() -> None:

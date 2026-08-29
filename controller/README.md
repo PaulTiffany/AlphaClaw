@@ -907,7 +907,18 @@ scores FAIL / output-contract -- it is not rounded up.
 This is three preregistered paired cases with one failure in common. It is not evidence
 about emission behaviour in general, and no causal claim beyond these three is made.
 
-### Cap status after A + B2
+### Cap status after A + B2 -- two separate ledgers
+
+Protocol v2 meters two independent resident billing paths. Conflating them is what made
+an earlier revision of this section wrong.
+
+**Ledger 1 -- Protocol v2 ASICloud allocation**
+
+| condition | ASICloud calls |
+|---|---|
+| Condition A | 36 |
+| Condition B2 | 6 |
+| **total** | **42 / 42** |
 
 | | used | cap | headroom |
 |---|---|---|---|
@@ -915,14 +926,26 @@ about emission behaviour in general, and no causal claim beyond these three is m
 | input tokens | 86,057 | 124,572 | 38,515 |
 | output tokens | 7,771 | 21,714 | 13,943 |
 
-**Protocol v2's ASICloud allocation is now exhausted exactly at 42 calls.** That means
-no further *ASICloud* condition may run without an amendment.
+The allocation is exhausted exactly. **Therefore no additional ASICloud condition may
+run without an amendment.** The cap is not raised here.
 
-It does **not** block Condition C. C's preregistered resident is OpenRouter
-`google/gemma-4-26b-a4b-it` with `resident_billing: openrouter` and `sensory_calls: 0`,
-so **Condition C remains executable and does not consume ASICloud call headroom.** Tests
-assert both halves: the allocation is exhausted at exactly 42, and C's frozen billing
-path is OpenRouter rather than ASICloud. The ASICloud cap is not raised.
+**Ledger 2 -- Condition C, OpenRouter resident**
+
+| | |
+|---|---|
+| resident provider | `openrouter` |
+| resident model | `google/gemma-4-26b-a4b-it` |
+| sensory calls | 0 |
+| boot + episode | 3 + 3 = **6 OpenRouter resident calls** |
+| ASICloud calls | **0** |
+
+C draws on the OpenRouter resident path, not the ASICloud allocation. **Therefore
+Condition C remains executable under the existing Protocol v2 without raising the
+ASICloud cap.**
+
+Tests assert both ledgers independently: that A + B2 total exactly 42 against
+`ASICLOUD_MAX_CALLS`, and that C's frozen provider, model, billing and 3 + 3 call budget
+place it outside that allocation.
 
 ## Unbounded Omega is a different population
 
