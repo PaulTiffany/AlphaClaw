@@ -166,6 +166,15 @@ This verifies the committed receipts and artifacts and re-derives every headline
 from them. It makes **no** provider call, launches **no** container, and needs **no**
 credentials.
 
+**What is mechanically checked, and what is recorded.** Artifact identity, synthesis
+outputs, substrate pins and Git commit ancestry are checked mechanically and offline;
+amendment timing relative to provider calls, and the surrounding commit chronology, are
+**recorded in the repository history** rather than independently reconstructed by the
+verifier. Git ancestry establishes the order of commits, not the order of provider calls.
+
+Ancestry checks are skipped rather than failed outside a Git checkout, so a source
+tarball can still verify every digest and both syntheses.
+
 The raw evidence — provider receipts, run manifests, container-side observations, the
 stimulus bytes and the ground truth — is deliberately committed. Scientific claims can
 therefore be audited **without trusting current provider availability or current model

@@ -139,8 +139,9 @@ def test_verifier_passes() -> None:
 
 
 def test_verifier_is_networkless_and_makes_no_provider_call() -> None:
-    banned = {"requests", "urllib", "socket", "http", "httpx", "ssl", "subprocess",
-              "docker", "openrouter_image", "asyncio"}
+    """No network module anywhere. ``subprocess`` is allowed only for local Git."""
+    network = {"requests", "urllib", "socket", "http", "httpx", "ssl",
+               "docker", "openrouter_image", "asyncio"}
     for name in ("verify_research_checkpoint.py", "research_checkpoint.py"):
         source = (SCRIPTS / name).read_text(encoding="utf-8")
         imported: set[str] = set()
@@ -149,9 +150,62 @@ def test_verifier_is_networkless_and_makes_no_provider_call() -> None:
                 imported |= {a.name.split(".")[0] for a in node.names}
             elif isinstance(node, ast.ImportFrom) and node.module:
                 imported.add(node.module.split(".")[0])
-        assert not (imported & banned), (name, sorted(imported & banned))
+        assert not (imported & network), (name, sorted(imported & network))
         assert "http://" not in source and "https://" not in source, name
         assert "api_key" not in source.lower(), name
+    assert "subprocess" not in (SCRIPTS / "research_checkpoint.py").read_text(
+        encoding="utf-8")
+
+
+def test_verifier_subprocess_use_is_read_only_local_git() -> None:
+    """The only subprocess is `git`, from an allowlist, with no shell."""
+    source = (SCRIPTS / "verify_research_checkpoint.py").read_text(encoding="utf-8")
+    calls = [node for node in ast.walk(ast.parse(source))
+             if isinstance(node, ast.Call)
+             and isinstance(node.func, ast.Attribute)
+             and isinstance(node.func.value, ast.Name)
+             and node.func.value.id == "subprocess"]
+    assert len(calls) == 1, "exactly one subprocess call expected"
+    call = calls[0]
+    assert call.func.attr == "run"
+    keywords = {kw.arg for kw in call.keywords}
+    assert "shell" not in keywords          # never a shell
+    assert "capture_output" in keywords and "timeout" in keywords
+    # the command list starts with the literal "git"
+    first = call.args[0]
+    assert isinstance(first, ast.List)
+    assert isinstance(first.elts[0], ast.Constant) and first.elts[0].value == "git"
+
+    for prefix in verifier.GIT_READ_ONLY_COMMANDS:
+        assert prefix[0] in {"rev-parse", "cat-file", "merge-base"}, prefix
+    for mutating in ("commit", "checkout", "push", "fetch", "clone", "reset",
+                     "add", "tag"):
+        assert not any(mutating in prefix for prefix in
+                       verifier.GIT_READ_ONLY_COMMANDS), mutating
+
+
+def test_verifier_refuses_a_non_allowlisted_git_command() -> None:
+    with pytest.raises(ValueError, match="non-allowlisted"):
+        verifier._git("push", "origin", "main")
+    with pytest.raises(ValueError, match="non-allowlisted"):
+        verifier._git("commit", "-m", "x")
+
+
+def test_git_ancestry_facts_hold_in_this_checkout() -> None:
+    checks = {c["name"]: c for c in verifier.summary()["checks"]}
+    ancestry = [name for name in checks if "ancestor" in name]
+    assert len(ancestry) == 3
+    for name in ancestry:
+        # inside a git checkout these must pass; outside they are skipped, never failed
+        assert checks[name]["ok"] is True or checks[name]["skipped"] is True, name
+
+
+def test_verifier_does_not_claim_git_proves_provider_call_chronology() -> None:
+    source = (SCRIPTS / "verify_research_checkpoint.py").read_text(encoding="utf-8")
+    assert "not the order of *provider calls*" in source
+    assert "recorded process evidence" in source
+    names = " ".join(c["name"] for c in verifier.summary()["checks"]).lower()
+    assert "provider call" not in names       # no check claims call ordering
 
 
 def test_verifier_has_no_write_path() -> None:
@@ -301,3 +355,11 @@ def test_documented_verifier_command_exists() -> None:
     research = RESEARCH.read_text(encoding="utf-8")
     assert "python scripts/verify_research_checkpoint.py" in research
     assert (SCRIPTS / "verify_research_checkpoint.py").exists()
+
+
+def test_research_summary_separates_verified_from_recorded(flat) -> None:
+    """The distinction the checkpoint depends on must be stated, not implied."""
+    assert "what is mechanically checked, and what is recorded" in flat
+    assert "recorded in the repository history" in flat
+    assert "order of commits, not the order of provider calls" in flat
+    assert "skipped rather than failed outside a git checkout" in flat

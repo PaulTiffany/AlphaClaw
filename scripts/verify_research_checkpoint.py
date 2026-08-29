@@ -6,21 +6,33 @@ Read-only and networkless. It launches no container, makes no provider call, nee
 API key, spends nothing, and writes nothing. Reproducing the published analysis must
 never require re-running paid inference or trusting current provider availability.
 
-It checks that:
+It mechanically checks that:
 
 * every pinned artifact digest matches its committed bytes;
 * the substrate identifiers recorded in the committed evidence are single-valued;
 * the v2 synthesis still derives from the frozen artifacts;
 * the v3 synthesis still derives from the frozen artifacts;
-* the checkpoint manifest indexes exactly the files it claims, at the right digests.
+* the checkpoint manifest indexes exactly the files it claims, at the right digests;
+* the Git ancestry facts the checkpoint records hold in this checkout.
 
-Exit status is 0 when every check passes, 1 otherwise.
+What it does NOT prove
+----------------------
+Git ancestry establishes the order of *commits*, not the order of *provider calls*. The
+amendments' "BEFORE any ... provider call" statements remain **recorded process
+evidence** from the repository history; no artifact ties an amendment to a wall-clock
+moment relative to an inference request, and this verifier does not pretend otherwise.
+
+Ancestry checks are skipped, not failed, when the tree is not a Git checkout or `git` is
+unavailable -- a source tarball can still verify every artifact digest and both syntheses.
+
+Exit status is 0 when every executed check passes, 1 otherwise.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -35,14 +47,73 @@ import synthesis_v3
 
 MANIFEST = ROOT / "benchmark" / "research-checkpoint.json"
 
+SKIPPED = None
 
-def _check(results: list[tuple[str, bool, str]], name: str, ok: bool,
+#: The only subprocesses this verifier may run: read-only local Git queries, no shell.
+GIT_READ_ONLY_COMMANDS = (
+    ("rev-parse", "--git-dir"),
+    ("cat-file", "-e"),
+    ("merge-base", "--is-ancestor"),
+)
+
+
+def _git(*args: str) -> tuple[bool, str]:
+    """Run one read-only local Git query. Never a shell, never the network."""
+    if not any(args[:len(prefix)] == prefix for prefix in GIT_READ_ONLY_COMMANDS):
+        raise ValueError(f"refusing to run a non-allowlisted git command: {args}")
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(ROOT), *args],
+            capture_output=True, text=True, timeout=30, check=False)
+    except (OSError, subprocess.SubprocessError):
+        return False, "git unavailable"
+    return completed.returncode == 0, completed.stdout.strip()
+
+
+def _check(results: list[tuple[str, bool | None, str]], name: str, ok: bool | None,
            detail: str = "") -> None:
-    results.append((name, bool(ok), detail))
+    results.append((name, ok if ok is SKIPPED else bool(ok), detail))
 
 
-def run() -> tuple[bool, list[tuple[str, bool, str]]]:
-    results: list[tuple[str, bool, str]] = []
+def git_ancestry(manifest: dict[str, Any],
+                 results: list[tuple[str, bool | None, str]]) -> None:
+    """Validate the repository-history facts the checkpoint records.
+
+    These are ancestry facts about commits available in this checkout. They say nothing
+    about when provider calls were issued.
+    """
+    available, _ = _git("rev-parse", "--git-dir")
+    if not available:
+        for name in ("checkpoint base is an ancestor of HEAD",
+                     "v2 synthesis commit is an ancestor of the checkpoint base",
+                     "v3 synthesis commit is the checkpoint base or its ancestor"):
+            _check(results, name, SKIPPED, "not a git checkout")
+        return
+
+    base = manifest["base_commit"]
+    exists, _ = _git("cat-file", "-e", f"{base}^{{commit}}")
+    if not exists:
+        _check(results, "checkpoint base is an ancestor of HEAD", False,
+               f"{base[:12]} not present in this checkout")
+        return
+    ancestor, _ = _git("merge-base", "--is-ancestor", base, "HEAD")
+    _check(results, "checkpoint base is an ancestor of HEAD", ancestor, base[:12])
+
+    for label, commit in (("v2", manifest["synthesis_merge_commits"]["v2"]),
+                          ("v3", manifest["synthesis_merge_commits"]["v3"])):
+        name = (f"{label} synthesis commit is "
+                + ("the checkpoint base or its ancestor" if label == "v3"
+                   else "an ancestor of the checkpoint base"))
+        present, _ = _git("cat-file", "-e", f"{commit}^{{commit}}")
+        if not present:
+            _check(results, name, False, f"{commit[:12]} missing")
+            continue
+        ok, _ = _git("merge-base", "--is-ancestor", commit, base)
+        _check(results, name, ok, commit[:12])
+
+
+def run() -> tuple[bool, list[tuple[str, bool | None, str]]]:
+    results: list[tuple[str, bool | None, str]] = []
 
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
 
@@ -105,7 +176,10 @@ def run() -> tuple[bool, list[tuple[str, bool, str]]]:
     _check(results, "protocol v4 not started",
            manifest["protocol_v4_started"] is False)
 
-    return all(ok for _, ok, _ in results), results
+    # 8. repository-history facts (commit ancestry only, never call chronology)
+    git_ancestry(manifest, results)
+
+    return all(ok is not False for _, ok, _ in results), results
 
 
 def main() -> int:
@@ -114,12 +188,19 @@ def main() -> int:
     print("AlphaClaw research checkpoint -- offline verification")
     print("(read-only: no network, no container, no provider call, no API key)\n")
     for name, ok, detail in results:
-        mark = "PASS" if ok else "FAIL"
+        mark = "SKIP" if ok is SKIPPED else ("PASS" if ok else "FAIL")
         suffix = f"  {detail}" if detail else ""
         print(f"  [{mark}] {name:<{width}}{suffix}")
-    total = len(results)
-    print(f"\n{sum(1 for _, ok, _ in results if ok)}/{total} checks passed")
-    print("RESULT: PASS" if passed else "RESULT: FAIL")
+
+    executed = [ok for _, ok, _ in results if ok is not SKIPPED]
+    skipped = len(results) - len(executed)
+    print(f"\n{sum(1 for ok in executed if ok)}/{len(executed)} checks passed"
+          + (f", {skipped} skipped" if skipped else ""))
+    print("\nMechanically verified here: artifact identity, synthesis derivation,\n"
+          "substrate pins and Git commit ancestry. Amendment timing relative to\n"
+          "provider calls is recorded process evidence from the repository history,\n"
+          "not reconstructed by this verifier.")
+    print("\nRESULT: PASS" if passed else "\nRESULT: FAIL")
     return 0 if passed else 1
 
 
@@ -127,7 +208,8 @@ def summary() -> dict[str, Any]:
     """Machine-readable form of the same verification, for tests."""
     passed, results = run()
     return {"passed": passed,
-            "checks": [{"name": n, "ok": ok} for n, ok, _ in results]}
+            "checks": [{"name": n, "ok": ok, "skipped": ok is SKIPPED}
+                       for n, ok, _ in results]}
 
 
 if __name__ == "__main__":
