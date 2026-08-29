@@ -132,10 +132,15 @@ def test_amendment_chronology_appears_in_the_research_summary(flat) -> None:
 
 
 def test_verifier_passes() -> None:
+    """Checks are tri-state: no check may FAIL; skipped ones are legitimate."""
     summary = verifier.summary()
     assert summary["passed"] is True
-    assert all(check["ok"] for check in summary["checks"])
+    failed = [c["name"] for c in summary["checks"] if c["ok"] is False]
+    assert failed == [], failed
+    executed = [c for c in summary["checks"] if not c["skipped"]]
+    assert all(c["ok"] is True for c in executed)
     assert len(summary["checks"]) >= 15
+    assert len(executed) >= 16      # everything except the git-ancestry trio
 
 
 def test_verifier_is_networkless_and_makes_no_provider_call() -> None:
