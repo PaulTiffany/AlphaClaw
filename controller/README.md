@@ -1291,6 +1291,96 @@ Any of these halts before spending: a v2 artifact digest mismatch, a pin or byte
 mismatch, a changed stock image id, a representation leaking the expected answer, a
 failed preflight invariant, or any call/token/dollar cap.
 
+## Protocol v3-A -- result (frozen)
+
+18 preregistered runs, **zero new sensory calls**, replaying frozen v2 evidence through
+four deterministic representations at one- and two-turn budgets. Frozen at
+`benchmark/benchmark-v3-A.json`.
+
+**The headline is a negative result.** V3-A did not isolate a cause, and none is claimed.
+
+| case / representation / turns | exact | send | token internally | class |
+|---|---|---|---|---|
+| A1 R1 1t | PASS | yes | yes | passed |
+| A1 R1 2t | FAIL | no | **yes** | output-contract |
+| A1 R2 1t | PASS | yes | yes | passed |
+| A1 R2 2t | FAIL | no | no | reasoning/composition |
+| A1 R3 1t | FAIL | no | **yes** | output-contract |
+| A1 R3 2t | PASS | yes | yes | passed |
+| A1 R4 1t | PASS | yes | yes | passed |
+| A1 R4 2t | PASS | yes | yes | passed |
+| A2 R1 1t | FAIL | yes | no | reasoning/composition |
+| A2 R1 2t | PASS | yes | yes | passed |
+| A2 R2 1t | FAIL | yes | no | reasoning/composition |
+| A2 R2 2t | FAIL | no | no | reasoning/composition |
+| A2 R3 1t | FAIL | yes | no | reasoning/composition |
+| A2 R3 2t | FAIL | yes | no | reasoning/composition |
+| A2 R4 1t | PASS | yes | yes | passed |
+| A2 R4 2t | FAIL | yes | no | reasoning/composition |
+| A3 native 1t | FAIL | yes | no | reasoning/composition |
+| A3 native 2t | FAIL | no | no | reasoning/composition |
+
+Decomposition: passed 7, reasoning/composition 9, output-contract 2, sensory 0,
+infrastructure 0, provider availability 0.
+
+### Why no effect is claimed
+
+**Transitions run in both directions for the same manipulation.** Changing turn budget
+takes A1/R1 from PASS to FAIL and A2/R1 from FAIL to PASS. R3 takes A1 from PASS to FAIL
+at one turn and from FAIL to PASS at two. With **one run per cell**, these are not
+separable from run-to-run variability.
+
+Several branches of the frozen interpretation matrix therefore fire in contradictory
+directions at once -- exactly the situation in which the preregistered non-attribution
+constraint forbids naming a cause. Establishing a representation effect or a scheduling
+effect needs repeats, which this tranche did not preregister. That is a design
+limitation of V3-A as frozen, recorded rather than argued around.
+
+### What did reproduce
+
+The v2 signature appeared twice, both on `distractor_selection` under MiniMax: the
+correct token `RED` present internally, **no valid `send`**, no channel response --
+`A1/R1/2t` (both permitted turns spent) and `A1/R3/1t` (timeout). Consistent with the
+output/skill-action interface observation from v2, on two cases, with no causal claim.
+
+### Instruction-position receipts
+
+All 18 runs: the Alpha instruction is found, and **1,324-1,698 characters separate it
+from the answer-required task**. Evidence matched literally or JSON-escaped, recorded
+either way. Stock Omega prompt context is **not** locatable at the envelope level and is
+recorded as `omega_context_located: false` rather than faked -- it exists only in the
+container-side prompt. No salience score; per-segment tokens marked unavailable.
+
+### Two derived-analysis corrections, both pre-inference or post-hoc-safe
+
+**Amendment v3.1, before any provider call.** Preflight flagged A2/R1 for answer
+leakage. It was a false positive in the check, not a leak: the frozen
+`number_arithmetic` payload contains `19` inside the image digest `...c197e29bfb`.
+Leakage now means the answer appears as a **standalone token**, still case-sensitive and
+still applied to every variant including R1. No representation, transform, model, budget
+or condition changed.
+
+**Turn-aware classification, after the runs.** The v2 classifier treats any run whose
+episode-call count is not exactly 1 as infrastructure -- correct for the one-turn v2
+architecture, wrong for a two-turn diagnostic. `scripts/analyze_v3a.py` generalises the
+same causal chain from "exactly one episode call" to "within the permitted turn budget"
+and changes nothing else. **The v2 classifier and every v2 artifact are untouched**, and
+a test shows the v2 rule would have mislabelled these runs. Relatedly, controller exit
+code 3 is the terminal state of a fully spent turn budget -- most two-turn runs carry
+`termination_reason: responded` alongside it -- not a harness failure.
+
+### Budget
+
+| | used | cap |
+|---|---|---|
+| ASICloud | 19 | 20 |
+| OpenRouter resident | 24 | 25 |
+| sensory | **0** | 0 |
+| cost | **$0.002935** | $0.50 |
+
+19 ASICloud calls (8 boot / 11 episode), 33,995 in / 2,342 out. 24 OpenRouter calls
+(10 boot / 14 episode), 38,310 in / 581 out. The v2 ASICloud ledger is untouched.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.

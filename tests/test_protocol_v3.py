@@ -44,7 +44,7 @@ v2 = _load("protocol_v2_v3", SCRIPTS / "protocol_v2.py")
 
 README = ROOT / "controller" / "README.md"
 ARTIFACT = ROOT / "benchmark" / "protocol-v3.json"
-ARTIFACT_SHA = "8bd4e85dd04c40a7d69b7328732ba3503063a0b7d10fc5d4f2676e9721e963b8"
+ARTIFACT_SHA = "bde4fe5fc2f932a9dd1890f7196858f9ac09468457f8edd53698ddfd805d8b33"
 
 V2_DIGESTS = {
     "protocol-v2.json": "b5ee0c3760a9540119526f1c51ac1dc5cc0d6fadc0fe1e378ddf770d3d02557f",
@@ -96,10 +96,17 @@ def test_artifact_declares_itself_a_preregistration(spec) -> None:
         assert banned not in blob, banned
 
 
-def test_no_v3_result_artifact_exists() -> None:
-    for name in ("benchmark-v3-A.json", "benchmark-v3-B.json",
-                 "benchmark-v3.json", "screening-v3.json"):
+def test_v3b_has_not_been_run(spec) -> None:
+    """V3-A has since run; V3-B must stay unexecuted until its generator is frozen."""
+    for name in ("benchmark-v3-B.json", "benchmark-v3.json", "screening-v3.json"):
         assert not (ROOT / "benchmark" / name).exists(), name
+    assert spec["sections"]["V3B"]["call_budget"]["total_calls"] == 98
+
+
+def test_the_preregistration_artifact_holds_no_results(spec) -> None:
+    assert "no result recorded" in spec["status"]
+    assert "runs" not in spec
+    assert "failure_decomposition" not in spec
 
 
 # --- v2 is untouched ----------------------------------------------------------
@@ -282,7 +289,7 @@ def test_plain_language_uses_no_summariser_and_is_total() -> None:
     imports = [line for line in source.splitlines()
                if line.startswith(("import ", "from "))]
     assert imports == ["from __future__ import annotations", "import json",
-                       "from typing import Any"], imports
+                       "import re", "from typing import Any"], imports
     with pytest.raises(representation_v3.RepresentationError):
         representation_v3.render_fact_sentence({"type": "not_a_frozen_type"})
 
@@ -590,3 +597,39 @@ def test_readme_v3_section_keeps_the_non_attribution_language() -> None:
                    "must not assume",
                    "unique causal source"):
         assert phrase in flat, phrase
+
+
+# --- Amendment v3.1: word-anchored answer-leakage check ------------------------
+
+
+def test_leak_check_is_word_anchored_not_a_bare_substring() -> None:
+    """The frozen number_arithmetic payload contains "19" inside an image digest."""
+    assert representation_v3.LEAK_CHECK_VERSION == "v3.1-word-boundary"
+    assert not representation_v3.leaks_answer("...c197e29bfb...", "19")
+    assert not representation_v3.leaks_answer("M451", "M45")
+    assert representation_v3.leaks_answer('{"answer": "19"}', "19")
+    assert representation_v3.leaks_answer("The number 19 is shown.", "19")
+    assert representation_v3.leaks_answer("reply M45 now", "M45")
+
+
+def test_leak_check_stays_case_sensitive() -> None:
+    assert not representation_v3.leaks_answer('{"colour": "red"}', "RED")
+    assert representation_v3.leaks_answer('{"answer":"RED"}', "RED")
+
+
+def test_frozen_r1_payloads_do_not_leak_under_the_amended_check(
+        items, condition_a) -> None:
+    """R1 is frozen v2 evidence; the amended check must not falsely halt it."""
+    for item_id in DIAGNOSTIC_ITEMS:
+        payload = condition_a[(item_id, "image_text")]["payload"]
+        assert not representation_v3.leaks_answer(
+            payload, items[item_id]["expected_answer"]), item_id
+
+
+def test_amendment_is_recorded_in_the_preregistration(spec) -> None:
+    reps = spec["sections"]["V3A"]["representations"]
+    assert reps["answer_leakage_check_version"] == "v3.1-word-boundary"
+    note = reps["answer_leakage_amendment"]
+    assert "BEFORE any v3 provider call" in note
+    assert "no representation, transform, model, budget or condition changed" in note
+    assert "including R1" in note
