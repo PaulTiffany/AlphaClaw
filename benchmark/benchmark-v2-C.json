@@ -1,0 +1,672 @@
+{
+  "asicloud_calls": 0,
+  "attempted_runs": 3,
+  "condition_id": "C",
+  "derived_classifier": "scripts/analyze_condition_a.py (unchanged; same frozen semantics as Condition A)",
+  "derived_note": "exact_match was left unset by the run harness and is computed here mechanically from the stored verbatim response against the frozen expected answer. No response text, receipt or provider record was altered, and nothing was rerun.",
+  "failure_decomposition": {
+    "infrastructure": 0,
+    "output_contract": 1,
+    "passed": 0,
+    "provider_availability": 0,
+    "reasoning_composition": 2,
+    "sensory": 0
+  },
+  "generated_at": "2026-08-29T03:31:05.954007+00:00",
+  "protocol_version": "v2",
+  "question": "Given the same resident-facing evidence, does substituting the resident model change the bounded outcome on these three cases?",
+  "replay_source": "Condition A (dots-derived evidence, MiniMax resident)",
+  "resident_model": "google/gemma-4-26b-a4b-it",
+  "resident_provider": "openrouter",
+  "runs": [
+    {
+      "a_exact_match": true,
+      "a_resident_model": "minimax/minimax-m3",
+      "a_resident_provider": "ASICloud",
+      "a_response": "19\n",
+      "all_checks_passed": true,
+      "case_id": "number_arithmetic:text_control",
+      "checks": {
+        "1_preregistered_case": true,
+        "2_payload_digest": true,
+        "3_task_text_digest": true,
+        "4_payload_and_envelope_identity": true,
+        "5_provenance_explicit": true,
+        "6_no_sensory_call": true,
+        "7_provider_is_openrouter": true,
+        "8_model_is_exact": true
+      },
+      "condition": "text_control",
+      "controller_error": null,
+      "envelope_matches_source": true,
+      "envelope_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "human_text_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "item_id": "number_arithmetic",
+      "manifest": {
+        "alpha_git_sha": "495c38dfe127624292023c42e4090d3f0fe576bd",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T03:14:55.124819+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T031435Z-472fe87cca",
+        "started_at": "2026-08-29T03:14:35.693028+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "agent entering standby mode"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3147,
+          "output_tokens": 88
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1292,
+            "output_tokens": 14
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1855,
+            "output_tokens": 74
+          }
+        }
+      },
+      "paired_condition_a": {
+        "exact_match": true,
+        "payload_equal_to_c": true,
+        "resident_facing_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+        "resident_model": "minimax/minimax-m3",
+        "resident_provider": "ASICloud",
+        "response": "19\n",
+        "run_id": "20260828T210015Z-5d7e344412",
+        "transition": "PASS -> FAIL"
+      },
+      "provenance": {
+        "human_text_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+        "is_native_text_condition": true,
+        "origin_run_id": "20260828T210015Z-5d7e344412",
+        "original_image_sha256": null,
+        "receipt_note": "Condition C substitutes only the resident model. The resident-facing payload is byte-identical to the Condition A run named above. No perception occurred during this run.",
+        "replayed_from": "A",
+        "resident_facing_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+        "sensory_inference": false,
+        "sensory_model": null,
+        "source_condition": "number_arithmetic:text_control"
+      },
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031435Z-472fe87cca",
+          "ts": 1787973288.3161225,
+          "usage": {
+            "completion_tokens": 14,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00017356,
+            "cost_details": {
+              "upstream_inference_completions_cost": 5.6e-06,
+              "upstream_inference_cost": 0.00017356,
+              "upstream_inference_prompt_cost": 0.00016796
+            },
+            "is_byok": false,
+            "prompt_tokens": 1292,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1306
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031435Z-472fe87cca",
+          "ts": 1787973291.7344444,
+          "usage": {
+            "completion_tokens": 74,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00032265,
+            "cost_details": {
+              "upstream_inference_completions_cost": 4.44e-05,
+              "upstream_inference_cost": 0.00032265,
+              "upstream_inference_prompt_cost": 0.00027825
+            },
+            "is_byok": false,
+            "prompt_tokens": 1855,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 4,
+              "video_tokens": 0
+            },
+            "total_tokens": 1929
+          }
+        }
+      ],
+      "resident_facing_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "response": "processing benchmark ingress evidence\n",
+      "run_id": "20260829T031435Z-472fe87cca",
+      "source_run_id": "20260828T210015Z-5d7e344412"
+    },
+    {
+      "a_exact_match": true,
+      "a_resident_model": "minimax/minimax-m3",
+      "a_resident_provider": "ASICloud",
+      "a_response": "M45\n",
+      "all_checks_passed": true,
+      "case_id": "ocr_count:image_text",
+      "checks": {
+        "1_preregistered_case": true,
+        "2_payload_digest": true,
+        "3_task_text_digest": true,
+        "4_payload_and_envelope_identity": true,
+        "4b_replay_file_roundtrip": true,
+        "5_provenance_explicit": true,
+        "6_no_sensory_call": true,
+        "7_provider_is_openrouter": true,
+        "8_model_is_exact": true
+      },
+      "condition": "image_text",
+      "controller_error": null,
+      "envelope_matches_source": true,
+      "envelope_payload_sha256": "11a7248e67f49607b5e299ad9ead8838bebfb15cc34ce30e1660bd3df0fc812d",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "M45",
+      "failure_class": "reasoning_composition",
+      "human_text_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1",
+      "item_id": "ocr_count",
+      "manifest": {
+        "alpha_git_sha": "495c38dfe127624292023c42e4090d3f0fe576bd",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T03:15:17.421543+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "ocr_count__image_text.json",
+          "source_sha256": "11a7248e67f49607b5e299ad9ead8838bebfb15cc34ce30e1660bd3df0fc812d"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T031503Z-225826bb5c",
+        "started_at": "2026-08-29T03:15:03.700589+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "waiting for user input'"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3956,
+          "output_tokens": 39
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 10
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2679,
+            "output_tokens": 29
+          }
+        }
+      },
+      "paired_condition_a": {
+        "exact_match": true,
+        "payload_equal_to_c": true,
+        "resident_facing_payload_sha256": "11a7248e67f49607b5e299ad9ead8838bebfb15cc34ce30e1660bd3df0fc812d",
+        "resident_model": "minimax/minimax-m3",
+        "resident_provider": "ASICloud",
+        "response": "M45\n",
+        "run_id": "20260828T210830Z-dd42e14259",
+        "transition": "PASS -> FAIL"
+      },
+      "provenance": {
+        "human_text_sha256": "2111a90408080e31fde2f5633043d5f603cdbbb47690ffea2ea8d67860db58a1",
+        "is_native_text_condition": false,
+        "origin_run_id": "20260828T210830Z-dd42e14259",
+        "original_image_sha256": "9fffa97ac76f34c67694c02c7bb6cf6df13a2d887d88c62c98846d8d91904890",
+        "receipt_note": "Condition C substitutes only the resident model. The resident-facing payload is byte-identical to the Condition A run named above. No perception occurred during this run.",
+        "replayed_from": "A",
+        "resident_facing_payload_sha256": "11a7248e67f49607b5e299ad9ead8838bebfb15cc34ce30e1660bd3df0fc812d",
+        "sensory_inference": false,
+        "sensory_model": "dots-studio/dots-3-note-preview:free",
+        "source_condition": "ocr_count:image_text"
+      },
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031503Z-225826bb5c",
+          "ts": 1787973311.2516708,
+          "usage": {
+            "completion_tokens": 10,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001307,
+            "cost_details": {
+              "upstream_inference_completions_cost": 3e-06,
+              "upstream_inference_cost": 0.0001307,
+              "upstream_inference_prompt_cost": 0.0001277
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1287
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031503Z-225826bb5c",
+          "ts": 1787973314.3088622,
+          "usage": {
+            "completion_tokens": 29,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00019739,
+            "cost_details": {
+              "upstream_inference_completions_cost": 9.86e-06,
+              "upstream_inference_cost": 0.00019739,
+              "upstream_inference_prompt_cost": 0.00018753
+            },
+            "is_byok": false,
+            "prompt_tokens": 2679,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 2708
+          }
+        }
+      ],
+      "resident_facing_payload_sha256": "11a7248e67f49607b5e299ad9ead8838bebfb15cc34ce30e1660bd3df0fc812d",
+      "response": "waiting for analysis...\n",
+      "run_id": "20260829T031503Z-225826bb5c",
+      "source_run_id": "20260828T210830Z-dd42e14259"
+    },
+    {
+      "a_exact_match": true,
+      "a_resident_model": "minimax/minimax-m3",
+      "a_resident_provider": "ASICloud",
+      "a_response": "19\n",
+      "all_checks_passed": true,
+      "case_id": "number_arithmetic:image_text",
+      "checks": {
+        "1_preregistered_case": true,
+        "2_payload_digest": true,
+        "3_task_text_digest": true,
+        "4_payload_and_envelope_identity": true,
+        "4b_replay_file_roundtrip": true,
+        "5_provenance_explicit": true,
+        "6_no_sensory_call": true,
+        "7_provider_is_openrouter": true,
+        "8_model_is_exact": true
+      },
+      "condition": "image_text",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_source": true,
+      "envelope_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "exact_match": false,
+      "exit_code": 2,
+      "expected_answer": "19",
+      "failure_class": "output_contract",
+      "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+      "item_id": "number_arithmetic",
+      "manifest": {
+        "alpha_git_sha": "495c38dfe127624292023c42e4090d3f0fe576bd",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T03:31:05.896574+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "number_arithmetic__image_text.json",
+          "source_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": false,
+        "run_id": "20260829T031526Z-f145d4a7a8",
+        "started_at": "2026-08-29T03:15:27.024228+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Initializing OmegaClaw agentic harness loop."
+        ],
+        "status": "terminated_without_response",
+        "termination_reason": "timeout",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4096,
+          "output_tokens": 50
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 47
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2819,
+            "output_tokens": 3
+          }
+        }
+      },
+      "paired_condition_a": {
+        "exact_match": true,
+        "payload_equal_to_c": true,
+        "resident_facing_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+        "resident_model": "minimax/minimax-m3",
+        "resident_provider": "ASICloud",
+        "response": "19\n",
+        "run_id": "20260828T211110Z-7f845bdd13",
+        "transition": "PASS -> FAIL"
+      },
+      "provenance": {
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "is_native_text_condition": false,
+        "origin_run_id": "20260828T211110Z-7f845bdd13",
+        "original_image_sha256": "b09f90be93047df284a102ddb861062d8dac21c35784b0233b3030c197e29bfb",
+        "receipt_note": "Condition C substitutes only the resident model. The resident-facing payload is byte-identical to the Condition A run named above. No perception occurred during this run.",
+        "replayed_from": "A",
+        "resident_facing_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+        "sensory_inference": false,
+        "sensory_model": "dots-studio/dots-3-note-preview:free",
+        "source_condition": "number_arithmetic:image_text"
+      },
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031526Z-f145d4a7a8",
+          "ts": 1787973334.5822303,
+          "usage": {
+            "completion_tokens": 47,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001418,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.41e-05,
+              "upstream_inference_cost": 0.0001418,
+              "upstream_inference_prompt_cost": 0.0001277
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 1216,
+              "video_tokens": 0
+            },
+            "total_tokens": 1324
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T031526Z-f145d4a7a8",
+          "ts": 1787973340.0359833,
+          "usage": {
+            "completion_tokens": 3,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.000119058,
+            "cost_details": {
+              "upstream_inference_completions_cost": 6.6e-07,
+              "upstream_inference_cost": 0.000119058,
+              "upstream_inference_prompt_cost": 0.000118398
+            },
+            "is_byok": false,
+            "prompt_tokens": 2819,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 2822
+          }
+        }
+      ],
+      "resident_facing_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "response": null,
+      "run_id": "20260829T031526Z-f145d4a7a8",
+      "source_run_id": "20260828T211110Z-7f845bdd13"
+    }
+  ],
+  "schema_version": 1,
+  "sensory_calls": 0
+}

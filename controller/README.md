@@ -947,6 +947,72 @@ Tests assert both ledgers independently: that A + B2 total exactly 42 against
 `ASICLOUD_MAX_CALLS`, and that C's frozen provider, model, billing and 3 + 3 call budget
 place it outside that allocation.
 
+## Protocol v2 Condition C -- result (frozen)
+
+Resident substitution. The resident-facing evidence is byte-identical to Condition A;
+only the resident model changes: ASICloud `minimax/minimax-m3` ->
+OpenRouter `google/gemma-4-26b-a4b-it`. **3 runs, 0 sensory calls, 0 ASICloud calls,
+3 boot + 3 episode = 6 OpenRouter resident calls.** Frozen at
+`benchmark/benchmark-v2-C.json`.
+
+All eight invariants passed for every case before its provider call, and the delivered
+envelope was checked afterwards: `envelope_payload_sha256` equals the frozen Condition A
+payload digest on all three.
+
+| case | resident-facing payload | expected | response | verdict |
+|---|---|---|---|---|
+| `number_arithmetic:text_control` | `859fee76…` | `19` | `processing benchmark ingress evidence` | **FAIL** |
+| `ocr_count:image_text` | `11a7248e…` | `M45` | `waiting for analysis...` | **FAIL** |
+| `number_arithmetic:image_text` | `d9ce39ed…` | `19` | *(none)* | **FAIL** |
+
+Exact match **0/3**. Failure decomposition, using the same frozen classifier as
+Condition A with no new judge: reasoning/composition **2**, output-contract **1**,
+sensory 0, infrastructure 0, provider availability 0.
+
+### Paired contrast against Condition A
+
+| case | payload equal | A resident | C resident | A | C | transition |
+|---|---|---|---|---|---|---|
+| `number_arithmetic:text_control` | yes | MiniMax `19` | Gemma | PASS | FAIL | PASS -> FAIL |
+| `ocr_count:image_text` | yes | MiniMax `M45` | Gemma | PASS | FAIL | PASS -> FAIL |
+| `number_arithmetic:image_text` | yes | MiniMax `19` | Gemma | PASS | FAIL | PASS -> FAIL |
+
+**All three preregistered paired cases transitioned PASS -> FAIL on resident
+substitution alone.** The evidence, the task instruction and the Alpha envelope
+semantics were identical; only the resident model differed.
+
+The two reasoning/composition failures are not empty output. Gemma used its single
+permitted turn on bookkeeping and emitted a status message instead of the answer:
+
+```
+text_control : (pin "task_goal \"Calculate sum of 12 and 7\"") (send "processing benchmark ingress evidence")
+ocr_count    : (pin "sensory_evidence_M4") (send "waiting for analysis...")
+```
+
+It parsed the task correctly in the first case and still did not answer within the
+bound. The third case reproduces the emission failure seen from MiniMax on
+`distractor_selection`, with a different resident and a different token:
+
+```
+Condition A, MiniMax : (RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))
+Condition C, Gemma   : (RESPONSE: ((Error UNKNOWN_SKILL_CALL "19")))
+```
+
+The correct answer `19` appears only inside an error. It is scored FAIL /
+output-contract and is not rounded up.
+
+Read narrowly: given the same resident-facing evidence, substituting the resident model
+changed the bounded outcome on all three of these preregistered cases. Three cases is
+not a general claim about either model, and none is made. In particular this is a
+bounded one-turn benchmark; a model that spends its single turn on bookkeeping fails
+here in a way that says nothing about its behaviour under a larger loop budget.
+
+### Cost, from receipts
+
+6 OpenRouter resident calls, 11,199 in / 177 out, **actual cost $0.001085** as reported
+by the OpenRouter receipts. Requested and resolved model was
+`google/gemma-4-26b-a4b-it` on every call: no fallback, no substitution.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
