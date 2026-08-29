@@ -262,6 +262,12 @@ Chad philosophy therefore prefers **recoverable progress** over heroic overexten
 
 <p align="center"><em>annoned by <code>x-ai/grok-imagine-image-quality</code> · <a href="assets/chad/PROVENANCE.md#leave-room">receipt</a></em></p>
 
+## Done means done
+
+If the work is finished, stop touching it.
+
+Being able to keep going is not a reason to keep going.
+
 ## Capability is not permission
 
 <p align="center">
