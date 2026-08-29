@@ -1569,6 +1569,158 @@ not evidence of architectural accuracy superiority.
 94 calls (37 multimodal + 57 text) · 11,772 input / 48,904 output tokens ·
 **$0.006711 measured** against a $2.00 cap. Caps: 37/38 multimodal, 57/60 text.
 
+## Protocol v3 -- synthesis (both tranches complete)
+
+> **Perceive once, reason many: AlphaClaw reduced multimodal inference by up to 87.5% in
+> the tested depth range and reduced measured cost at depths 2-8, while preserving
+> successful task completion in all completed episodes.**
+
+"All completed episodes" excludes provider-availability failures, and that clause is
+asserted by test rather than assumed.
+
+**V3 is not collapsed into one score.** It answered two independent questions, and
+neither result is allowed to soften or inflate the other. Every figure below is
+recomputed from the frozen artifacts by `scripts/synthesis_v3.py`; tests fail if any of
+them drifts, including the numbers quoted in this section.
+
+### V3-A -- failure attribution: cause not isolated, signature reproduced
+
+18/18 preregistered runs executed, **zero sensory calls**, every preflight passed.
+Decomposition: passed 7, reasoning/composition 9, output-contract 2, sensory 0,
+infrastructure 0, provider availability 0.
+
+Representation and turn-budget manipulations produced transitions in **both directions**.
+With **one run per cell**, representation and scheduling effects are not separable from
+run-to-run variability, so **no unique cause was established**.
+
+> **V3-A did not isolate a unique cause for the downstream failures, but it reproduced
+> the correct-token-without-valid-emission signature under multiple diagnostic
+> conditions.**
+
+The signature reproduced **twice** under MiniMax, both classified output-contract. The
+`Alpha -> resident -> stock Omega` output/skill-action seam remains a real observed
+failure surface.
+
+This is a limitation of the tranche, not a finding about the architecture. V3-A did not
+have repeats sufficient to isolate those effects causally. It is **not** evidence that
+AlphaClaw is unstable, that the architecture failed, that the symbolic handoff is
+unreliable, or that representation or turn budget do not matter.
+
+### V3-B -- perceive-once economics
+
+**Architecture result, independent of current model prices.**
+
+| N | E1 multimodal | E2 multimodal | avoided | avoidance |
+|---|---:|---:|---:|---:|
+| 1 | 1 | 1 | 0 | 0% |
+| 2 | 2 | 1 | 1 | 50% |
+| 4 | 4 | 1 | 3 | 75% |
+| 8 | 8 | 1 | 7 | 87.5% |
+
+Observed receipts matched this structure at **every** depth.
+
+> **AlphaClaw held multimodal inference constant at one perception call while
+> multimodal-resident inference grew with reasoning depth.**
+
+**Measured dollar result, from actual OpenRouter receipts.**
+
+| N | E1 | E2 | measured savings |
+|---|---:|---:|---:|
+| 1 | $0.000284 | $0.000292 | **-2.7%** |
+| 2 | $0.000174 | $0.000136 | **+22.0%** |
+| 4 | $0.000789 | $0.000489 | **+38.0%** |
+| 8 | $0.001500 | $0.000943 | **+37.1%** |
+
+> **The preregistered shallow-depth surcharge occurred at N=1, and AlphaClaw became
+> cheaper by N=2 in the observed completed comparisons.**
+
+This is not a mixed result. The sign change is the expected amortisation behaviour: pay
+one extra perception setup cost, then amortise it over cheaper text-only reasoning calls.
+**N=1 losing is part of the hypothesis, not evidence against the architecture.** The
+observed statement is only that **the measured sign changed between N=1 and N=2**; no
+break-even depth is interpolated. Every completed call carried a receipt cost, so no
+estimated dollar value is reported.
+
+**Success-adjusted utility.** The fair comparisons are the depths where both arms have
+equal success counts:
+
+| N | successes each | E1 per success | E2 per success |
+|---|---:|---:|---:|
+| 4 | 2 | $0.000394 | **$0.000245** |
+| 8 | 2 | $0.000750 | **$0.000472** |
+
+> **At N=4 and N=8, AlphaClaw achieved the same success count as the multimodal-resident
+> baseline at lower measured cost per successful episode.**
+
+No superiority is claimed at N=2, where only one comparable item survived.
+
+### The availability burst
+
+Four HTTP 429 upstream rate-limit failures, contiguous episodes 2-5. They are **upstream
+provider availability failures**: not wrong answers, not AlphaClaw-specific, not evidence
+of architecture instability, and not retried.
+
+**20 successes · 4 availability failures · 0 wrong answers.** They reduced coverage --
+`98 planned - 4 unissued = 94 actual calls`, and fewer comparable task pairs at depth 2.
+
+> **A short provider-rate-limit burst reduced sample coverage but did not create
+> incorrect model outputs; all completed task episodes produced correct final answers.**
+
+Availability failures are never converted into accuracy failures.
+
+### The E2 sensory boundary
+
+Every E2 episode: exactly one perception call, no image after perception, and the same
+handoff reused with a single identical digest through all subsequent reasoning calls.
+Seven of eight handoffs contained every required fact; the eighth is the 429 failure, not
+an incorrect handoff. No handoff was repaired or replaced with oracle ground truth.
+
+> **Every completed E2 perception produced a complete task-relevant handoff, and that
+> handoff was reused without renewed multimodal inference.**
+
+Narrow to this benchmark population.
+
+### Combined conclusion
+
+> Protocol v3 sharpened two aspects of AlphaClaw. The diagnostic tranche did not isolate
+> a unique cause for downstream output failures, though the correct-token/failed-emission
+> signature reproduced. Separately, the economic tranche showed the intended
+> perceive-once amortisation: multimodal-call demand stayed fixed at one per AlphaClaw
+> episode while the multimodal-resident baseline scaled with reasoning depth, reaching
+> 87.5% multimodal-call avoidance at depth 8. Under the measured Qwen/OpenRouter prices,
+> AlphaClaw was slightly more expensive at depth 1 but cheaper at depths 2, 4 and 8; at
+> depths 4 and 8 it matched baseline success while reducing measured cost per successful
+> episode.
+
+**What this is not.** Not that AlphaClaw is always cheaper. Not that AlphaClaw is
+universally more accurate. Not that the break-even point is universally N=2. Not that
+Qwen pricing generalises to other providers. Not that all perception-once architectures
+will behave similarly.
+
+### The V2 -> V3 arc
+
+V2 established that the symbolic sensory boundary was portable across tested sensory
+models, that sensory substitution produced **0/3** paired outcome transitions, that
+resident substitution produced **3/3 PASS->FAIL**, and that output-channel behaviour was
+independently observable. V3 then probed the downstream failure seam diagnostically and
+quantified the economics of externalising perception once. V2 is not rewritten.
+
+| question | answer |
+|---|---|
+| **V2:** is the decomposition operationally real? | yes, under the tested conditions |
+| **V3-A:** why do downstream failures happen? | cause not isolated; output-emission signature reproduced |
+| **V3-B:** does the decomposition buy anything economically? | yes -- multimodal inference is amortised and measured cost falls at deeper tested reasoning depths |
+
+### Frozen inputs
+
+| | |
+|---|---|
+| `protocol-v3.json` | `a65cbaad…` |
+| `benchmark-v3-A.json` | `98ab018e…` |
+| `benchmark-v3-B.json` | `f5ddcf3d…` |
+| `v3b-ground-truth.json` | `35ce510b…` |
+| v2 artifacts | `b5ee0c37…` `847828d4…` `644f36e4…` `8b6cc455…` `b46ea2ce…` |
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
