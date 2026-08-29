@@ -154,7 +154,8 @@ def test_every_run_obeyed_one_boot_and_one_episode(runs) -> None:
         assert gateway["fatal_error"] is None
 
 
-def test_cumulative_asicloud_usage_is_within_the_v2_caps(runs, condition_a) -> None:
+def test_cumulative_asicloud_usage_exhausts_the_allocation_exactly(runs) -> None:
+    """A + B2 consume the ASICloud allocation exactly: 36 + 6 == 42 == the cap."""
     def total(records):
         calls = tokens_in = tokens_out = 0
         for record in records:
@@ -170,12 +171,41 @@ def test_cumulative_asicloud_usage_is_within_the_v2_caps(runs, condition_a) -> N
         (ROOT / "benchmark" / "benchmark-v2-A.json").read_text(encoding="utf-8"))["runs"]
     a_calls, a_in, a_out = total(whole_a)
     b_calls, b_in, b_out = total(runs.values())
-    assert (a_calls, b_calls) == (36, 6)
-    assert a_calls + b_calls <= v2.ASICLOUD_MAX_CALLS
+
+    assert a_calls == 36
+    assert b_calls == 6
+    assert a_calls + b_calls == 42
+    assert a_calls + b_calls == v2.ASICLOUD_MAX_CALLS
     assert a_in + b_in <= v2.ASICLOUD_MAX_INPUT_TOKENS
     assert a_out + b_out <= v2.ASICLOUD_MAX_OUTPUT_TOKENS
-    # A + B2 consume the call cap exactly; Condition C has no call headroom left.
-    assert a_calls + b_calls == v2.ASICLOUD_MAX_CALLS
+
+
+def test_condition_c_does_not_draw_on_the_asicloud_allocation() -> None:
+    """The exhausted ASICloud cap does not block C: C bills OpenRouter.
+
+    An exhausted allocation means no further ASICloud condition may run without an
+    amendment. It says nothing about a condition on a separate billing path.
+    """
+    frozen = json.loads(
+        (ROOT / "benchmark" / "protocol-v2.json").read_text(encoding="utf-8"))
+    condition_c = next(c for c in frozen["conditions"] if c["condition_id"] == "C")
+
+    assert condition_c["resident_provider"] == "openrouter"
+    assert condition_c["resident_billing"] == "openrouter"
+    assert condition_c["resident_model"] == "google/gemma-4-26b-a4b-it"
+    assert condition_c["sensory_calls"] == 0
+    # the module constants agree with the frozen artifact
+    assert v2.RESIDENT_ALTERNATE_PROVIDER == "openrouter"
+    assert v2.RESIDENT_ALTERNATE_MODEL == "google/gemma-4-26b-a4b-it"
+    # C's resident path is not the ASICloud one, so its calls are not counted there
+    assert condition_c["resident_provider"] != v2.RESIDENT_PRIMARY_PROVIDER
+    assert condition_c["resident_billing"] != "asicloud"
+
+
+def test_asicloud_cap_was_not_raised() -> None:
+    assert v2.ASICLOUD_MAX_CALLS == 42
+    assert v2.ASICLOUD_MAX_INPUT_TOKENS == 124_572
+    assert v2.ASICLOUD_MAX_OUTPUT_TOKENS == 21_714
 
 
 # --- results, preserved literally ---------------------------------------------

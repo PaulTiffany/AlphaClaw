@@ -915,9 +915,14 @@ about emission behaviour in general, and no causal claim beyond these three is m
 | input tokens | 86,057 | 124,572 | 38,515 |
 | output tokens | 7,771 | 21,714 | 13,943 |
 
-**Conditions A and B2 together consume the ASICloud call cap exactly.** Condition C has
-no call headroom left under Protocol v2 and cannot be run without an amendment raising
-the cap. A test asserts this.
+**Protocol v2's ASICloud allocation is now exhausted exactly at 42 calls.** That means
+no further *ASICloud* condition may run without an amendment.
+
+It does **not** block Condition C. C's preregistered resident is OpenRouter
+`google/gemma-4-26b-a4b-it` with `resident_billing: openrouter` and `sensory_calls: 0`,
+so **Condition C remains executable and does not consume ASICloud call headroom.** Tests
+assert both halves: the allocation is exhausted at exactly 42, and C's frozen billing
+path is OpenRouter rather than ASICloud. The ASICloud cap is not raised.
 
 ## Unbounded Omega is a different population
 
