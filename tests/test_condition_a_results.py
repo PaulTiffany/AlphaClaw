@@ -353,5 +353,12 @@ def test_condition_a_artifact_contains_only_condition_a_runs(data, runs) -> None
     assert all(r["condition"] in analyze.CONDITIONS for r in runs)
 
 
-def test_condition_c_still_not_run() -> None:
-    assert not (ROOT / "benchmark" / "benchmark-v2-C.json").exists()
+def test_condition_c_did_not_contaminate_the_condition_a_artifact(data) -> None:
+    """C has since run. The invariant is that A's artifact stayed pure: every run is a
+    Condition A run on the ASICloud MiniMax resident."""
+    assert data["condition_id"] == "A"
+    assert data["resident_provider"] == "asicloud"
+    assert data["resident_model"] == "minimax/minimax-m3"
+    for run in data["runs"]:
+        assert run["manifest"]["upstream_provider"] == "ASICloud"
+        assert run["manifest"]["requested_model"] == "minimax/minimax-m3"

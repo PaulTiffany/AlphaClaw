@@ -323,8 +323,13 @@ def test_distractor_selection_failed_identically_in_both_conditions(runs, condit
 # --- scope --------------------------------------------------------------------
 
 
-def test_condition_c_not_run() -> None:
-    assert not (ROOT / "benchmark" / "benchmark-v2-C.json").exists()
+def test_condition_c_did_not_contaminate_the_b2_artifact(data, runs) -> None:
+    """C has since run on OpenRouter. B2 stays an ASICloud MiniMax condition."""
+    assert data["condition_id"] == "B2"
+    assert data["resident_provider"] == "asicloud"
+    for run in runs.values():
+        assert run["manifest"]["upstream_provider"] == "ASICloud"
+        assert run["manifest"]["requested_model"] == "minimax/minimax-m3"
 
 
 def test_no_new_scorer_was_introduced() -> None:
