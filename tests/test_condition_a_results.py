@@ -341,14 +341,17 @@ def test_classifier_correction_chronology_is_documented(data) -> None:
     assert "frozen sensory-scorer verdicts" in unchanged
 
 
-def test_no_b2_or_c_results_are_present(data, runs) -> None:
-    """No B2 replay and no C run. The B1/Qwen mention in the scorer observation is a
-    cross-model citation, not a result, so the check is on executed runs."""
+def test_condition_a_artifact_contains_only_condition_a_runs(data, runs) -> None:
+    """B2 has since run, so the invariant is that A's artifact stayed pure -- every run
+    is a Condition A run on the dots sensory model. The B1/Qwen mention in the scorer
+    observation is a cross-model citation, not a result."""
     assert data["condition_id"] == "A"
     v2 = _load("protocol_v2_condA_d", SCRIPTS / "protocol_v2.py")
     assert analyze.sensory_totals(runs)["resolved_models"] == [v2.SENSORY_PRIMARY]
     assert all(r["sensory_model_resolved"] != v2.SENSORY_ALTERNATE
                for r in runs if r.get("sensory_model_resolved"))
     assert all(r["condition"] in analyze.CONDITIONS for r in runs)
-    assert not (ROOT / "benchmark" / "benchmark-v2-B2.json").exists()
+
+
+def test_condition_c_still_not_run() -> None:
     assert not (ROOT / "benchmark" / "benchmark-v2-C.json").exists()
