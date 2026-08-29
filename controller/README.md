@@ -1129,6 +1129,145 @@ claimed.
 A single Omega SHA, a single ThreadKeeper SHA and a single image ID cover **all 24
 bounded runs** across A, B2 and C, with commit and byte pins true on every one.
 
+## Protocol v3 -- preregistration (design only, no results)
+
+Two **independent** experiments. Their scores are never combined and neither is used to
+tune the other. Frozen at `benchmark/protocol-v3.json`
+(`d183b8f38e89a0380f543642535d02172220951e4922c55cadca847991d47d39`). No provider call
+was made to produce this design.
+
+V3 opens its **own** allocations. The Protocol v2 ASICloud allocation stays exhausted at
+42/42 and its cap is **not** raised, reused or reinterpreted.
+
+### V3-A -- failure attribution
+
+When AlphaClaw fails after the sensory boundary, is the failure associated with
+information loss at the boundary, representation form, instruction salience, one-turn
+scheduling, or output-channel / skill-selection behaviour? **The answer is not assumed.**
+The interpretation matrix is frozen before inference and every branch is reachable,
+including "inspect information preservation before attributing any downstream cause".
+
+Diagnostic cases come only from **already-observed v2 failures**. This is a diagnostic
+population, not a representative accuracy benchmark.
+
+| case | item | resident | factors |
+|---|---|---|---|
+| **A1** | `distractor_selection` (A:image_text) | ASICloud `minimax/minimax-m3` | R1-R4 x {1, 2} turns |
+| **A2** | `number_arithmetic` (A:image_text) | OpenRouter `google/gemma-4-26b-a4b-it` | R1-R4 x {1, 2} turns |
+| **A3** | `number_arithmetic` (A:text_control) | OpenRouter `google/gemma-4-26b-a4b-it` | {1, 2} turns (native text has no handoff) |
+
+18 runs; **20 ASICloud + 25 OpenRouter resident calls, and zero new sensory calls** --
+V3-A replays frozen v2 handoffs.
+
+**Representation factors.** Every variant carries the same task-relevant information and
+the same frozen task-instruction bytes; only form differs.
+
+- **R1** the exact current AlphaClaw payload, unchanged. A test asserts R1 reproduces the
+  frozen v2 payload **byte-for-byte**, so R1 is genuinely the current representation
+  rather than a re-rendering of it.
+- **R2** only the mechanically required facts, same schema.
+- **R3** the same facts as deterministic sentences from a frozen template table -- no LLM
+  summariser; the renderer imports only `json`.
+- **R4** the same facts with task structure explicit (`task_instruction`,
+  `observations`). No expected answer.
+
+**Answer leakage is prohibited** and checked case-sensitively per item: `RED` must never
+appear, while a required fact naming the colour `red` is the information the task
+legitimately needs.
+
+**Turn budget.** One turn stays the architectural baseline. Two turns is a **diagnostic
+control, not the AlphaClaw population**. No further levels in this tranche.
+
+**Instruction-position receipt.** `scripts/instruction_receipt.py` records observable
+positional facts only -- **no salience score**, and per-segment token counts are recorded
+as unavailable rather than estimated. Run offline against a real frozen v2 envelope it
+already shows why this matters:
+
+| component | chars before | chars after |
+|---|---|---|
+| Alpha instruction | 15 | 3,134 |
+| human task | 1,457 | 1,669 |
+| symbolic evidence | 1,604 | 61 |
+
+Order: Alpha instruction, human task, symbolic evidence; **1,343 characters** separate
+the preserved prepend from the answer-required task. That is the sense in which a
+prepend can be preserved and still operationally distant.
+
+### V3-B -- economic utility
+
+What does perceive-once + text-only-thereafter save versus keeping multimodal inference
+resident for every reasoning call?
+
+| arm | structure |
+|---|---|
+| **E1** multimodal resident | media available on every reasoning call |
+| **E2** AlphaClaw | one sensory inference, symbolic handoff reused |
+| **E3** text oracle | facts supplied as text; a control, not a deployable competitor |
+
+**Fairness.** All three arms use **one model**, `qwen/qwen3.7-flash`, which is multimodal
+and also accepts text-only input. Capability and price schedule are therefore identical
+across arms and the only thing varying is whether the image is attached to each call.
+This removes the model-price confound rather than comparing a cheap model to an
+expensive one and calling the gap "AlphaClaw savings".
+
+**Disclosure.** E1 cannot run through the bounded controller, because Omega is text-only
+and AlphaClaw must never mutate outbound Omega provider bodies to attach images. All
+three arms are therefore measured with one direct provider harness held constant across
+arms, and **E1 is not AlphaClaw**. Deployed AlphaClaw cost, where the text-only resident
+is a different model, is an **estimate** reported separately from measured call
+avoidance.
+
+**Task family.** `chained_accumulation`: one image shows eight integers in a fixed order;
+step *i* adds the *i*-th integer. Ground truth after N steps is the sum of the first N --
+mechanical, no judge. The handoff is constant across depths; only the number of
+sequential reasoning calls varies. The generator lands in a **new** module so every v2
+item digest is untouched.
+
+**Depths** 1, 2, 4, 8. **38 multimodal + 60 text-only calls.**
+
+**Primary metric is model-independent: multimodal calls avoided per episode.**
+
+| N | E1 multimodal | E2 multimodal | avoided | avoidance |
+|---|---|---|---|---|
+| 1 | 1 | 1 | 0 | 0% |
+| 2 | 2 | 1 | 1 | 50% |
+| 4 | 4 | 1 | 3 | 75% |
+| 8 | 8 | 1 | 7 | 87.5% |
+
+This table is **architectural arithmetic, not an empirical result** -- it is the expected
+call-structure implication, and the benchmark's job is to verify the actual receipts
+match it.
+
+**Frozen cost equations.** `C_MM(N) = N * C_multimodal`;
+`C_Alpha(N) = C_multimodal + (N-1) * C_text`;
+`Savings(N) = (N-1) * (C_multimodal - C_text)`; fraction `1 - C_Alpha(N)/C_MM(N)`;
+stationary limit `1 - C_text/C_multimodal`. These are analytic expectations. Dollars from
+receipts are labelled **measured**; anything from catalog pricing is labelled
+**estimated** and never reported as measured.
+
+**Success-adjusted economics.** The primary economic figure is **cost per successful
+episode**. With zero successes it is *undefined*, not favourable, and a cheaper
+architecture that fails the frozen success criterion is never called economically
+superior -- a rule the v2 resident-substitution result makes necessary.
+
+### Caps, policy and stop conditions
+
+| | |
+|---|---|
+| V3-A | 20 ASICloud + 25 OpenRouter resident calls, **0** sensory |
+| V3-B | 38 multimodal + 60 text = 98 calls |
+| grand total | **143 provider calls** |
+| tokens | 520,000 in / 230,000 out |
+| dollars | V3-A $0.50, V3-B $2.00, total **$2.50** |
+
+No automatic model fallback. No retry-until-pass. Provider availability failures remain
+evidence. No prompt tuning after results. No changing representation rules after
+observing results. No broadening the v2 scorer retrospectively. No LLM judge.
+
+Any of these halts before spending: a v2 artifact digest mismatch, a pin or byte
+mismatch, a changed stock image id, a representation leaking the expected answer, a
+failed preflight invariant, or any call/token/dollar cap.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
