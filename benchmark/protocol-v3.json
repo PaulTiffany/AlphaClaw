@@ -1,0 +1,627 @@
+{
+  "caps": {
+    "V3A_asicloud_calls": 20,
+    "V3A_max_cost_usd": 0.5,
+    "V3A_openrouter_resident_calls": 25,
+    "V3A_sensory_calls": 0,
+    "V3B_max_cost_usd": 2.0,
+    "V3B_multimodal_calls": 38,
+    "V3B_text_calls": 60,
+    "V3B_total_calls": 98,
+    "max_cost_usd": 2.5,
+    "max_input_tokens": 520000,
+    "max_output_tokens": 230000,
+    "v2_asicloud_allocation": "separate and untouched; v2 remains exhausted at 42/42 and its cap is NOT raised"
+  },
+  "independence": "V3-A and V3-B are separate experiments; their scores are never combined and neither tunes the other",
+  "policy": [
+    "no automatic model fallback",
+    "no retry-until-pass",
+    "provider availability failures remain evidence",
+    "no prompt tuning after results",
+    "no changing representation rules after observing results",
+    "no broadening the v2 scorer retrospectively",
+    "no LLM judge anywhere",
+    "V3-A and V3-B scores are never combined",
+    "neither section is used to tune the other",
+    "V3-A is a diagnostic population, not a representative accuracy benchmark"
+  ],
+  "protocol_version": "v3",
+  "scoring": {
+    "criterion": "exact match under the already-frozen v2 task contracts",
+    "failure_decomposition": "scripts/analyze_condition_a.py, unchanged",
+    "llm_judge": false,
+    "new_scorer_introduced": false,
+    "sensory_scorer": "scripts/score_handoff.py, unchanged and not broadened"
+  },
+  "sections": {
+    "V3A": {
+      "attribution_rule": [
+        {
+          "held_fixed": [
+            "resident",
+            "task facts",
+            "turn budget",
+            "Omega substrate"
+          ],
+          "manipulation": "representation change (R1 vs R2/R3/R4)",
+          "may_implicate": "representation effects",
+          "may_not_conclude": "a unique causal source"
+        },
+        {
+          "held_fixed": [
+            "representation",
+            "resident",
+            "task facts",
+            "Omega substrate"
+          ],
+          "manipulation": "turn-budget change (1 vs 2 turns)",
+          "may_implicate": "scheduling / turn budget",
+          "may_not_conclude": "a unique causal source"
+        },
+        {
+          "held_fixed": [
+            "across representations and both turn budgets"
+          ],
+          "manipulation": "repeated correct internal token followed by invalid Omega skill/action emission",
+          "may_implicate": "the output / skill-action interface",
+          "may_not_conclude": "a unique causal source"
+        }
+      ],
+      "baseline_turn_budget": 1,
+      "call_budget": {
+        "asicloud_calls": 20,
+        "asicloud_cap": 20,
+        "openrouter_cap": 25,
+        "openrouter_resident_calls": 25,
+        "runs": 18,
+        "sensory_calls": 0
+      },
+      "candidate_sources": [
+        "Alpha representation/instruction effects",
+        "resident behaviour",
+        "one-turn scheduling",
+        "stock Omega skill/action-contract interaction",
+        "combinations of the above"
+      ],
+      "cases": [
+        {
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "observed_v2_failure": "sensory evidence mechanically correct 4/4; correct token RED present internally; emitted as UNKNOWN_SKILL_CALL \"RED\"; no valid channel response. Reproduced under both dots and Qwen sensory handoffs.",
+          "representations": [
+            "R1_full_symbolic",
+            "R2_minimal_symbolic",
+            "R3_plain_language",
+            "R4_task_structured"
+          ],
+          "resident": [
+            "asicloud",
+            "minimax/minimax-m3"
+          ],
+          "resident_model": "minimax/minimax-m3",
+          "resident_provider": "asicloud",
+          "source_condition": "A:image_text"
+        },
+        {
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "observed_v2_failure": "correct token 19 present internally; emitted as UNKNOWN_SKILL_CALL \"19\"; no valid channel response.",
+          "representations": [
+            "R1_full_symbolic",
+            "R2_minimal_symbolic",
+            "R3_plain_language",
+            "R4_task_structured"
+          ],
+          "resident": [
+            "openrouter",
+            "google/gemma-4-26b-a4b-it"
+          ],
+          "resident_model": "google/gemma-4-26b-a4b-it",
+          "resident_provider": "openrouter",
+          "source_condition": "A:image_text"
+        },
+        {
+          "case_id": "A3",
+          "item_id": "number_arithmetic",
+          "observed_v2_failure": "task parsed correctly; the one permitted turn produced bookkeeping (pin task_goal) and a status message rather than the answer.",
+          "representations": [],
+          "resident": [
+            "openrouter",
+            "google/gemma-4-26b-a4b-it"
+          ],
+          "resident_model": "google/gemma-4-26b-a4b-it",
+          "resident_provider": "openrouter",
+          "source_condition": "A:text_control"
+        }
+      ],
+      "failure_surface": [
+        "Alpha representation / instruction",
+        "resident model",
+        "stock OmegaClaw skill/action contract"
+      ],
+      "held_fixed": [
+        "task",
+        "task-relevant facts",
+        "expected answer",
+        "resident model",
+        "provider",
+        "OmegaClaw and ThreadKeeper pins",
+        "stock Omega image",
+        "output contract",
+        "task instruction bytes (except where R4 varies task STRUCTURE, never the bytes)",
+        "sensory evidence source (frozen v2 handoffs; no new sensory inference)"
+      ],
+      "instruction_position_receipt": {
+        "module": "scripts/instruction_receipt.py",
+        "omega_context_located_when_observable": true,
+        "per_segment_tokens_available": false,
+        "records": [
+          "exact instruction text",
+          "character offsets",
+          "order relative to Omega context, human task and symbolic evidence",
+          "characters before and after",
+          "stock Omega prompt / skill-action context wherever mechanically locatable",
+          "literal vs JSON-escaped match mode",
+          "whole-request tokens where a receipt supplies them"
+        ],
+        "salience_score_reported": false
+      },
+      "interpretation_limit": "No branch of this matrix may be called a universal cause from one task, one resident, or one tranche.",
+      "interpretation_matrix": [
+        {
+          "observation": "R1 FAIL and R2 PASS at the same turn budget",
+          "reading": "evidence that representation richness/form affects the outcome"
+        },
+        {
+          "observation": "R1 FAIL and R3 PASS with the same facts and budget",
+          "reading": "evidence that representation form affects the outcome"
+        },
+        {
+          "observation": "R1 FAIL and R4 PASS at the same turn budget",
+          "reading": "evidence that explicit task structure affects the outcome"
+        },
+        {
+          "observation": "one-turn FAIL and two-turn PASS on the same representation",
+          "reading": "evidence that the one-turn scheduling constraint affects the outcome"
+        },
+        {
+          "observation": "correct internal token repeatedly present but emission invalid across representations and budgets",
+          "reading": "evidence pointing toward output-channel / skill-selection behaviour"
+        },
+        {
+          "observation": "all representations fail with missing or wrong task facts",
+          "reading": "inspect information preservation at the boundary BEFORE attributing any downstream cause"
+        }
+      ],
+      "no_assumed_cause": "V3-A must NOT assume in advance that a failure such as UNKNOWN_SKILL_CALL \"RED\" is caused by Alpha's symbolic representation. That emission occurs at the stock OmegaClaw skill/action boundary, and Alpha, the resident and the Omega action contract are all live candidates until an experiment isolates one.",
+      "non_attribution_constraint": "Do not claim a unique causal source unless the experiment actually isolates it. Evidence may be reported as consistent with a factor; it may not be reported as the cause. The system under test is the whole seam: Alpha -> resident -> stock Omega.",
+      "outcomes": [
+        "exact-match response",
+        "valid send emission present",
+        "expected token present internally but not emitted",
+        "failure class under existing v2 semantics",
+        "boot calls",
+        "episode calls",
+        "raw idle ticks (lifecycle observation only)",
+        "provider usage",
+        "two-turn only: which turn first contains the correct internal answer, and which first contains a valid user-facing answer"
+      ],
+      "planned_runs": [
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R1_full_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R1_full_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R2_minimal_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R2_minimal_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R3_plain_language",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R3_plain_language",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R4_task_structured",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A1",
+          "item_id": "distractor_selection",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "minimax/minimax-m3",
+          "provider": "asicloud",
+          "representation": "R4_task_structured",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R1_full_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R1_full_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R2_minimal_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R2_minimal_symbolic",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R3_plain_language",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R3_plain_language",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R4_task_structured",
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A2",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": "R4_task_structured",
+          "sensory_calls": 0,
+          "turn_budget": 2
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A3",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 1,
+          "max_provider_calls": 2,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": null,
+          "sensory_calls": 0,
+          "turn_budget": 1
+        },
+        {
+          "boot_calls": 1,
+          "case_id": "A3",
+          "item_id": "number_arithmetic",
+          "max_episode_calls": 2,
+          "max_provider_calls": 3,
+          "model": "google/gemma-4-26b-a4b-it",
+          "provider": "openrouter",
+          "representation": null,
+          "sensory_calls": 0,
+          "turn_budget": 2
+        }
+      ],
+      "population_note": "diagnostic cases drawn from observed v2 failures; NOT a representative accuracy benchmark",
+      "question": "When AlphaClaw fails after the sensory boundary, is the failure associated with information loss at the symbolic boundary, representation form/richness, instruction salience, one-turn scheduling, or output-channel / skill-selection behaviour?",
+      "representations": {
+        "R1": "exact current AlphaClaw payload, unchanged",
+        "R2": "only the mechanically required facts, same schema",
+        "R3": "the same required facts as deterministic sentences",
+        "R4": "the same required facts with task structure explicit",
+        "answer_leakage": "prohibited; checked case-sensitively per item",
+        "shared": "every variant carries the same frozen task instruction bytes and the same task-relevant information"
+      },
+      "turn_budgets": [
+        1,
+        2
+      ],
+      "two_turn_role": "diagnostic control, not the AlphaClaw population"
+    },
+    "V3B": {
+      "architectures": {
+        "E1": "multimodal-resident baseline; media available every call",
+        "E2": "AlphaClaw; one sensory inference, symbolic handoff reused",
+        "E3": "text-oracle control; facts supplied as text, not deployable"
+      },
+      "call_budget": {
+        "depths": [
+          1,
+          2,
+          4,
+          8
+        ],
+        "items": 2,
+        "multimodal_calls": 38,
+        "multimodal_cap": 38,
+        "repeats": 1,
+        "text_calls": 60,
+        "text_cap": 60,
+        "total_calls": 98,
+        "total_cap": 98
+      },
+      "cost_equations": {
+        "C_Alpha(N)": "C_multimodal + (N - 1) * C_text",
+        "C_MM(N)": "N * C_multimodal",
+        "Savings(N)": "(N - 1) * (C_multimodal - C_text)",
+        "fraction": "1 - C_Alpha(N) / C_MM(N)",
+        "stationary_limit": "1 - C_text / C_multimodal",
+        "status": "analytic expectations; receipts test the architecture"
+      },
+      "cost_labelling": {
+        "estimated": "derived from catalog pricing; never called measured",
+        "measured": "derived from provider receipts"
+      },
+      "depths": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "economic_metrics": [
+        "multimodal calls",
+        "text-only calls",
+        "input tokens",
+        "output tokens",
+        "actual dollar cost from receipts",
+        "cost per successful episode",
+        "cost per correct answer",
+        "latency if reliably receipt-derived",
+        "exact-match success"
+      ],
+      "expected_call_structure": [
+        {
+          "E1_multimodal_resident": {
+            "multimodal_calls": 1,
+            "text_calls": 0
+          },
+          "E2_alphaclaw": {
+            "multimodal_calls": 1,
+            "text_calls": 1
+          },
+          "E3_text_oracle": {
+            "multimodal_calls": 0,
+            "text_calls": 1
+          },
+          "depth": 1,
+          "label": "architectural arithmetic; not an empirical result",
+          "multimodal_avoidance_fraction": 0.0,
+          "multimodal_calls_avoided": 0
+        },
+        {
+          "E1_multimodal_resident": {
+            "multimodal_calls": 2,
+            "text_calls": 0
+          },
+          "E2_alphaclaw": {
+            "multimodal_calls": 1,
+            "text_calls": 2
+          },
+          "E3_text_oracle": {
+            "multimodal_calls": 0,
+            "text_calls": 2
+          },
+          "depth": 2,
+          "label": "architectural arithmetic; not an empirical result",
+          "multimodal_avoidance_fraction": 0.5,
+          "multimodal_calls_avoided": 1
+        },
+        {
+          "E1_multimodal_resident": {
+            "multimodal_calls": 4,
+            "text_calls": 0
+          },
+          "E2_alphaclaw": {
+            "multimodal_calls": 1,
+            "text_calls": 4
+          },
+          "E3_text_oracle": {
+            "multimodal_calls": 0,
+            "text_calls": 4
+          },
+          "depth": 4,
+          "label": "architectural arithmetic; not an empirical result",
+          "multimodal_avoidance_fraction": 0.75,
+          "multimodal_calls_avoided": 3
+        },
+        {
+          "E1_multimodal_resident": {
+            "multimodal_calls": 8,
+            "text_calls": 0
+          },
+          "E2_alphaclaw": {
+            "multimodal_calls": 1,
+            "text_calls": 8
+          },
+          "E3_text_oracle": {
+            "multimodal_calls": 0,
+            "text_calls": 8
+          },
+          "depth": 8,
+          "label": "architectural arithmetic; not an empirical result",
+          "multimodal_avoidance_fraction": 0.875,
+          "multimodal_calls_avoided": 7
+        }
+      ],
+      "expected_call_structure_label": "architectural arithmetic, not an empirical result; the benchmark verifies that actual receipts match it",
+      "fairness_rule": "One model serves all three arms, so capability and price schedule are identical across arms and only input modality per call varies. Architecture-measured call avoidance is reported separately from any model-price-dependent dollar extrapolation, and cheap-vs-expensive model pairs are never presented as 'AlphaClaw savings'.",
+      "harness_note": "E1/E2/E3 are measured with a single direct provider harness. E1 is not AlphaClaw and does not run Omega. Deployed AlphaClaw cost, where the text-only resident is a different model, is an ESTIMATE and is reported separately from measured call avoidance.",
+      "model": {
+        "model": "qwen/qwen3.7-flash",
+        "provider": "openrouter",
+        "used_by": [
+          "E1_multimodal_resident",
+          "E2_alphaclaw",
+          "E3_text_oracle"
+        ]
+      },
+      "primary_metric": "multimodal calls avoided per episode (model-independent)",
+      "question": "For a task needing multimodal perception then iterative reasoning, what does perceive-once + text-only-thereafter save versus keeping multimodal inference resident for every reasoning call?",
+      "success_adjusted": "cost per SUCCESSFUL episode is the primary economic comparison; an architecture failing the frozen success criterion is reported but never called economically superior",
+      "task_family": {
+        "depth_varies": "number of sequential resident calls, not the stimulus",
+        "generator": "deterministic; extends the existing stdlib PNG generator in a NEW module so that every v2 item digest is untouched",
+        "ground_truth": "sum of the first N integers in the frozen order; mechanical",
+        "handoff_constant_across_depths": true,
+        "llm_judge": false,
+        "name": "chained_accumulation",
+        "stimulus": "one image showing eight integers in a fixed left-to-right order",
+        "task": "step i adds the i-th integer to the running total; after N steps reply with the running total, digits only",
+        "tuning_after_results": "prohibited"
+      }
+    }
+  },
+  "status": "preregistration; no result recorded",
+  "stop_conditions": [
+    "any v2 artifact digest mismatch -> halt the entire tranche",
+    "OmegaClaw or ThreadKeeper commit/byte pin mismatch -> halt the entire tranche",
+    "stock Omega image id changed -> halt the entire tranche",
+    "a representation leaks the item's exact expected answer -> halt that case",
+    "a preflight invariant fails for a case -> that case makes no provider call",
+    "any call cap reached -> halt that section",
+    "any token or dollar cap reached -> halt that section",
+    "provider availability failure -> record as evidence; no substitute, no retry",
+    "scorer or v2 conclusions would need changing to make a result work -> halt"
+  ],
+  "total_projected_calls": {
+    "V3A_asicloud": 20,
+    "V3A_openrouter_resident": 25,
+    "V3A_sensory": 0,
+    "V3B_multimodal": 38,
+    "V3B_text": 60,
+    "grand_total": 143
+  },
+  "unchanged_from_v2": [
+    "all v2 artifacts",
+    "the v2 scorer and its relation lexicon",
+    "the v2 conclusions",
+    "pinned OmegaClaw",
+    "pinned ThreadKeeper",
+    "the stock Omega image",
+    "the sensory boundary",
+    "the v2 ASICloud allocation"
+  ]
+}
