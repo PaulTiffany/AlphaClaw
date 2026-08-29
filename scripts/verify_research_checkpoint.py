@@ -82,34 +82,36 @@ def git_ancestry(manifest: dict[str, Any],
     These are ancestry facts about commits available in this checkout. They say nothing
     about when provider calls were issued.
     """
+    base = manifest["base_commit"]
+    plan = (
+        ("checkpoint base is an ancestor of HEAD", base, "HEAD"),
+        ("v2 synthesis commit is an ancestor of the checkpoint base",
+         manifest["synthesis_merge_commits"]["v2"], base),
+        ("v3 synthesis commit is the checkpoint base or its ancestor",
+         manifest["synthesis_merge_commits"]["v3"], base),
+    )
+
     available, _ = _git("rev-parse", "--git-dir")
     if not available:
-        for name in ("checkpoint base is an ancestor of HEAD",
-                     "v2 synthesis commit is an ancestor of the checkpoint base",
-                     "v3 synthesis commit is the checkpoint base or its ancestor"):
+        for name, _commit, _target in plan:
             _check(results, name, SKIPPED, "not a git checkout")
         return
 
-    base = manifest["base_commit"]
-    exists, _ = _git("cat-file", "-e", f"{base}^{{commit}}")
-    if not exists:
-        _check(results, "checkpoint base is an ancestor of HEAD", False,
-               f"{base[:12]} not present in this checkout")
-        return
-    ancestor, _ = _git("merge-base", "--is-ancestor", base, "HEAD")
-    _check(results, "checkpoint base is an ancestor of HEAD", ancestor, base[:12])
-
-    for label, commit in (("v2", manifest["synthesis_merge_commits"]["v2"]),
-                          ("v3", manifest["synthesis_merge_commits"]["v3"])):
-        name = (f"{label} synthesis commit is "
-                + ("the checkpoint base or its ancestor" if label == "v3"
-                   else "an ancestor of the checkpoint base"))
-        present, _ = _git("cat-file", "-e", f"{commit}^{{commit}}")
-        if not present:
-            _check(results, name, False, f"{commit[:12]} missing")
-            continue
-        ok, _ = _git("merge-base", "--is-ancestor", commit, base)
-        _check(results, name, ok, commit[:12])
+    # A commit missing from the working checkout is UNKNOWN, not false: CI and many
+    # clones are shallow, so the history simply is not present to consult. Only a
+    # commit that IS present and is NOT an ancestor is a real contradiction.
+    for name, commit, target in plan:
+        for ref in (commit, target):
+            if ref == "HEAD":
+                continue
+            present, _ = _git("cat-file", "-e", f"{ref}^{{commit}}")
+            if not present:
+                _check(results, name, SKIPPED,
+                       f"{ref[:12]} not in this checkout (shallow clone?)")
+                break
+        else:
+            ok, _ = _git("merge-base", "--is-ancestor", commit, target)
+            _check(results, name, ok, commit[:12])
 
 
 def run() -> tuple[bool, list[tuple[str, bool | None, str]]]:

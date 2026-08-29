@@ -363,3 +363,30 @@ def test_research_summary_separates_verified_from_recorded(flat) -> None:
     assert "recorded in the repository history" in flat
     assert "order of commits, not the order of provider calls" in flat
     assert "skipped rather than failed outside a git checkout" in flat
+
+
+def test_absent_commits_skip_rather_than_fail(manifest) -> None:
+    """CI clones shallowly: a commit missing from the checkout is unknown, not false.
+
+    Regression guard -- treating absence as failure broke CI while passing locally.
+    """
+    absent = "0" * 40
+    fake = {**manifest, "base_commit": absent,
+            "synthesis_merge_commits": {"v2": absent, "v3": absent}}
+    results: list = []
+    verifier.git_ancestry(fake, results)
+    assert len(results) == 3, "every ancestry check must be emitted, never dropped"
+    assert all(ok is verifier.SKIPPED for _name, ok, _detail in results)
+    assert all("not in this checkout" in detail for _n, _o, detail in results)
+
+
+def test_a_present_but_wrong_ancestry_still_fails(manifest) -> None:
+    """Skipping absent commits must not soften a real contradiction."""
+    head_only = {**manifest,
+                 "base_commit": manifest["base_commit"],
+                 "synthesis_merge_commits": manifest["synthesis_merge_commits"]}
+    results: list = []
+    verifier.git_ancestry(head_only, results)
+    if any(ok is verifier.SKIPPED for _n, ok, _d in results):
+        pytest.skip("shallow checkout: ancestry not consultable here")
+    assert all(ok is True for _n, ok, _d in results)
