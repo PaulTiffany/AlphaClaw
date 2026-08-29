@@ -44,7 +44,7 @@ v2 = _load("protocol_v2_v3", SCRIPTS / "protocol_v2.py")
 
 README = ROOT / "controller" / "README.md"
 ARTIFACT = ROOT / "benchmark" / "protocol-v3.json"
-ARTIFACT_SHA = "bde4fe5fc2f932a9dd1890f7196858f9ac09468457f8edd53698ddfd805d8b33"
+ARTIFACT_SHA = "a65cbaad7640c3c64a03903dddef8b9162f08bd1d3a524fadc3367148ede0409"
 
 V2_DIGESTS = {
     "protocol-v2.json": "b5ee0c3760a9540119526f1c51ac1dc5cc0d6fadc0fe1e378ddf770d3d02557f",
@@ -414,14 +414,17 @@ def test_receipts_are_checked_against_the_expected_structure() -> None:
 
 
 def test_frozen_cost_equations() -> None:
+    """Amendment v3.2: C_Alpha(N) = C_multimodal + N * C_text (reasoning-step parity)."""
     c_mm, c_text = 0.010, 0.001
+    assert economics_v3.AMENDMENT_VERSION == "v3.2"
     assert economics_v3.cost_multimodal_resident(4, c_mm) == pytest.approx(0.040)
-    assert economics_v3.cost_alphaclaw(4, c_mm, c_text) == pytest.approx(0.013)
-    assert economics_v3.savings(4, c_mm, c_text) == pytest.approx(0.027)
-    assert economics_v3.savings_fraction(4, c_mm, c_text) == pytest.approx(0.675)
+    assert economics_v3.cost_alphaclaw(4, c_mm, c_text) == pytest.approx(0.014)
+    assert economics_v3.savings(4, c_mm, c_text) == pytest.approx(0.026)
+    assert economics_v3.savings_fraction(4, c_mm, c_text) == pytest.approx(0.65)
     assert economics_v3.stationary_limit(c_mm, c_text) == pytest.approx(0.9)
-    assert economics_v3.savings(1, c_mm, c_text) == 0
-    assert economics_v3.savings_fraction(1, c_mm, c_text) == pytest.approx(0.0)
+    # At depth 1 AlphaClaw pays perception plus one text call: a real loss, preserved.
+    assert economics_v3.savings(1, c_mm, c_text) == pytest.approx(-0.001)
+    assert economics_v3.savings_fraction(1, c_mm, c_text) == pytest.approx(-0.1)
 
 
 def test_cost_per_success_is_undefined_at_zero_successes() -> None:

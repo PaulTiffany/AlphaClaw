@@ -10,13 +10,26 @@ an empirical result, and is labelled as such everywhere.
 **Measured cost.** Dollars come from provider receipts. Where a provider exposes only
 catalog pricing, the figure is labelled an ESTIMATE and never reported as measured.
 
-Cost equations, frozen:
+Cost equations, frozen (Amendment v3.2):
 
     C_MM(N)    = N * C_multimodal
-    C_Alpha(N) = C_multimodal + (N - 1) * C_text
-    Savings(N) = (N - 1) * (C_multimodal - C_text)
-    fraction   = 1 - C_Alpha(N) / C_MM(N)
-    limit      = 1 - C_text / C_multimodal     (stationary prices, N -> infinity)
+    C_Alpha(N) = C_multimodal + N * C_text
+    Savings(N) = N * C_multimodal - (C_multimodal + N * C_text)
+               = (N - 1) * C_multimodal - N * C_text
+    fraction   = 1 - C_Alpha(N) / C_MM(N)                (defined for N > 0)
+    limit      = 1 - C_text / C_multimodal               (stationary prices, N -> inf)
+
+Reasoning depth is held CONSTANT across architectures: at depth N every arm performs N
+reasoning calls. E2 additionally makes exactly one perception call, an architectural
+setup cost that is NOT one of the N reasoning steps, so E2 issues N + 1 provider calls
+per episode. The superseded ``C_multimodal + (N - 1) * C_text`` assumed total-call
+parity instead, which would have given E2 one fewer reasoning step than E1 and E3.
+
+A consequence to preserve rather than hide: at N = 1 AlphaClaw pays one perception plus
+one text call against the baseline's single multimodal call, so negative dollar savings
+at shallow depth is a legitimate result. The economic claim is amortisation, not a
+guarantee of a break-even depth inside {1, 2, 4, 8}; break-even is derived only from
+receipts.
 
 A cheaper architecture that fails the frozen success criterion is NOT economically
 superior. The primary economic figure is therefore **cost per successful episode**.
@@ -38,6 +51,11 @@ DEPTHS = (1, 2, 4, 8)
 MEASURED = "measured"
 ESTIMATED = "estimated"
 
+AMENDMENT_VERSION = "v3.2"
+
+#: Superseded by Amendment v3.2. Retained only so a test can prove it is not used.
+SUPERSEDED_ALPHA_COST_FORMULA = "C_multimodal + (N - 1) * C_text"
+
 
 class EconomicsError(ValueError):
     """A comparison was requested that the preregistration forbids."""
@@ -46,8 +64,28 @@ class EconomicsError(ValueError):
 # --- architectural arithmetic (not an empirical result) -----------------------
 
 
+def reasoning_steps(architecture: str, depth: int) -> int:
+    """Reasoning-step parity: every architecture performs exactly ``depth`` steps."""
+    if architecture not in ARCHITECTURES:
+        raise EconomicsError(f"unknown architecture {architecture!r}")
+    return depth
+
+
+def perception_calls(architecture: str, depth: int) -> int:
+    """Architectural setup cost. Only E2 pays it, and only once."""
+    if architecture not in ARCHITECTURES:
+        raise EconomicsError(f"unknown architecture {architecture!r}")
+    if architecture == E1_MULTIMODAL_RESIDENT:
+        return 0        # E1's multimodal calls ARE its reasoning calls
+    return 1 if architecture == E2_ALPHACLAW else 0
+
+
 def expected_call_structure(depth: int) -> dict[str, Any]:
-    """Call counts implied by each architecture at reasoning depth ``depth``."""
+    """Call counts implied by each architecture at reasoning depth ``depth``.
+
+    Depth is reasoning steps, held constant across arms. E2's single perception call is
+    additional, so E2 issues ``depth + 1`` provider calls per episode.
+    """
     if depth < 1:
         raise EconomicsError("reasoning depth must be at least 1")
     return {
@@ -55,8 +93,13 @@ def expected_call_structure(depth: int) -> dict[str, Any]:
         E1_MULTIMODAL_RESIDENT: {"multimodal_calls": depth, "text_calls": 0},
         E2_ALPHACLAW: {"multimodal_calls": 1, "text_calls": depth},
         E3_TEXT_ORACLE: {"multimodal_calls": 0, "text_calls": depth},
+        "reasoning_steps_per_arm": depth,
+        "e2_perception_calls": 1,
+        "e2_total_provider_calls": depth + 1,
         "multimodal_calls_avoided": depth - 1,
         "multimodal_avoidance_fraction": 1 - (1 / depth),
+        "metric_scope": ("multimodal inference avoidance; NOT total provider-call "
+                         "avoidance"),
         "label": "architectural arithmetic; not an empirical result",
     }
 
@@ -93,13 +136,20 @@ def cost_multimodal_resident(depth: int, c_multimodal: float) -> float:
 
 
 def cost_alphaclaw(depth: int, c_multimodal: float, c_text: float) -> float:
-    """C_Alpha(N) = C_multimodal + (N - 1) * C_text"""
-    return c_multimodal + (depth - 1) * c_text
+    """C_Alpha(N) = C_multimodal + N * C_text  (Amendment v3.2)
+
+    One perception call plus N text reasoning calls: reasoning-step parity with E1.
+    """
+    return c_multimodal + depth * c_text
 
 
 def savings(depth: int, c_multimodal: float, c_text: float) -> float:
-    """Savings(N) = (N - 1) * (C_multimodal - C_text)"""
-    return (depth - 1) * (c_multimodal - c_text)
+    """Savings(N) = (N - 1) * C_multimodal - N * C_text  (Amendment v3.2)
+
+    May be negative at shallow depth. That is a real result, not an error.
+    """
+    return (cost_multimodal_resident(depth, c_multimodal)
+            - cost_alphaclaw(depth, c_multimodal, c_text))
 
 
 def savings_fraction(depth: int, c_multimodal: float, c_text: float) -> float:
