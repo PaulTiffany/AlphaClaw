@@ -1476,6 +1476,99 @@ so this is disclosed rather than removed.
 matching the frozen caps. The test sums per-episode counts rather than asserting a
 hardcoded agreement.
 
+## Protocol v3-B -- result (frozen)
+
+The economic question, executed against the frozen population on merged main
+`7098e416`. **24 episodes attempted, 94 provider calls, $0.006711 measured.** Frozen at
+`benchmark/benchmark-v3-B.json`. Execution manifest hashed **before** the first call:
+`a725e3e8…`.
+
+One model, `qwen/qwen3.7-flash` on OpenRouter, requested and resolved on every receipt.
+No fallback, no substitution, no retries.
+
+### Outcomes
+
+**20 successes, 4 availability failures, 0 wrong answers.**
+
+The four failures are a contiguous HTTP 429 upstream rate-limit burst on
+`qwen/qwen3.7-flash` (episodes 2-5, all on `chain_a`). They are preserved verbatim as
+evidence and were not retried, which is why 94 calls were issued rather than the planned
+98: an aborted episode does not issue its remaining calls. 98 planned - 4 not issued = 94.
+
+| arm | N=1 | N=2 | N=4 | N=8 |
+|---|---|---|---|---|
+| **E1** multimodal resident | 2/2 | 1/2 (1 availability) | 2/2 | 2/2 |
+| **E2** AlphaClaw | 2/2 | 1/2 (1 availability) | 2/2 | 2/2 |
+| **E3** text oracle | 1/2 (1 availability) | 1/2 (1 availability) | 2/2 | 2/2 |
+
+### A. Architecture-invariant call reduction -- receipts match the preregistration
+
+| N | E1 multimodal | E2 multimodal | avoided | avoidance | comparable pairs |
+|---|---|---|---|---|---|
+| 1 | 1 | 1 | **0** | 0% | 2 |
+| 2 | 2 | 1 | **1** | 50% | 1 |
+| 4 | 4 | 1 | **3** | 75% | 2 |
+| 8 | 8 | 1 | **7** | 87.5% | 2 |
+
+Observed receipts equal the preregistered structure at every depth. Depth 2 has only one
+comparable pair because `chain_a` was lost on both arms to the 429 burst; that is reported
+rather than averaged away.
+
+Observed call totals: E1 **29 multimodal / 0 text**; E2 **8 multimodal (all perception) /
+28 text**; E3 **0 multimodal / 29 text**. Totals **37 multimodal + 57 text = 94**.
+
+### B. Measured current-price savings (receipt dollars, provider- and price-dependent)
+
+| N | E1 | E2 | savings | fraction | AlphaClaw cheaper? |
+|---|---|---|---|---|---|
+| 1 | $0.000284 | $0.000292 | **-$0.000008** | **-2.7%** | **no** |
+| 2 | $0.000174 | $0.000136 | +$0.000038 | +22.0% | yes |
+| 4 | $0.000789 | $0.000489 | +$0.000300 | +38.0% | yes |
+| 8 | $0.001500 | $0.000943 | +$0.000557 | +37.1% | yes |
+
+**The predicted shallow-depth loss appeared.** At N=1 AlphaClaw is measurably *more*
+expensive, exactly as Amendment v3.2 said it might be, and it is reported rather than
+hidden. A sign change is observed between N=1 and N=2. **No break-even point is
+interpolated** -- any such figure would be an estimate, and none is given.
+
+Every completed call carried a receipt cost: **zero estimated values are reported**.
+
+### C. Success-adjusted utility -- cost per successful episode
+
+Denominators are shown explicitly rather than smoothed, because there are at most two
+items per cell.
+
+| arm | N=1 | N=2 | N=4 | N=8 |
+|---|---|---|---|---|
+| **E1** | $0.000284 / 2 = $0.000142 | $0.000174 / 1 = $0.000174 | $0.000789 / 2 = $0.000394 | $0.001500 / 2 = $0.000750 |
+| **E2** | $0.000292 / 2 = $0.000146 | $0.000136 / 1 = $0.000136 | $0.000489 / 2 = $0.000245 | $0.000943 / 2 = $0.000472 |
+| **E3** | $0.000117 / 1 = $0.000117 | $0.000145 / 1 = $0.000145 | $0.000497 / 2 = $0.000248 | $0.001343 / 2 = $0.000671 |
+
+E2 beats E1 on cost per success at N=4 and N=8 with equal success counts. A cell with zero
+successes would report **undefined**, not zero, and a cheaper failing arm can never win --
+asserted by test.
+
+These three results are **not** collapsed into one economic score.
+
+### E2 integrity
+
+Every E2 episode: **exactly one perception call**, the resulting handoff reused with a
+**single identical digest** across all its reasoning calls, and **no image after
+perception**. Perception output was treated as evidence -- never repaired, re-run or
+replaced with ground truth. Seven of eight handoffs contained every required fact; the
+eighth is the 429 failure, whose empty handoff is preserved as-is.
+
+### Caveat retained
+
+At N=1 the expected answer is the first displayed integer, so E2/E3 hold it textually
+while E1 must perceive it. **N=1 is the no-amortisation economic baseline only** and is
+not evidence of architectural accuracy superiority.
+
+### Totals
+
+94 calls (37 multimodal + 57 text) · 11,772 input / 48,904 output tokens ·
+**$0.006711 measured** against a $2.00 cap. Caps: 37/38 multimodal, 57/60 text.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.

@@ -286,5 +286,9 @@ def test_leak_check_amendment_still_applies_to_every_variant(runs) -> None:
             json.dumps(run["transform_manifest"] or {}), expected)
 
 
-def test_no_v3b_results_exist() -> None:
-    assert not (ROOT / "benchmark" / "benchmark-v3-B.json").exists()
+def test_v3b_execution_did_not_contaminate_v3a(data) -> None:
+    """V3-B has since run on a different population and model; V3-A stays as frozen."""
+    assert data["section"] == "V3-A"
+    blob = json.dumps(data)
+    for token in ("qwen/qwen3.7-flash", "chain_a", "chain_b", "E1_multimodal_resident"):
+        assert token not in blob, token

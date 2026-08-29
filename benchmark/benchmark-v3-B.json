@@ -1,0 +1,3045 @@
+{
+  "amendment": "v3.2",
+  "attempted_episodes": 24,
+  "caps": {
+    "cost_usd": 2.0,
+    "multimodal": 38,
+    "text": 60
+  },
+  "episodes": [
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "7",
+          "cost": 0.00017381,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 18.566,
+          "output_tokens": 1304,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 0,
+      "exact_match": true,
+      "expected_answer": "7",
+      "final_response": "7",
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 1
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 6.325e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 7.997,
+          "output_tokens": 454,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "7",
+          "cost": 0.00013816,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 142,
+          "kind": "text",
+          "latency_s": 6.035,
+          "output_tokens": 1030,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 1,
+      "exact_match": true,
+      "expected_answer": "7",
+      "final_response": "7",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203"
+      },
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 1,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": null,
+          "cost": null,
+          "cost_available": false,
+          "error": "HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"qwen/qwen3.7-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Alibaba\",\"is_byok\":false,\"provider_error_code\":\"insufficient_quota\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"R",
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": null,
+          "kind": "text",
+          "latency_s": 0.377,
+          "output_tokens": null,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": null,
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 2,
+      "exact_match": null,
+      "expected_answer": "7",
+      "final_response": null,
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": null,
+          "step": 1
+        }
+      ],
+      "terminated": "call_failed_step_1",
+      "text_calls": 1,
+      "total_provider_calls": 1
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": null,
+          "cost": null,
+          "cost_available": false,
+          "error": "HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"qwen/qwen3.7-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Alibaba\",\"is_byok\":false,\"provider_error_code\":\"insufficient_quota\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"R",
+          "evidence_sha256": null,
+          "input_tokens": null,
+          "kind": "multimodal",
+          "latency_s": 0.413,
+          "output_tokens": null,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": null,
+          "step": 1
+        }
+      ],
+      "depth": 2,
+      "episode_index": 3,
+      "exact_match": null,
+      "expected_answer": "19",
+      "final_response": null,
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 2,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 2,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": null,
+          "step": 1
+        }
+      ],
+      "terminated": "call_failed_step_1",
+      "text_calls": 0,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": null,
+          "cost": null,
+          "cost_available": false,
+          "error": "HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"qwen/qwen3.7-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Alibaba\",\"is_byok\":false,\"provider_error_code\":\"insufficient_quota\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"R",
+          "input_tokens": null,
+          "kind": "multimodal",
+          "latency_s": 0.426,
+          "output_tokens": null,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": null
+        }
+      ],
+      "depth": 2,
+      "episode_index": 4,
+      "exact_match": null,
+      "expected_answer": "19",
+      "final_response": null,
+      "handoff": {
+        "carries_image": true,
+        "raw": null,
+        "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 2,
+      "step_results": [],
+      "terminated": "perception_failed",
+      "text_calls": 2,
+      "total_provider_calls": 3
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": null,
+          "cost": null,
+          "cost_available": false,
+          "error": "HTTP 429: {\"error\":{\"message\":\"Provider returned error\",\"code\":429,\"metadata\":{\"raw\":\"qwen/qwen3.7-flash is temporarily rate-limited upstream. Please retry shortly, or add your own key to accumulate your rate limits: https://openrouter.ai/settings/integrations\",\"provider_name\":\"Alibaba\",\"is_byok\":false,\"provider_error_code\":\"insufficient_quota\",\"limit_source\":\"upstream_provider_shared_pool\",\"remedy_hint\":\"R",
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": null,
+          "kind": "text",
+          "latency_s": 0.328,
+          "output_tokens": null,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": null,
+          "step": 1
+        }
+      ],
+      "depth": 2,
+      "episode_index": 5,
+      "exact_match": null,
+      "expected_answer": "19",
+      "final_response": null,
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 2,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": null,
+          "step": 1
+        }
+      ],
+      "terminated": "call_failed_step_1",
+      "text_calls": 2,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "7",
+          "cost": 6.578e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 8.98,
+          "output_tokens": 473,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": true,
+          "content": "19",
+          "cost": 8.827e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 10.783,
+          "output_tokens": 646,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": true,
+          "content": "24",
+          "cost": 9.714e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 10.567,
+          "output_tokens": 714,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": true,
+          "content": "33",
+          "cost": 8.258e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 13.235,
+          "output_tokens": 602,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 6,
+      "exact_match": true,
+      "expected_answer": "33",
+      "final_response": "33",
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 4,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 4
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 5.922e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 7.324,
+          "output_tokens": 423,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "7",
+          "cost": 0.00011827,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 142,
+          "kind": "text",
+          "latency_s": 5.583,
+          "output_tokens": 877,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "19",
+          "cost": 2.103e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 142,
+          "kind": "text",
+          "latency_s": 1.698,
+          "output_tokens": 129,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "24",
+          "cost": 4.498e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.8,
+          "output_tokens": 313,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "33",
+          "cost": 4.849e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 3.042,
+          "output_tokens": 340,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 7,
+      "exact_match": true,
+      "expected_answer": "33",
+      "final_response": "33",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203"
+      },
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 4,
+      "total_provider_calls": 5
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "7",
+          "cost": 4.086e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 101,
+          "kind": "text",
+          "latency_s": 1.959,
+          "output_tokens": 291,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "19",
+          "cost": 3.917e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 101,
+          "kind": "text",
+          "latency_s": 2.495,
+          "output_tokens": 278,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "24",
+          "cost": 7.833e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 3.309,
+          "output_tokens": 579,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "33",
+          "cost": 8.418e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.041,
+          "output_tokens": 624,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 8,
+      "exact_match": true,
+      "expected_answer": "33",
+      "final_response": "33",
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 4,
+      "total_provider_calls": 4
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "7",
+          "cost": 0.00011908,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 13.949,
+          "output_tokens": 883,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": true,
+          "content": "19",
+          "cost": 7.956e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 10.288,
+          "output_tokens": 579,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": true,
+          "content": "24",
+          "cost": 8.323e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 9.5,
+          "output_tokens": 607,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": true,
+          "content": "33",
+          "cost": 9.467e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 15.258,
+          "output_tokens": 695,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": true,
+          "content": "47",
+          "cost": 9.142e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 9.733,
+          "output_tokens": 670,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": true,
+          "content": "49",
+          "cost": 8.999e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 10.591,
+          "output_tokens": 659,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": true,
+          "content": "60",
+          "cost": 9.857e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 11.301,
+          "output_tokens": 725,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": true,
+          "content": "64",
+          "cost": 6.568e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 8.697,
+          "output_tokens": 472,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 9,
+      "exact_match": true,
+      "expected_answer": "64",
+      "final_response": "64",
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+        "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+        "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 8,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 49,
+          "response": "49",
+          "step": 6
+        },
+        {
+          "expected_running_total": 60,
+          "response": "60",
+          "step": 7
+        },
+        {
+          "expected_running_total": 64,
+          "response": "64",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 8
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 8.236e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 9.15,
+          "output_tokens": 601,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "7",
+          "cost": 0.00011268,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 142,
+          "kind": "text",
+          "latency_s": 5.387,
+          "output_tokens": 834,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "19",
+          "cost": 2.103e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 142,
+          "kind": "text",
+          "latency_s": 1.252,
+          "output_tokens": 129,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "24",
+          "cost": 4.537e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.65,
+          "output_tokens": 316,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "33",
+          "cost": 3.523e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.49,
+          "output_tokens": 238,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": false,
+          "content": "47",
+          "cost": 3.198e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.33,
+          "output_tokens": 213,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": false,
+          "content": "49",
+          "cost": 7.891e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 4.006,
+          "output_tokens": 574,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": false,
+          "content": "60",
+          "cost": 5.863e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.993,
+          "output_tokens": 418,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": false,
+          "content": "64",
+          "cost": 5.993e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 3.283,
+          "output_tokens": 428,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 10,
+      "exact_match": true,
+      "expected_answer": "64",
+      "final_response": "64",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            7,\n            12,\n            5,\n            9,\n            14,\n            2,\n            11,\n            4\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "954cb11671a8657b19dba0789754c70d338ad55475be6f36ed869db045b56203"
+      },
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+        "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+        "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 49,
+          "response": "49",
+          "step": 6
+        },
+        {
+          "expected_running_total": 60,
+          "response": "60",
+          "step": 7
+        },
+        {
+          "expected_running_total": 64,
+          "response": "64",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 8,
+      "total_provider_calls": 9
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "7",
+          "cost": 6.803e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 101,
+          "kind": "text",
+          "latency_s": 3.391,
+          "output_tokens": 500,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "19",
+          "cost": 4.151e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 101,
+          "kind": "text",
+          "latency_s": 2.329,
+          "output_tokens": 296,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "24",
+          "cost": 8.808e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.123,
+          "output_tokens": 654,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "33",
+          "cost": 4.323e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 2.22,
+          "output_tokens": 309,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": false,
+          "content": "47",
+          "cost": 9.276e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.339,
+          "output_tokens": 690,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": false,
+          "content": "49",
+          "cost": 0.00012305,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.436,
+          "output_tokens": 923,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": false,
+          "content": "60",
+          "cost": 0.00012747,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.721,
+          "output_tokens": 957,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": false,
+          "content": "64",
+          "cost": 6.585e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 2.513,
+          "output_tokens": 483,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 11,
+      "exact_match": true,
+      "expected_answer": "64",
+      "final_response": "64",
+      "handoff": null,
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+        "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+        "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+        "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+        "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+      ],
+      "item_id": "chain_a",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 7,
+          "response": "7",
+          "step": 1
+        },
+        {
+          "expected_running_total": 19,
+          "response": "19",
+          "step": 2
+        },
+        {
+          "expected_running_total": 24,
+          "response": "24",
+          "step": 3
+        },
+        {
+          "expected_running_total": 33,
+          "response": "33",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 49,
+          "response": "49",
+          "step": 6
+        },
+        {
+          "expected_running_total": 60,
+          "response": "60",
+          "step": 7
+        },
+        {
+          "expected_running_total": 64,
+          "response": "64",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 8,
+      "total_provider_calls": 8
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "9",
+          "cost": 0.0001105,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 13.008,
+          "output_tokens": 817,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 12,
+      "exact_match": true,
+      "expected_answer": "9",
+      "final_response": "9",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 1
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 6.026e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 10.505,
+          "output_tokens": 431,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 3.029e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.035,
+          "output_tokens": 200,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 13,
+      "exact_match": true,
+      "expected_answer": "9",
+      "final_response": "9",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e"
+      },
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 1,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 0.00011746,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 5.388,
+          "output_tokens": 880,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        }
+      ],
+      "depth": 1,
+      "episode_index": 14,
+      "exact_match": true,
+      "expected_answer": "9",
+      "final_response": "9",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 1,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 1,
+      "total_provider_calls": 1
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "9",
+          "cost": 0.00011427,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 14.985,
+          "output_tokens": 846,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": true,
+          "content": "21",
+          "cost": 6.006e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 7.937,
+          "output_tokens": 429,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        }
+      ],
+      "depth": 2,
+      "episode_index": 15,
+      "exact_match": true,
+      "expected_answer": "21",
+      "final_response": "21",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 2,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 2,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 7.066e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 9.051,
+          "output_tokens": 511,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 2.86e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.591,
+          "output_tokens": 187,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 3.679e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.098,
+          "output_tokens": 250,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        }
+      ],
+      "depth": 2,
+      "episode_index": 16,
+      "exact_match": true,
+      "expected_answer": "21",
+      "final_response": "21",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e"
+      },
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 2,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 2,
+      "total_provider_calls": 3
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 0.00010888,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 4.21,
+          "output_tokens": 814,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 3.608e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 2.216,
+          "output_tokens": 254,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        }
+      ],
+      "depth": 2,
+      "episode_index": 17,
+      "exact_match": true,
+      "expected_answer": "21",
+      "final_response": "21",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 2,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 2,
+      "total_provider_calls": 2
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "9",
+          "cost": 0.00010504,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 12.264,
+          "output_tokens": 775,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": true,
+          "content": "21",
+          "cost": 7.969e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 12.887,
+          "output_tokens": 580,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": true,
+          "content": "25",
+          "cost": 0.00020959,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 22.022,
+          "output_tokens": 1579,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": true,
+          "content": "40",
+          "cost": 6.074e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 9.447,
+          "output_tokens": 434,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 18,
+      "exact_match": true,
+      "expected_answer": "40",
+      "final_response": "40",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 4,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 4
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 6e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 6.808,
+          "output_tokens": 429,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 4.641e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.466,
+          "output_tokens": 324,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 2.925e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.468,
+          "output_tokens": 192,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "25",
+          "cost": 2.603e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 1.387,
+          "output_tokens": 167,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "40",
+          "cost": 3.565e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 1.855,
+          "output_tokens": 241,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 19,
+      "exact_match": true,
+      "expected_answer": "40",
+      "final_response": "40",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e"
+      },
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 4,
+      "total_provider_calls": 5
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 0.00011213,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 5.14,
+          "output_tokens": 839,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 3.634e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 2.211,
+          "output_tokens": 256,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "25",
+          "cost": 6.497e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 2.421,
+          "output_tokens": 476,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "40",
+          "cost": 4.066e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 1.907,
+          "output_tokens": 289,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        }
+      ],
+      "depth": 4,
+      "episode_index": 20,
+      "exact_match": true,
+      "expected_answer": "40",
+      "final_response": "40",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 4,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 4,
+      "total_provider_calls": 4
+    },
+    {
+      "architecture": "E1_multimodal_resident",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "9",
+          "cost": 0.00020137,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 27.456,
+          "output_tokens": 1516,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": true,
+          "content": "21",
+          "cost": 9.724e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 143,
+          "kind": "multimodal",
+          "latency_s": 11.472,
+          "output_tokens": 715,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": true,
+          "content": "25",
+          "cost": 6.035e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 7.292,
+          "output_tokens": 431,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": true,
+          "content": "40",
+          "cost": 7.075e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 8.769,
+          "output_tokens": 511,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": true,
+          "content": "47",
+          "cost": 9.636e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 12.052,
+          "output_tokens": 708,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": true,
+          "content": "69",
+          "cost": 7.205e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 10.662,
+          "output_tokens": 521,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": true,
+          "content": "74",
+          "cost": 8.778e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 9.839,
+          "output_tokens": 642,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": true,
+          "content": "85",
+          "cost": 9.233e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": null,
+          "input_tokens": 144,
+          "kind": "multimodal",
+          "latency_s": 10.722,
+          "output_tokens": 677,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 21,
+      "exact_match": true,
+      "expected_answer": "85",
+      "final_response": "85",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+        "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+        "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 8,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 69,
+          "response": "69",
+          "step": 6
+        },
+        {
+          "expected_running_total": 74,
+          "response": "74",
+          "step": 7
+        },
+        {
+          "expected_running_total": 85,
+          "response": "85",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 0,
+      "total_provider_calls": 8
+    },
+    {
+      "architecture": "E2_alphaclaw",
+      "calls": [
+        {
+          "carries_image": true,
+          "content": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+          "cost": 5.987e-05,
+          "cost_available": true,
+          "error": null,
+          "input_tokens": 141,
+          "kind": "multimodal",
+          "latency_s": 6.814,
+          "output_tokens": 428,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash"
+        },
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 2.873e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 1.415,
+          "output_tokens": 188,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 2.574e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 143,
+          "kind": "text",
+          "latency_s": 2.261,
+          "output_tokens": 165,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "25",
+          "cost": 3.578e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 1.996,
+          "output_tokens": 242,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "40",
+          "cost": 3.292e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 1.86,
+          "output_tokens": 220,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": false,
+          "content": "47",
+          "cost": 6.009e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 2.842,
+          "output_tokens": 429,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": false,
+          "content": "69",
+          "cost": 6.698e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 3.751,
+          "output_tokens": 482,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": false,
+          "content": "74",
+          "cost": 5.593e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 2.809,
+          "output_tokens": 397,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": false,
+          "content": "85",
+          "cost": 5.125e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e",
+          "input_tokens": 144,
+          "kind": "text",
+          "latency_s": 2.648,
+          "output_tokens": 361,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 22,
+      "exact_match": true,
+      "expected_answer": "85",
+      "final_response": "85",
+      "handoff": {
+        "carries_image": true,
+        "raw": "```json\n{\n    \"observation\": {\n        \"numbers_left_to_right\": [\n            9,\n            12,\n            4,\n            15,\n            7,\n            22,\n            5,\n            11\n        ]\n    },\n    \"schema_version\": 1\n}\n```",
+        "raw_sha256": "25ad1da7ff967ef8262ffa56219761db5038e46ecf13fb4677fb641806c52d3e"
+      },
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+        "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+        "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 1,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 1,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 69,
+          "response": "69",
+          "step": 6
+        },
+        {
+          "expected_running_total": 74,
+          "response": "74",
+          "step": 7
+        },
+        {
+          "expected_running_total": 85,
+          "response": "85",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 8,
+      "total_provider_calls": 9
+    },
+    {
+      "architecture": "E3_text_oracle",
+      "calls": [
+        {
+          "carries_image": false,
+          "content": "9",
+          "cost": 5.558e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 3.091,
+          "output_tokens": 404,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 1
+        },
+        {
+          "carries_image": false,
+          "content": "21",
+          "cost": 3.608e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 102,
+          "kind": "text",
+          "latency_s": 1.593,
+          "output_tokens": 254,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 2
+        },
+        {
+          "carries_image": false,
+          "content": "25",
+          "cost": 9.903e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 4.284,
+          "output_tokens": 738,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 3
+        },
+        {
+          "carries_image": false,
+          "content": "40",
+          "cost": 8.798e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 4.143,
+          "output_tokens": 653,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 4
+        },
+        {
+          "carries_image": false,
+          "content": "47",
+          "cost": 8.928e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 4.177,
+          "output_tokens": 663,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 5
+        },
+        {
+          "carries_image": false,
+          "content": "69",
+          "cost": 0.00012113,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 4.35,
+          "output_tokens": 908,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 6
+        },
+        {
+          "carries_image": false,
+          "content": "74",
+          "cost": 8.876e-05,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 3.502,
+          "output_tokens": 659,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 7
+        },
+        {
+          "carries_image": false,
+          "content": "85",
+          "cost": 0.00011515,
+          "cost_available": true,
+          "error": null,
+          "evidence_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+          "input_tokens": 103,
+          "kind": "text",
+          "latency_s": 4.67,
+          "output_tokens": 862,
+          "requested_model": "qwen/qwen3.7-flash",
+          "resolved_model": "qwen/qwen3.7-flash",
+          "step": 8
+        }
+      ],
+      "depth": 8,
+      "episode_index": 23,
+      "exact_match": true,
+      "expected_answer": "85",
+      "final_response": "85",
+      "handoff": null,
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "instruction_sha256": [
+        "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+        "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+        "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+        "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+        "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+        "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+        "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+        "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+      ],
+      "item_id": "chain_b",
+      "multimodal_calls": 0,
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "perception_calls": 0,
+      "reasoning_steps": 8,
+      "step_results": [
+        {
+          "expected_running_total": 9,
+          "response": "9",
+          "step": 1
+        },
+        {
+          "expected_running_total": 21,
+          "response": "21",
+          "step": 2
+        },
+        {
+          "expected_running_total": 25,
+          "response": "25",
+          "step": 3
+        },
+        {
+          "expected_running_total": 40,
+          "response": "40",
+          "step": 4
+        },
+        {
+          "expected_running_total": 47,
+          "response": "47",
+          "step": 5
+        },
+        {
+          "expected_running_total": 69,
+          "response": "69",
+          "step": 6
+        },
+        {
+          "expected_running_total": 74,
+          "response": "74",
+          "step": 7
+        },
+        {
+          "expected_running_total": 85,
+          "response": "85",
+          "step": 8
+        }
+      ],
+      "terminated": "completed",
+      "text_calls": 8,
+      "total_provider_calls": 8
+    }
+  ],
+  "execution_manifest": {
+    "depths": [
+      1,
+      2,
+      4,
+      8
+    ],
+    "episodes": [
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 1,
+        "episode_index": 0,
+        "expected_answer": "7",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 1,
+        "text_calls": 0,
+        "total_provider_calls": 1
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 1,
+        "episode_index": 1,
+        "expected_answer": "7",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 1,
+        "text_calls": 1,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 1,
+        "episode_index": 2,
+        "expected_answer": "7",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 1,
+        "text_calls": 1,
+        "total_provider_calls": 1
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 2,
+        "episode_index": 3,
+        "expected_answer": "19",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 2,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 2,
+        "text_calls": 0,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 2,
+        "episode_index": 4,
+        "expected_answer": "19",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 2,
+        "text_calls": 2,
+        "total_provider_calls": 3
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 2,
+        "episode_index": 5,
+        "expected_answer": "19",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 2,
+        "text_calls": 2,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 4,
+        "episode_index": 6,
+        "expected_answer": "33",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 4,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 4,
+        "text_calls": 0,
+        "total_provider_calls": 4
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 4,
+        "episode_index": 7,
+        "expected_answer": "33",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 4,
+        "text_calls": 4,
+        "total_provider_calls": 5
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 4,
+        "episode_index": 8,
+        "expected_answer": "33",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 4,
+        "text_calls": 4,
+        "total_provider_calls": 4
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 8,
+        "episode_index": 9,
+        "expected_answer": "64",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+          "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+          "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 8,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 8,
+        "text_calls": 0,
+        "total_provider_calls": 8
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 8,
+        "episode_index": 10,
+        "expected_answer": "64",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+          "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+          "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 8,
+        "text_calls": 8,
+        "total_provider_calls": 9
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 8,
+        "episode_index": 11,
+        "expected_answer": "64",
+        "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+          "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+          "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+          "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+          "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+        ],
+        "item_id": "chain_a",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 8,
+        "text_calls": 8,
+        "total_provider_calls": 8
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 1,
+        "episode_index": 12,
+        "expected_answer": "9",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 1,
+        "text_calls": 0,
+        "total_provider_calls": 1
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 1,
+        "episode_index": 13,
+        "expected_answer": "9",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 1,
+        "text_calls": 1,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 1,
+        "episode_index": 14,
+        "expected_answer": "9",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 1,
+        "text_calls": 1,
+        "total_provider_calls": 1
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 2,
+        "episode_index": 15,
+        "expected_answer": "21",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 2,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 2,
+        "text_calls": 0,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 2,
+        "episode_index": 16,
+        "expected_answer": "21",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 2,
+        "text_calls": 2,
+        "total_provider_calls": 3
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 2,
+        "episode_index": 17,
+        "expected_answer": "21",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 2,
+        "text_calls": 2,
+        "total_provider_calls": 2
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 4,
+        "episode_index": 18,
+        "expected_answer": "40",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 4,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 4,
+        "text_calls": 0,
+        "total_provider_calls": 4
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 4,
+        "episode_index": 19,
+        "expected_answer": "40",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 4,
+        "text_calls": 4,
+        "total_provider_calls": 5
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 4,
+        "episode_index": 20,
+        "expected_answer": "40",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 4,
+        "text_calls": 4,
+        "total_provider_calls": 4
+      },
+      {
+        "architecture": "E1_multimodal_resident",
+        "depth": 8,
+        "episode_index": 21,
+        "expected_answer": "85",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+          "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+          "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 8,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 8,
+        "text_calls": 0,
+        "total_provider_calls": 8
+      },
+      {
+        "architecture": "E2_alphaclaw",
+        "depth": 8,
+        "episode_index": 22,
+        "expected_answer": "85",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+          "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+          "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 1,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 1,
+        "reasoning_steps": 8,
+        "text_calls": 8,
+        "total_provider_calls": 9
+      },
+      {
+        "architecture": "E3_text_oracle",
+        "depth": 8,
+        "episode_index": 23,
+        "expected_answer": "85",
+        "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+        "instruction_sha256": [
+          "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+          "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+          "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+          "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+          "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+          "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+          "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+          "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+        ],
+        "item_id": "chain_b",
+        "multimodal_calls": 0,
+        "output_contract": "Use digits only. Reply with no spaces and no other text.",
+        "perception_calls": 0,
+        "reasoning_steps": 8,
+        "text_calls": 8,
+        "total_provider_calls": 8
+      }
+    ],
+    "ground_truth_doc_sha256": "a2b1c2747f5c8d5ad226be27ce7e8d269838d54d622832ac6787d76b246c9b21",
+    "ground_truth_file_sha256": "35ce510b03473c58a166c6fabafa93a21f6a57e16dd203a7adf7b2b64c8ef767",
+    "items": 2,
+    "model": "qwen/qwen3.7-flash",
+    "ordering": "item, then depth ascending, then E1/E2/E3 within each cell",
+    "ordering_specified_by_protocol": false,
+    "planned_multimodal_calls": 38,
+    "planned_text_calls": 60,
+    "planned_total_calls": 98,
+    "protocol_version": "v3",
+    "provider": "openrouter",
+    "repeats": 1,
+    "section": "V3-B"
+  },
+  "execution_manifest_sha256": "a725e3e8413b7da00eebe5a334347e2a9627ab1d5e9f7173b6b5007c1b5a7757",
+  "generated_at": "2026-08-29T11:05:10.843114+00:00",
+  "ground_truth_doc_sha256": "a2b1c2747f5c8d5ad226be27ce7e8d269838d54d622832ac6787d76b246c9b21",
+  "ground_truth_file_sha256": "35ce510b03473c58a166c6fabafa93a21f6a57e16dd203a7adf7b2b64c8ef767",
+  "protocol_version": "v3",
+  "provider": "openrouter",
+  "requested_model": "qwen/qwen3.7-flash",
+  "schema_version": 1,
+  "section": "V3-B",
+  "spent": {
+    "measured_cost_usd": 0.006711,
+    "multimodal_calls": 37,
+    "text_calls": 57,
+    "total_calls": 94
+  },
+  "stopped_early": null
+}
