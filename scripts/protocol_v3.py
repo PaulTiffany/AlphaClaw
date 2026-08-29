@@ -393,7 +393,18 @@ def specification() -> dict[str, Any]:
                     "R4": "the same required facts with task structure explicit",
                     "shared": ("every variant carries the same frozen task instruction "
                                "bytes and the same task-relevant information"),
-                    "answer_leakage": "prohibited; checked case-sensitively per item",
+                    "answer_leakage": (
+                        "prohibited; checked case-sensitively and word-anchored per "
+                        "item (Amendment v3.1)"),
+                    "answer_leakage_check_version": representation_v3.LEAK_CHECK_VERSION,
+                    "answer_leakage_amendment": (
+                        "v3.1: a bare substring test wrongly flagged the frozen "
+                        "number_arithmetic payload, whose image digest ...c197e29bfb "
+                        "contains \"19\". Leakage now means the answer appears as a "
+                        "STANDALONE token. Discovered by preflight BEFORE any v3 "
+                        "provider call; no representation, transform, model, budget or "
+                        "condition changed, and the check still applies to every "
+                        "variant including R1."),
                 },
                 "turn_budgets": list(V3A_TURN_BUDGETS),
                 "baseline_turn_budget": V3A_BASELINE_TURN_BUDGET,

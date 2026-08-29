@@ -1,0 +1,5148 @@
+{
+  "attempted_runs": 18,
+  "attribution_constraint": "Do not claim a unique causal source unless the experiment actually isolates it. Evidence may be reported as consistent with a factor; it may not be reported as the cause. The system under test is the whole seam: Alpha -> resident -> stock Omega.",
+  "derived_analysis": {
+    "answer_leakage_amendment": "v3.1 word-anchored; see protocol-v3.json",
+    "classifier": "scripts/analyze_v3a.py",
+    "exit_code_3_meaning": "exit 3 is the controller's terminal state when the episode provider budget is consumed. Most two-turn runs carry termination_reason=responded alongside it, so exit 3 is the expected end of a fully spent two-turn budget, not a harness failure.",
+    "why_not_the_v2_classifier": "The v2 classifier treats any run whose episode-call count is not exactly 1 as infrastructure, which is correct for the one-turn v2 architecture but mislabels every two-turn V3-A run. analyze_v3a generalises the same causal chain from \"exactly one episode call\" to \"within the run's permitted turn budget\" and changes nothing else. The v2 classifier and every v2 artifact are untouched."
+  },
+  "failure_decomposition": {
+    "infrastructure": 0,
+    "output_contract": 2,
+    "passed": 7,
+    "provider_availability": 0,
+    "reasoning_composition": 9,
+    "sensory": 0
+  },
+  "generated_at": "2026-08-29T09:55:01.493173+00:00",
+  "internal_token_without_correct_answer": [
+    {
+      "case_id": "A1",
+      "failure_class": "output_contract",
+      "representation": "R1_full_symbolic",
+      "response": null,
+      "turn_budget": 2,
+      "valid_send": false
+    },
+    {
+      "case_id": "A1",
+      "failure_class": "output_contract",
+      "representation": "R3_plain_language",
+      "response": null,
+      "turn_budget": 1,
+      "valid_send": false
+    }
+  ],
+  "protocol_version": "v3",
+  "question": "failure attribution across Alpha -> resident -> stock Omega",
+  "representation_pairs": [
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": false,
+      "r1_exact_match": true,
+      "transition": "PASS -> PASS",
+      "turn_budget": 1,
+      "variant": "R2_minimal_symbolic",
+      "variant_exact_match": true
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": false,
+      "r1_exact_match": false,
+      "transition": "FAIL -> FAIL",
+      "turn_budget": 2,
+      "variant": "R2_minimal_symbolic",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": true,
+      "r1_exact_match": true,
+      "transition": "PASS -> FAIL",
+      "turn_budget": 1,
+      "variant": "R3_plain_language",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": true,
+      "r1_exact_match": false,
+      "transition": "FAIL -> PASS",
+      "turn_budget": 2,
+      "variant": "R3_plain_language",
+      "variant_exact_match": true
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": false,
+      "r1_exact_match": true,
+      "transition": "PASS -> PASS",
+      "turn_budget": 1,
+      "variant": "R4_task_structured",
+      "variant_exact_match": true
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A1",
+      "changed": true,
+      "r1_exact_match": false,
+      "transition": "FAIL -> PASS",
+      "turn_budget": 2,
+      "variant": "R4_task_structured",
+      "variant_exact_match": true
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": false,
+      "r1_exact_match": false,
+      "transition": "FAIL -> FAIL",
+      "turn_budget": 1,
+      "variant": "R2_minimal_symbolic",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": true,
+      "r1_exact_match": true,
+      "transition": "PASS -> FAIL",
+      "turn_budget": 2,
+      "variant": "R2_minimal_symbolic",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": false,
+      "r1_exact_match": false,
+      "transition": "FAIL -> FAIL",
+      "turn_budget": 1,
+      "variant": "R3_plain_language",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": true,
+      "r1_exact_match": true,
+      "transition": "PASS -> FAIL",
+      "turn_budget": 2,
+      "variant": "R3_plain_language",
+      "variant_exact_match": false
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": true,
+      "r1_exact_match": false,
+      "transition": "FAIL -> PASS",
+      "turn_budget": 1,
+      "variant": "R4_task_structured",
+      "variant_exact_match": true
+    },
+    {
+      "baseline": "R1_full_symbolic",
+      "case_id": "A2",
+      "changed": true,
+      "r1_exact_match": true,
+      "transition": "PASS -> FAIL",
+      "turn_budget": 2,
+      "variant": "R4_task_structured",
+      "variant_exact_match": false
+    }
+  ],
+  "runs": [
+    {
+      "case_id": "A1",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 3134,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 1669,
+            "chars_before": 1457,
+            "end": 1579,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 1583,
+            "chars_after": 61,
+            "chars_before": 1604,
+            "end": 3187,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1604
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 3248,
+        "prompt_sha256": "ff3b253e58be5b412fd90efa82612e2afe25e2c49aa56dba076b8b9eb2048753",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:30:48.179583+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R1_full_symbolic_1t.json",
+          "source_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T093020Z-f6ef47c0b5",
+        "started_at": "2026-08-29T09:30:20.323211+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4351,
+          "output_tokens": 243
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 77
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2919,
+            "output_tokens": 166
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093020Z-f6ef47c0b5",
+          "ts": 1787995834.9292028,
+          "usage": {
+            "completion_tokens": 77,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 128
+            },
+            "total_tokens": 1509
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093020Z-f6ef47c0b5",
+          "ts": 1787995845.277946,
+          "usage": {
+            "completion_tokens": 166,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2919,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 128
+            },
+            "total_tokens": 3085
+          }
+        }
+      ],
+      "representation": "R1_full_symbolic",
+      "representation_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "requested_model": "minimax/minimax-m3",
+      "response": "RED\n",
+      "run_id": "20260829T093020Z-f6ef47c0b5",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 1640,
+        "payload_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+        "variant": "R1_full_symbolic"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A1",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "RED",
+      "failure_class": "output_contract",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 3135,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 1669,
+            "chars_before": 1458,
+            "end": 1580,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 1583,
+            "chars_after": 61,
+            "chars_before": 1605,
+            "end": 3188,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1605
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 3249,
+        "prompt_sha256": "2e611d786193b565e16120e7e4908fc2fc93ef2a6a03c71c5927cb31ee9ca2fd",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": null,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 8,
+        "valid_send_emitted": false
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:31:20.190638+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R1_full_symbolic_2t.json",
+          "source_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": false,
+        "run_id": "20260829T093056Z-ea60490c6c",
+        "started_at": "2026-08-29T09:30:56.252467+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "episode_provider_budget_exhausted",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 5617,
+          "output_tokens": 208
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 58
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 4185,
+            "output_tokens": 150
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093056Z-ea60490c6c",
+          "ts": 1787995866.1332161,
+          "usage": {
+            "completion_tokens": 58,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1490
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093056Z-ea60490c6c",
+          "ts": 1787995871.9684656,
+          "usage": {
+            "completion_tokens": 97,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1488,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1280
+            },
+            "total_tokens": 1585
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093056Z-ea60490c6c",
+          "ts": 1787995876.3937697,
+          "usage": {
+            "completion_tokens": 53,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2697,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1280
+            },
+            "total_tokens": 2750
+          }
+        }
+      ],
+      "representation": "R1_full_symbolic",
+      "representation_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "requested_model": "minimax/minimax-m3",
+      "response": null,
+      "run_id": "20260829T093056Z-ea60490c6c",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 1640,
+        "payload_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+        "variant": "R1_full_symbolic"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A1",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1878,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 413,
+            "chars_before": 1457,
+            "end": 1579,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 328,
+            "chars_after": 61,
+            "chars_before": 1603,
+            "end": 1931,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1603
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1992,
+        "prompt_sha256": "5b20915f9016ad4e5f8b60c593518f46369ff8e6b7205ce4930a734437466cd4",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:31:54.402687+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R2_minimal_symbolic_1t.json",
+          "source_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T093130Z-b86112ad4e",
+        "started_at": "2026-08-29T09:31:30.100417+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3664,
+          "output_tokens": 266
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 106
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2232,
+            "output_tokens": 160
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093130Z-b86112ad4e",
+          "ts": 1787995902.3278632,
+          "usage": {
+            "completion_tokens": 106,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1280
+            },
+            "total_tokens": 1538
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093130Z-b86112ad4e",
+          "ts": 1787995911.1967888,
+          "usage": {
+            "completion_tokens": 160,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2232,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1280
+            },
+            "total_tokens": 2392
+          }
+        }
+      ],
+      "representation": "R2_minimal_symbolic",
+      "representation_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+      "requested_model": "minimax/minimax-m3",
+      "response": "RED\n",
+      "run_id": "20260829T093130Z-b86112ad4e",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 436,
+        "payload_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+        "variant": "R2_minimal_symbolic"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A1",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "RED",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1879,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 413,
+            "chars_before": 1458,
+            "end": 1580,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 328,
+            "chars_after": 61,
+            "chars_before": 1604,
+            "end": 1932,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1604
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1993,
+        "prompt_sha256": "b2517de45eba8ab0fb082bd837da4bdc9e1c252369dba6131d72a1d30eb49bed",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": null,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 5,
+        "valid_send_emitted": false
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:32:29.691433+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R2_minimal_symbolic_2t.json",
+          "source_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": false,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T093205Z-a66c4ec3d9",
+        "started_at": "2026-08-29T09:32:05.319137+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 2920,
+          "output_tokens": 363
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 238
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1488,
+            "output_tokens": 125
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093205Z-a66c4ec3d9",
+          "ts": 1787995940.2130296,
+          "usage": {
+            "completion_tokens": 238,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1670
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093205Z-a66c4ec3d9",
+          "ts": 1787995946.9249344,
+          "usage": {
+            "completion_tokens": 125,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1488,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1613
+          }
+        }
+      ],
+      "representation": "R2_minimal_symbolic",
+      "representation_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+      "requested_model": "minimax/minimax-m3",
+      "response": "Awaiting your input. Ready to assist when you have a task.\n",
+      "run_id": "20260829T093205Z-a66c4ec3d9",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 436,
+        "payload_sha256": "51a4c7b43d7e590c1adf94863459a58704c58e4190e24ed57cd00cce10ce768b",
+        "variant": "R2_minimal_symbolic"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A1",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+      "exact_match": false,
+      "exit_code": 2,
+      "expected_answer": "RED",
+      "failure_class": "output_contract",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1661,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 196,
+            "chars_before": 1457,
+            "end": 1579,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 104,
+            "chars_after": 63,
+            "chars_before": 1608,
+            "end": 1712,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1608
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1775,
+        "prompt_sha256": "ebae50881a343d3f5ab626c7b1bc674e7ac76466a521469d7378a28c66248b7b",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": null,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 901,
+        "valid_send_emitted": false
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:48:40.450455+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R3_plain_language_1t.json",
+          "source_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": false,
+        "run_id": "20260829T093245Z-a16eb549aa",
+        "started_at": "2026-08-29T09:32:45.586028+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "terminated_without_response",
+        "termination_reason": "timeout",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3434,
+          "output_tokens": 198
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 161
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2002,
+            "output_tokens": 37
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093245Z-a16eb549aa",
+          "ts": 1787995978.7834716,
+          "usage": {
+            "completion_tokens": 161,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1593
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T093245Z-a16eb549aa",
+          "ts": 1787995982.9270492,
+          "usage": {
+            "completion_tokens": 37,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2002,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 2039
+          }
+        }
+      ],
+      "representation": "R3_plain_language",
+      "representation_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+      "requested_model": "minimax/minimax-m3",
+      "response": null,
+      "run_id": "20260829T093245Z-a16eb549aa",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 269,
+        "payload_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+        "variant": "R3_plain_language"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A1",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+      "exact_match": true,
+      "exit_code": 3,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1662,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 196,
+            "chars_before": 1458,
+            "end": 1580,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 104,
+            "chars_after": 63,
+            "chars_before": 1609,
+            "end": 1713,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1609
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1776,
+        "prompt_sha256": "5c8f7ab27e6ef7706eaa4297a1ee3aa319c70f2d51f28429be42989483822295",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:49:23.267468+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R3_plain_language_2t.json",
+          "source_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T094852Z-1b24eaa5d5",
+        "started_at": "2026-08-29T09:48:52.427574+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 4934,
+          "output_tokens": 382
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 100
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 3502,
+            "output_tokens": 282
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T094852Z-1b24eaa5d5",
+          "ts": 1787996945.694187,
+          "usage": {
+            "completion_tokens": 100,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1532
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T094852Z-1b24eaa5d5",
+          "ts": 1787996951.820199,
+          "usage": {
+            "completion_tokens": 119,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1485,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1280
+            },
+            "total_tokens": 1604
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T094852Z-1b24eaa5d5",
+          "ts": 1787996960.6022546,
+          "usage": {
+            "completion_tokens": 163,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2017,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 2180
+          }
+        }
+      ],
+      "representation": "R3_plain_language",
+      "representation_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+      "requested_model": "minimax/minimax-m3",
+      "response": "RED\n",
+      "run_id": "20260829T094852Z-1b24eaa5d5",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 269,
+        "payload_sha256": "f5289e6ec4772e041f3fe2e3716fd8be6daf5a7249c3fdc2f74047a466f5477b",
+        "variant": "R3_plain_language"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A1",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1697,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1882,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 63,
+            "chars_before": 1811,
+            "end": 1933,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1811
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 328,
+            "chars_after": 211,
+            "chars_before": 1457,
+            "end": 1785,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1457
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "symbolic_evidence",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 2,
+          "symbolic_evidence": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1996,
+        "prompt_sha256": "e3acdb6281fb5925349a5654b269c75aa5143622d851b43d606a15aaa96db68c",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:49:51.321235+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R4_task_structured_1t.json",
+          "source_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T094932Z-88b39819f6",
+        "started_at": "2026-08-29T09:49:32.568237+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "No new input received. Let me know how I can help."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3620,
+          "output_tokens": 154
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 48
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2188,
+            "output_tokens": 106
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T094932Z-88b39819f6",
+          "ts": 1787996980.8604295,
+          "usage": {
+            "completion_tokens": 48,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1480
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T094932Z-88b39819f6",
+          "ts": 1787996988.4891272,
+          "usage": {
+            "completion_tokens": 106,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2188,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 2294
+          }
+        }
+      ],
+      "representation": "R4_task_structured",
+      "representation_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+      "requested_model": "minimax/minimax-m3",
+      "response": "RED\n",
+      "run_id": "20260829T094932Z-88b39819f6",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 440,
+        "payload_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+        "variant": "R4_task_structured"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A1",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+      "exact_match": true,
+      "exit_code": 3,
+      "expected_answer": "RED",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1698,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1883,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 122,
+            "chars_after": 63,
+            "chars_before": 1812,
+            "end": 1934,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1812
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 328,
+            "chars_after": 211,
+            "chars_before": 1458,
+            "end": 1786,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1458
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "symbolic_evidence",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 2,
+          "symbolic_evidence": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1997,
+        "prompt_sha256": "eb2aedaca42e00561e17e824042491229147894e6dd6a0a13bd52cd5a41146f5",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "distractor_selection",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:50:36.358532+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A1_R4_task_structured_2t.json",
+          "source_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "minimax/minimax-m3",
+        "response_present": true,
+        "run_id": "20260829T095000Z-16c39dff72",
+        "started_at": "2026-08-29T09:50:00.928098+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "ASICloud",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 5455,
+          "output_tokens": 528
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1432,
+            "output_tokens": 130
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 4023,
+            "output_tokens": 398
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "asicloud",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "ASICloud",
+          "thread_id": "20260829T095000Z-16c39dff72",
+          "ts": 1787997012.3220518,
+          "usage": {
+            "completion_tokens": 130,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1432,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1562
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T095000Z-16c39dff72",
+          "ts": 1787997022.4577816,
+          "usage": {
+            "completion_tokens": 125,
+            "completion_tokens_details": null,
+            "prompt_tokens": 1607,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 1732
+          }
+        },
+        {
+          "model": "minimax/minimax-m3",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "ASICloud",
+          "thread_id": "20260829T095000Z-16c39dff72",
+          "ts": 1787997033.7241788,
+          "usage": {
+            "completion_tokens": 273,
+            "completion_tokens_details": null,
+            "prompt_tokens": 2416,
+            "prompt_tokens_details": {
+              "audio_tokens": null,
+              "cached_tokens": 1408
+            },
+            "total_tokens": 2689
+          }
+        }
+      ],
+      "representation": "R4_task_structured",
+      "representation_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+      "requested_model": "minimax/minimax-m3",
+      "response": "RED\n",
+      "run_id": "20260829T095000Z-16c39dff72",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "9296de920b990cdfd558e1f1bbd57f2d2ffe3919c1b51b3c9a344601c6f296e0",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "d6bc2d9078222d72ae867b85fdb6f6f2c5586fc7be3e23334b5cf688f50f0fed",
+        "item_id": "distractor_selection",
+        "llm_summariser_used": false,
+        "payload_chars": 440,
+        "payload_sha256": "3686d235ae3ab22ffcc01c49f9f4fd023da95846a66a2bd00e6b1b940b902c03",
+        "variant": "R4_task_structured"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A2",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 3247,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 1796,
+            "chars_before": 1457,
+            "end": 1565,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 1710,
+            "chars_after": 61,
+            "chars_before": 1590,
+            "end": 3300,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1590
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 3361,
+        "prompt_sha256": "e082ca7f713efee18393bb6efbd32eb47a00bb56fb19ca77d6005b58e6f59134",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:51:00.231259+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R1_full_symbolic_1t.json",
+          "source_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095044Z-fa4f82d881",
+        "started_at": "2026-08-29T09:50:44.543602+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Check system status and user availability'"
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 4007,
+          "output_tokens": 52
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 12
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 2730,
+            "output_tokens": 40
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095044Z-fa4f82d881",
+          "ts": 1787997053.565339,
+          "usage": {
+            "completion_tokens": 12,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 5.6274e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 2.64e-06,
+              "upstream_inference_cost": 5.6274e-05,
+              "upstream_inference_prompt_cost": 5.3634e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1289
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095044Z-fa4f82d881",
+          "ts": 1787997057.3718581,
+          "usage": {
+            "completion_tokens": 40,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0003436,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.6e-05,
+              "upstream_inference_cost": 0.0003436,
+              "upstream_inference_prompt_cost": 0.0003276
+            },
+            "is_byok": false,
+            "prompt_tokens": 2730,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 2770
+          }
+        }
+      ],
+      "representation": "R1_full_symbolic",
+      "representation_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "I have received the bounded benchmark evidence. Processing the arithmetic request.\n",
+      "run_id": "20260829T095044Z-fa4f82d881",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 1759,
+        "payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+        "variant": "R1_full_symbolic"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A2",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "exact_match": true,
+      "exit_code": 3,
+      "expected_answer": "19",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 3248,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 1796,
+            "chars_before": 1458,
+            "end": 1566,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 1710,
+            "chars_after": 61,
+            "chars_before": 1591,
+            "end": 3301,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1591
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 3362,
+        "prompt_sha256": "40bcad7f78484306f3520a401f7f760a9c1c4bc2b9049c4bbe92d00fe2cc885c",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:51:28.482265+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R1_full_symbolic_2t.json",
+          "source_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095108Z-e3bd7a6541",
+        "started_at": "2026-08-29T09:51:08.125091+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "I am initialized and in a continuous loop. Please provide a goal or task to begin the agentic cycle."
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 5333,
+          "output_tokens": 84
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 24
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 4056,
+            "output_tokens": 60
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095108Z-e3bd7a6541",
+          "ts": 1787997077.052981,
+          "usage": {
+            "completion_tokens": 24,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 5.8914e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 5.28e-06,
+              "upstream_inference_cost": 5.8914e-05,
+              "upstream_inference_prompt_cost": 5.3634e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1301
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095108Z-e3bd7a6541",
+          "ts": 1787997082.303493,
+          "usage": {
+            "completion_tokens": 24,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 6.051e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 5.28e-06,
+              "upstream_inference_cost": 6.051e-05,
+              "upstream_inference_prompt_cost": 5.523e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1315,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1339
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095108Z-e3bd7a6541",
+          "ts": 1787997085.6979036,
+          "usage": {
+            "completion_tokens": 36,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.000123042,
+            "cost_details": {
+              "upstream_inference_completions_cost": 7.92e-06,
+              "upstream_inference_cost": 0.000123042,
+              "upstream_inference_prompt_cost": 0.000115122
+            },
+            "is_byok": false,
+            "prompt_tokens": 2741,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 2777
+          }
+        }
+      ],
+      "representation": "R1_full_symbolic",
+      "representation_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "19\n",
+      "run_id": "20260829T095108Z-e3bd7a6541",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 1759,
+        "payload_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+        "variant": "R1_full_symbolic"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A2",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1613,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 162,
+            "chars_before": 1457,
+            "end": 1565,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 77,
+            "chars_after": 61,
+            "chars_before": 1589,
+            "end": 1666,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1589
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1727,
+        "prompt_sha256": "80333997e64a92a81fd679a5a4a2c3afbf002977a891265c96567d91f92a7ea2",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:51:55.298722+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R2_minimal_symbolic_1t.json",
+          "source_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095138Z-49f2d0ea77",
+        "started_at": "2026-08-29T09:51:38.184109+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Waiting for user input to begin operations."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3235,
+          "output_tokens": 56
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1278,
+            "output_tokens": 23
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1957,
+            "output_tokens": 33
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095138Z-49f2d0ea77",
+          "ts": 1787997105.6926394,
+          "usage": {
+            "completion_tokens": 23,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 9.728e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 7.82e-06,
+              "upstream_inference_cost": 9.728e-05,
+              "upstream_inference_prompt_cost": 8.946e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1278,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1301
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095138Z-49f2d0ea77",
+          "ts": 1787997111.1785707,
+          "usage": {
+            "completion_tokens": 33,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 8.9454e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 7.26e-06,
+              "upstream_inference_cost": 8.9454e-05,
+              "upstream_inference_prompt_cost": 8.2194e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1957,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1990
+          }
+        }
+      ],
+      "representation": "R2_minimal_symbolic",
+      "representation_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "Acknowledged contract and mission constraints. Processing math evidence.\n",
+      "run_id": "20260829T095138Z-49f2d0ea77",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 211,
+        "payload_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+        "variant": "R2_minimal_symbolic"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A2",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1614,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 162,
+            "chars_before": 1458,
+            "end": 1566,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 77,
+            "chars_after": 61,
+            "chars_before": 1590,
+            "end": 1667,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1590
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1728,
+        "prompt_sha256": "3a5d798e403f028893722c150f9ec491214e1edaa4bf6a6bcc23d84818f1626d",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": null,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 5,
+        "valid_send_emitted": false
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:52:17.527254+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R2_minimal_symbolic_2t.json",
+          "source_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": false,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095205Z-f276bcc419",
+        "started_at": "2026-08-29T09:52:05.368145+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "system_ready_waiting_for_input"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 4564,
+          "output_tokens": 65
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 20
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 3287,
+            "output_tokens": 45
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095205Z-f276bcc419",
+          "ts": 1787997132.2059708,
+          "usage": {
+            "completion_tokens": 20,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00020355,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.2e-05,
+              "upstream_inference_cost": 0.00020355,
+              "upstream_inference_prompt_cost": 0.00019155
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 4,
+              "video_tokens": 0
+            },
+            "total_tokens": 1297
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095205Z-f276bcc419",
+          "ts": 1787997134.794029,
+          "usage": {
+            "completion_tokens": 24,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001437,
+            "cost_details": {
+              "upstream_inference_completions_cost": 9.6e-06,
+              "upstream_inference_cost": 0.0001437,
+              "upstream_inference_prompt_cost": 0.0001341
+            },
+            "is_byok": false,
+            "prompt_tokens": 1341,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1365
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095205Z-f276bcc419",
+          "ts": 1787997137.0311542,
+          "usage": {
+            "completion_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00014336,
+            "cost_details": {
+              "upstream_inference_completions_cost": 7.14e-06,
+              "upstream_inference_cost": 0.00014336,
+              "upstream_inference_prompt_cost": 0.00013622
+            },
+            "is_byok": false,
+            "prompt_tokens": 1946,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1967
+          }
+        }
+      ],
+      "representation": "R2_minimal_symbolic",
+      "representation_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "OmegaClaw agentic harness initialized. Awaiting user objectives.\n",
+      "run_id": "20260829T095205Z-f276bcc419",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 211,
+        "payload_sha256": "1fff67368b0abbf1727dc824a60c847faf2e84ade3d935321b53204391a3db71",
+        "variant": "R2_minimal_symbolic"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A2",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1343,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1589,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 138,
+            "chars_before": 1457,
+            "end": 1565,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1457
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 46,
+            "chars_after": 63,
+            "chars_before": 1594,
+            "end": 1640,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1594
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1703,
+        "prompt_sha256": "d9fd76338ee903421ed258f1ddbe918711bb5d0515035ddeda582a4d58057d66",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:52:43.704480+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R3_plain_language_1t.json",
+          "source_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095228Z-adee785c1d",
+        "started_at": "2026-08-29T09:52:28.586208+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "I am initializing OmegaClaw harness. Monitoring for user input."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3202,
+          "output_tokens": 59
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 31
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1925,
+            "output_tokens": 28
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095228Z-adee785c1d",
+          "ts": 1787997156.796171,
+          "usage": {
+            "completion_tokens": 31,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.000137,
+            "cost_details": {
+              "upstream_inference_completions_cost": 9.3e-06,
+              "upstream_inference_cost": 0.000137,
+              "upstream_inference_prompt_cost": 0.0001277
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1308
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095228Z-adee785c1d",
+          "ts": 1787997160.5736816,
+          "usage": {
+            "completion_tokens": 28,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 8.701e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 6.16e-06,
+              "upstream_inference_cost": 8.701e-05,
+              "upstream_inference_prompt_cost": 8.085e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1925,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1953
+          }
+        }
+      ],
+      "representation": "R3_plain_language",
+      "representation_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "I have received the bounded benchmark payload. Processing evidence.\n",
+      "run_id": "20260829T095228Z-adee785c1d",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 197,
+        "payload_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+        "variant": "R3_plain_language"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A2",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1344,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1590,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 138,
+            "chars_before": 1458,
+            "end": 1566,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1458
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 46,
+            "chars_after": 63,
+            "chars_before": 1595,
+            "end": 1641,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1595
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task",
+          "symbolic_evidence"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1,
+          "symbolic_evidence": 2
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1704,
+        "prompt_sha256": "5a1f98911279f00720d5649f65fedb2fff24b0f8a4ffc5711900ca3fd39232d0",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:53:11.487630+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R3_plain_language_2t.json",
+          "source_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095253Z-5234d5ca34",
+        "started_at": "2026-08-29T09:52:53.817955+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Waiting for user input."
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 4507,
+          "output_tokens": 77
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1278,
+            "output_tokens": 15
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 3229,
+            "output_tokens": 62
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095253Z-5234d5ca34",
+          "ts": 1787997182.65914,
+          "usage": {
+            "completion_tokens": 15,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 9.456e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 5.1e-06,
+              "upstream_inference_cost": 9.456e-05,
+              "upstream_inference_prompt_cost": 8.946e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1278,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1293
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095253Z-5234d5ca34",
+          "ts": 1787997185.7065055,
+          "usage": {
+            "completion_tokens": 15,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 5.9328e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 3.3e-06,
+              "upstream_inference_cost": 5.9328e-05,
+              "upstream_inference_prompt_cost": 5.6028e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1334,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1349
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095253Z-5234d5ca34",
+          "ts": 1787997188.7545452,
+          "usage": {
+            "completion_tokens": 47,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 8.993e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.034e-05,
+              "upstream_inference_cost": 8.993e-05,
+              "upstream_inference_prompt_cost": 7.959e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1895,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1942
+          }
+        }
+      ],
+      "representation": "R3_plain_language",
+      "representation_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "Calculation in progress: 12 + 7.\n",
+      "run_id": "20260829T095253Z-5234d5ca34",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 197,
+        "payload_sha256": "ca9545582c73bd7a94c19f7ca3557f1f9c11a7f6d61605a001651ef30ec2715b",
+        "variant": "R3_plain_language"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A2",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+      "exact_match": true,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": null,
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1446,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1617,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 63,
+            "chars_before": 1560,
+            "end": 1668,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1560
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 77,
+            "chars_after": 197,
+            "chars_before": 1457,
+            "end": 1534,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1457
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "symbolic_evidence",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 2,
+          "symbolic_evidence": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1731,
+        "prompt_sha256": "9b518540cdd6233488f96845748df6965e65b0e623ff40699cb145d0ff81578c",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": true,
+        "first_turn_with_expected_token": 1,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:53:40.583655+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R4_task_structured_1t.json",
+          "source_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095324Z-4eac9f5cfa",
+        "started_at": "2026-08-29T09:53:24.918587+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "Agentic harness initialized. Awaiting user input."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3236,
+          "output_tokens": 32
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1278,
+            "output_tokens": 27
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1958,
+            "output_tokens": 5
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095324Z-4eac9f5cfa",
+          "ts": 1787997213.7572858,
+          "usage": {
+            "completion_tokens": 27,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00017694,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.08e-05,
+              "upstream_inference_cost": 0.00017694,
+              "upstream_inference_prompt_cost": 0.00016614
+            },
+            "is_byok": false,
+            "prompt_tokens": 1278,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1305
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095324Z-4eac9f5cfa",
+          "ts": 1787997217.969558,
+          "usage": {
+            "completion_tokens": 5,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 8.3336e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.1e-06,
+              "upstream_inference_cost": 8.3336e-05,
+              "upstream_inference_prompt_cost": 8.2236e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1958,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1963
+          }
+        }
+      ],
+      "representation": "R4_task_structured",
+      "representation_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "19\n",
+      "run_id": "20260829T095324Z-4eac9f5cfa",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 215,
+        "payload_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+        "variant": "R4_task_structured"
+      },
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A2",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": true,
+        "chars_between_alpha_instruction_and_human_task": 1447,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1618,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 108,
+            "chars_after": 63,
+            "chars_before": 1561,
+            "end": 1669,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1561
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": 77,
+            "chars_after": 197,
+            "chars_before": 1458,
+            "end": 1535,
+            "found": true,
+            "matched_form": "json_escaped",
+            "start": 1458
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "symbolic_evidence",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 2,
+          "symbolic_evidence": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1732,
+        "prompt_sha256": "ebae4d17fe54e42b107c9e179d83670696d16e80b723af8c254da221a65992cb",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 2,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:54:06.755503+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "A2_R4_task_structured_2t.json",
+          "source_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": true,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095350Z-33fd0c6972",
+        "started_at": "2026-08-29T09:53:50.264317+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "waiting for user input"
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 3,
+          "input_tokens": 4526,
+          "output_tokens": 47
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1278,
+            "output_tokens": 6
+          },
+          "episode": {
+            "calls": 2,
+            "input_tokens": 3248,
+            "output_tokens": 41
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095350Z-33fd0c6972",
+          "ts": 1787997239.0296936,
+          "usage": {
+            "completion_tokens": 6,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001302,
+            "cost_details": {
+              "upstream_inference_completions_cost": 2.4e-06,
+              "upstream_inference_cost": 0.0001302,
+              "upstream_inference_prompt_cost": 0.0001278
+            },
+            "is_byok": false,
+            "prompt_tokens": 1278,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1284
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095350Z-33fd0c6972",
+          "ts": 1787997241.3124633,
+          "usage": {
+            "completion_tokens": 15,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 9.603e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 5.1e-06,
+              "upstream_inference_cost": 9.603e-05,
+              "upstream_inference_prompt_cost": 9.093e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1299,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1314
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095350Z-33fd0c6972",
+          "ts": 1787997243.9229035,
+          "usage": {
+            "completion_tokens": 26,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.00026377,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.04e-05,
+              "upstream_inference_cost": 0.00026377,
+              "upstream_inference_prompt_cost": 0.00025337
+            },
+            "is_byok": false,
+            "prompt_tokens": 1949,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1975
+          }
+        }
+      ],
+      "representation": "R4_task_structured",
+      "representation_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "processing observations and calculating sum\n",
+      "run_id": "20260829T095350Z-33fd0c6972",
+      "source_condition": "A:image_text",
+      "source_evidence_sha256": "d9ce39ed6d6a57d459af5dc1604180d22ac711074210a016ee7e56513882f074",
+      "transform_manifest": {
+        "deterministic": true,
+        "human_text_sha256": "75b7ae9d6bc2373f549104c92e4cd0308460bc01e6193e571c86540a294610b4",
+        "item_id": "number_arithmetic",
+        "llm_summariser_used": false,
+        "payload_chars": 215,
+        "payload_sha256": "1b05833dcd8a53abff817112478ae9ebefa33b102861806620dc992a5cdf0802",
+        "variant": "R4_task_structured"
+      },
+      "turn_budget": 2
+    },
+    {
+      "case_id": "A3",
+      "controller_error": null,
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "exact_match": false,
+      "exit_code": 0,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": null,
+        "chars_between_alpha_instruction_and_human_task": 1324,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1524,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 140,
+            "chars_after": 60,
+            "chars_before": 1438,
+            "end": 1578,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1438
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": null,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1638,
+        "prompt_sha256": "93d8031f497891a59e9938b1305d172fb6b32f1a713d5bab42b22246339ff14d",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": 1,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 7,
+        "valid_send_emitted": true
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": false,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:54:32.316284+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 1 reasoning loop after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 1.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 1,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 1,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "adb33e5a4abf42976889e42567e87441a5d46a8b87347980ca4c3689cfa80992",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": false,
+          "budget_exhausted": false,
+          "episode_attempts": 1,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 1,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095416Z-d07df09050",
+        "started_at": "2026-08-29T09:54:16.720631+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "I am online and initialized. Please provide your goals or instructions to begin the agentic cycle."
+        ],
+        "status": "completed",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 3111,
+          "output_tokens": 58
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 21
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1834,
+            "output_tokens": 37
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095416Z-d07df09050",
+          "ts": 1787997264.9129205,
+          "usage": {
+            "completion_tokens": 21,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 5.8254e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 4.62e-06,
+              "upstream_inference_cost": 5.8254e-05,
+              "upstream_inference_prompt_cost": 5.3634e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1298
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095416Z-d07df09050",
+          "ts": 1787997269.4671028,
+          "usage": {
+            "completion_tokens": 37,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001374,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.48e-05,
+              "upstream_inference_cost": 0.0001374,
+              "upstream_inference_prompt_cost": 0.0001226
+            },
+            "is_byok": false,
+            "prompt_tokens": 1834,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 1216,
+              "video_tokens": 0
+            },
+            "total_tokens": 1871
+          }
+        }
+      ],
+      "representation": null,
+      "representation_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "I am processing the bounded benchmark payload. Initializing reasoning loop.\n",
+      "run_id": "20260829T095416Z-d07df09050",
+      "source_condition": "A:text_control",
+      "source_evidence_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "transform_manifest": null,
+      "turn_budget": 1
+    },
+    {
+      "case_id": "A3",
+      "controller_error": "ERROR:root:Socket error event:  POLLRDHUP",
+      "envelope_matches_payload": true,
+      "envelope_payload_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "exact_match": false,
+      "exit_code": 3,
+      "expected_answer": "19",
+      "failure_class": "reasoning_composition",
+      "instruction_position_receipt": {
+        "all_components_found": false,
+        "alpha_instruction_precedes_human_task": true,
+        "alpha_instruction_precedes_symbolic_evidence": null,
+        "chars_between_alpha_instruction_and_human_task": 1325,
+        "components": {
+          "alpha_instruction": {
+            "chars": 99,
+            "chars_after": 1525,
+            "chars_before": 15,
+            "end": 114,
+            "found": true,
+            "matched_form": "literal",
+            "start": 15
+          },
+          "human_task": {
+            "chars": 140,
+            "chars_after": 60,
+            "chars_before": 1439,
+            "end": 1579,
+            "found": true,
+            "matched_form": "literal",
+            "start": 1439
+          },
+          "omega_context": {
+            "chars": 35,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          },
+          "symbolic_evidence": {
+            "chars": null,
+            "chars_after": null,
+            "chars_before": null,
+            "end": null,
+            "found": false,
+            "matched_form": null,
+            "start": null
+          }
+        },
+        "omega_context_located": false,
+        "omega_context_precedes_human_task": null,
+        "order": [
+          "alpha_instruction",
+          "human_task"
+        ],
+        "order_rank": {
+          "alpha_instruction": 0,
+          "human_task": 1
+        },
+        "per_segment_tokens_available": false,
+        "prompt_chars": 1639,
+        "prompt_sha256": "7d61439d91a267684187f243b368866f21c3f97ddfb085c8842d37d409b0d16c",
+        "request_tokens": null,
+        "salience_score_reported": false
+      },
+      "item_id": "number_arithmetic",
+      "log_analysis": {
+        "expected_token_present_internally": false,
+        "first_turn_with_expected_token": null,
+        "first_turn_with_valid_send": null,
+        "injection_found": true,
+        "prompted_turns_observed": 1,
+        "raw_idle_ticks": 5,
+        "valid_send_emitted": false
+      },
+      "manifest": {
+        "alpha_git_sha": "6be3d1369f5ed5e6b96b2694d335d52243ef028f",
+        "boot_budget_exhausted": true,
+        "boot_readiness_signal": "CHARS_SENT: [0-9]+",
+        "boot_turn_complete_signal": "\\(-+iteration [0-9]+\\)",
+        "bounded_controller": true,
+        "ended_at": "2026-08-29T09:55:01.402369+00:00",
+        "episode_contract": {
+          "after_response": "wait_for_new_user_input_or_terminate",
+          "boot_behavior": "stock_omegaclaw_boot_observed_and_metered",
+          "bounds_semantics": {
+            "maxHistory": "suppresses prior recalled history; the current HUMAN-MSG input is delivered outside the HISTORY field and is preserved",
+            "maxNewInputLoops": "bounds prompted reasoning turns per new-input activation, not raw loop ticks",
+            "maxWakeLoops": "suppresses wake-driven prompted work",
+            "provider_calls": "bounded separately and independently by the external metering gateway",
+            "skill_executions": "not equivalent to provider calls: one prompted turn may request up to five skills, so no one-tool ceiling is claimed"
+          },
+          "instructions": [
+            "This bounded benchmark episode permits at most 2 reasoning loops after this human-mediated input is received.",
+            "Send your best response to the user no later than reasoning loop 2.",
+            "After you send a response, wait for genuinely new user input; the benchmark controller will end this one-shot episode.",
+            "The benchmark schedules no autonomous wake-up window before teardown.",
+            "OmegaClaw's stock startup activity occurs before this handoff and is measured separately from this human-input grant."
+          ],
+          "max_boot_calls": 1,
+          "max_history": 0,
+          "max_reasoning_loops": 2,
+          "max_wake_loops": 0,
+          "mode": "bounded_benchmark"
+        },
+        "ignored_stale_messages": [],
+        "ingress": {
+          "route": "text_passthrough",
+          "sensory_inference": false,
+          "source": "inline",
+          "source_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e"
+        },
+        "omega_bounds": {
+          "maxHistory": 0,
+          "maxNewInputLoops": 2,
+          "maxWakeLoops": 0,
+          "wakeupInterval": 960
+        },
+        "omega_bounds_container_path": "/etc/alphaclaw-bounds.yaml",
+        "omega_bounds_sha256": "f0ccc4fcda6243c74e2c52f7e8b2e68d638369a18f3d2df9594c0f5d1c1f6621",
+        "omega_bounds_source": "yaml_config_file",
+        "omega_commit_matches_pin": true,
+        "omega_image": "alphaclaw-omega-stock:3d711e4b9f52",
+        "omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+        "omega_provider": "OpenAIAPI",
+        "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+        "omega_source_modified": false,
+        "omega_worktree_bytes_match_pin": true,
+        "provider_gateway": {
+          "boot_attempts": 1,
+          "boot_budget_exhausted": true,
+          "budget_exhausted": false,
+          "episode_attempts": 2,
+          "episode_released": true,
+          "fatal_error": null,
+          "max_boot_calls": 1,
+          "max_episode_calls": 2,
+          "phase": "episode"
+        },
+        "requested_model": "google/gemma-4-26b-a4b-it",
+        "response_present": true,
+        "run_id": "20260829T095443Z-d5a87a6d7c",
+        "started_at": "2026-08-29T09:54:43.548417+00:00",
+        "startup_messages": [
+          "OmegaClaw version=unknown",
+          "I am initialized and ready. Please provide a goal or task to begin the continuous loop."
+        ],
+        "status": "boot_budget_exhausted",
+        "termination_reason": "responded",
+        "threadkeeper_commit_matches_pin": true,
+        "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931",
+        "threadkeeper_worktree_bytes_match_pin": true,
+        "upstream_provider": "OpenRouter",
+        "usage": {
+          "calls": 2,
+          "input_tokens": 2589,
+          "output_tokens": 51
+        },
+        "usage_by_phase": {
+          "boot": {
+            "calls": 1,
+            "input_tokens": 1277,
+            "output_tokens": 20
+          },
+          "episode": {
+            "calls": 1,
+            "input_tokens": 1312,
+            "output_tokens": 31
+          }
+        }
+      },
+      "preflight_checks": {
+        "frozen_transform_version": true,
+        "identical_task_instruction_bytes": true,
+        "model_is_preregistered": true,
+        "no_added_fact": true,
+        "no_expected_answer_leakage": true,
+        "no_removed_required_fact": true,
+        "provider_is_preregistered": true,
+        "r1_byte_identical_to_frozen_v2": true,
+        "same_fact_set": true,
+        "sensory_calls_zero": true,
+        "source_artifact_digest_unchanged": true
+      },
+      "preflight_passed": true,
+      "provider": "openrouter",
+      "provider_call_made": true,
+      "provider_usage": [
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_boot",
+          "phase": "boot",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095443Z-d5a87a6d7c",
+          "ts": 1787997294.7345712,
+          "usage": {
+            "completion_tokens": 20,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 5.8034e-05,
+            "cost_details": {
+              "upstream_inference_completions_cost": 4.4e-06,
+              "upstream_inference_cost": 5.8034e-05,
+              "upstream_inference_prompt_cost": 5.3634e-05
+            },
+            "is_byok": false,
+            "prompt_tokens": 1277,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1297
+          }
+        },
+        {
+          "model": "google/gemma-4-26b-a4b-it",
+          "node_role": "omega_episode",
+          "phase": "episode",
+          "provider": "OpenRouter",
+          "thread_id": "20260829T095443Z-d5a87a6d7c",
+          "ts": 1787997297.4757648,
+          "usage": {
+            "completion_tokens": 31,
+            "completion_tokens_details": {
+              "audio_tokens": 0,
+              "image_tokens": 0,
+              "reasoning_tokens": 0
+            },
+            "cost": 0.0001436,
+            "cost_details": {
+              "upstream_inference_completions_cost": 1.24e-05,
+              "upstream_inference_cost": 0.0001436,
+              "upstream_inference_prompt_cost": 0.0001312
+            },
+            "is_byok": false,
+            "prompt_tokens": 1312,
+            "prompt_tokens_details": {
+              "audio_tokens": 0,
+              "cache_write_tokens": 0,
+              "cached_tokens": 0,
+              "video_tokens": 0
+            },
+            "total_tokens": 1343
+          }
+        }
+      ],
+      "representation": null,
+      "representation_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "requested_model": "google/gemma-4-26b-a4b-it",
+      "response": "I am in a standby state due to no new user input. Please provide a goal, task, or command to initiate the agentic loop.\n",
+      "run_id": "20260829T095443Z-d5a87a6d7c",
+      "source_condition": "A:text_control",
+      "source_evidence_sha256": "859fee767e82eb551330202f23ea89807bd97d7c0c9091630ecb8c2c60e3101e",
+      "transform_manifest": null,
+      "turn_budget": 2
+    }
+  ],
+  "schema_version": 1,
+  "section": "V3-A",
+  "sensory_calls": 0,
+  "statistical_limitation": {
+    "consequence": "No representation effect and no scheduling effect is claimed. Under the frozen interpretation matrix several branches fire in contradictory directions, which is exactly the situation in which the non-attribution constraint forbids naming a cause. Establishing any such effect requires repeats, which this tranche did not preregister.",
+    "finding": "Transitions occur in BOTH directions for the same manipulation: A1/R1 goes PASS->FAIL from one turn to two while A2/R1 goes FAIL->PASS, and R3 flips A1 PASS->FAIL at one turn but FAIL->PASS at two. With a single run per cell these are not separable from run-to-run variability.",
+    "repeats_per_cell": 1
+  },
+  "turn_pairs": [
+    {
+      "case_id": "A1",
+      "changed": true,
+      "one_turn_exact_match": true,
+      "representation": "R1_full_symbolic",
+      "transition": "PASS -> FAIL",
+      "two_turn_exact_match": false
+    },
+    {
+      "case_id": "A1",
+      "changed": true,
+      "one_turn_exact_match": true,
+      "representation": "R2_minimal_symbolic",
+      "transition": "PASS -> FAIL",
+      "two_turn_exact_match": false
+    },
+    {
+      "case_id": "A1",
+      "changed": true,
+      "one_turn_exact_match": false,
+      "representation": "R3_plain_language",
+      "transition": "FAIL -> PASS",
+      "two_turn_exact_match": true
+    },
+    {
+      "case_id": "A1",
+      "changed": false,
+      "one_turn_exact_match": true,
+      "representation": "R4_task_structured",
+      "transition": "PASS -> PASS",
+      "two_turn_exact_match": true
+    },
+    {
+      "case_id": "A2",
+      "changed": true,
+      "one_turn_exact_match": false,
+      "representation": "R1_full_symbolic",
+      "transition": "FAIL -> PASS",
+      "two_turn_exact_match": true
+    },
+    {
+      "case_id": "A2",
+      "changed": false,
+      "one_turn_exact_match": false,
+      "representation": "R2_minimal_symbolic",
+      "transition": "FAIL -> FAIL",
+      "two_turn_exact_match": false
+    },
+    {
+      "case_id": "A2",
+      "changed": false,
+      "one_turn_exact_match": false,
+      "representation": "R3_plain_language",
+      "transition": "FAIL -> FAIL",
+      "two_turn_exact_match": false
+    },
+    {
+      "case_id": "A2",
+      "changed": true,
+      "one_turn_exact_match": true,
+      "representation": "R4_task_structured",
+      "transition": "PASS -> FAIL",
+      "two_turn_exact_match": false
+    },
+    {
+      "case_id": "A3",
+      "changed": false,
+      "one_turn_exact_match": false,
+      "representation": null,
+      "transition": "FAIL -> FAIL",
+      "two_turn_exact_match": false
+    }
+  ],
+  "usage_by_provider": {
+    "ASICloud": {
+      "calls": 19,
+      "cost": 0.0,
+      "input_tokens": 33995,
+      "models": [
+        "minimax/minimax-m3"
+      ],
+      "output_tokens": 2342,
+      "phases": {
+        "boot": 8,
+        "episode": 11
+      }
+    },
+    "OpenRouter": {
+      "calls": 24,
+      "cost": 0.002935,
+      "input_tokens": 38310,
+      "models": [
+        "google/gemma-4-26b-a4b-it"
+      ],
+      "output_tokens": 581,
+      "phases": {
+        "boot": 10,
+        "episode": 14
+      }
+    }
+  }
+}

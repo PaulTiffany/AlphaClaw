@@ -24,6 +24,7 @@ colour word ("red"), while the expected answer token ("RED") must never appear. 
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
 R1_FULL_SYMBOLIC = "R1_full_symbolic"
@@ -125,13 +126,26 @@ def render(
                        "observations": facts}, **SERIALISATION)
 
 
+#: Amendment v3.1. A bare substring test is wrong for short numeric answers: the frozen
+#: v2 payload for ``number_arithmetic`` contains "19" inside the image digest
+#: ...c197e29bfb, which states nothing. Leakage means the answer appears as a STANDALONE
+#: token, so the test is anchored on word boundaries. Still case-sensitive, still
+#: mechanical, still applied to every variant including R1. Discovered by preflight
+#: before any v3 provider call; no representation was changed.
+LEAK_CHECK_VERSION = "v3.1-word-boundary"
+
+
 def leaks_answer(payload: str, expected_answer: str) -> bool:
-    """True if the exact expected-answer string appears in the payload.
+    """True if the expected answer appears as a standalone token in the payload.
 
     Case-sensitive on purpose: ``RED`` leaking is a failure, while a required fact
     naming the colour ``red`` is the information the task legitimately needs.
+
+    Word-anchored on purpose: ``19`` inside a hex digest is not a stated answer, while
+    ``19`` as its own token is.
     """
-    return expected_answer in payload
+    return re.search(rf"(?<![A-Za-z0-9]){re.escape(expected_answer)}(?![A-Za-z0-9])",
+                     payload) is not None
 
 
 def transform_manifest(
