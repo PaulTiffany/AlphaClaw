@@ -473,11 +473,50 @@ def specification() -> dict[str, Any]:
                                      "exact-match success"],
                 "cost_equations": {
                     "C_MM(N)": "N * C_multimodal",
-                    "C_Alpha(N)": "C_multimodal + (N - 1) * C_text",
-                    "Savings(N)": "(N - 1) * (C_multimodal - C_text)",
+                    "C_Alpha(N)": "C_multimodal + N * C_text",
+                    "Savings(N)": "(N - 1) * C_multimodal - N * C_text",
                     "fraction": "1 - C_Alpha(N) / C_MM(N)",
                     "stationary_limit": "1 - C_text / C_multimodal",
                     "status": "analytic expectations; receipts test the architecture",
+                    "amendment": economics_v3.AMENDMENT_VERSION,
+                    "superseded": economics_v3.SUPERSEDED_ALPHA_COST_FORMULA,
+                },
+                "amendment_v3_2": {
+                    "scope": "call-parity semantics and the AlphaClaw cost equation only",
+                    "resolves": (
+                        "Protocol v3 defined E2 twice and inconsistently: "
+                        "expected_call_structure gave 1 multimodal + N text, while "
+                        "C_Alpha(N) = C_multimodal + (N - 1) * C_text assumed total-call "
+                        "parity. Only the former yields the frozen 38/60/98 budget."),
+                    "ruling": (
+                        "Reasoning depth is held CONSTANT across architectures. At depth "
+                        "N every arm performs N reasoning calls; E2's single perception "
+                        "call is an architectural setup cost, not one of the N steps, so "
+                        "E2 issues N + 1 provider calls per episode."),
+                    "chronology": (
+                        "Discovered after V3-A and BEFORE any V3-B provider call, before "
+                        "any V3-B population was frozen. No V3-B call had occurred."),
+                    "unchanged": ["architectures", "models", "task family", "depths",
+                                  "repeats", "providers", "expected_call_structure",
+                                  "all call, token and dollar caps"],
+                    "shallow_depth_note": (
+                        "At N = 1 AlphaClaw pays one perception plus one text call "
+                        "against the baseline's single multimodal call, so negative "
+                        "dollar savings at shallow depth is a legitimate result and must "
+                        "not be hidden. The claim is amortisation; no break-even depth "
+                        "inside {1, 2, 4, 8} is preregistered, and break-even is derived "
+                        "only from receipts."),
+                    "metric_distinction": (
+                        "multimodal calls avoided = N - 1 and fraction = 1 - 1/N measure "
+                        "MULTIMODAL INFERENCE avoidance, not total provider-call "
+                        "avoidance. The two must not be conflated."),
+                },
+                "frozen_population": {
+                    "generator": "scripts/make_v3b_suite.py",
+                    "ground_truth": "benchmark/v3b-ground-truth.json",
+                    "stimuli_dir": "benchmark/v3b-stimuli",
+                    "frozen_before_execution": True,
+                    "regenerated_at_run_time": False,
                 },
                 "cost_labelling": {
                     "measured": "derived from provider receipts",

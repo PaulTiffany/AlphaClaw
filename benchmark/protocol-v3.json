@@ -444,6 +444,24 @@
       "two_turn_role": "diagnostic control, not the AlphaClaw population"
     },
     "V3B": {
+      "amendment_v3_2": {
+        "chronology": "Discovered after V3-A and BEFORE any V3-B provider call, before any V3-B population was frozen. No V3-B call had occurred.",
+        "metric_distinction": "multimodal calls avoided = N - 1 and fraction = 1 - 1/N measure MULTIMODAL INFERENCE avoidance, not total provider-call avoidance. The two must not be conflated.",
+        "resolves": "Protocol v3 defined E2 twice and inconsistently: expected_call_structure gave 1 multimodal + N text, while C_Alpha(N) = C_multimodal + (N - 1) * C_text assumed total-call parity. Only the former yields the frozen 38/60/98 budget.",
+        "ruling": "Reasoning depth is held CONSTANT across architectures. At depth N every arm performs N reasoning calls; E2's single perception call is an architectural setup cost, not one of the N steps, so E2 issues N + 1 provider calls per episode.",
+        "scope": "call-parity semantics and the AlphaClaw cost equation only",
+        "shallow_depth_note": "At N = 1 AlphaClaw pays one perception plus one text call against the baseline's single multimodal call, so negative dollar savings at shallow depth is a legitimate result and must not be hidden. The claim is amortisation; no break-even depth inside {1, 2, 4, 8} is preregistered, and break-even is derived only from receipts.",
+        "unchanged": [
+          "architectures",
+          "models",
+          "task family",
+          "depths",
+          "repeats",
+          "providers",
+          "expected_call_structure",
+          "all call, token and dollar caps"
+        ]
+      },
       "architectures": {
         "E1": "multimodal-resident baseline; media available every call",
         "E2": "AlphaClaw; one sensory inference, symbolic handoff reused",
@@ -466,12 +484,14 @@
         "total_cap": 98
       },
       "cost_equations": {
-        "C_Alpha(N)": "C_multimodal + (N - 1) * C_text",
+        "C_Alpha(N)": "C_multimodal + N * C_text",
         "C_MM(N)": "N * C_multimodal",
-        "Savings(N)": "(N - 1) * (C_multimodal - C_text)",
+        "Savings(N)": "(N - 1) * C_multimodal - N * C_text",
+        "amendment": "v3.2",
         "fraction": "1 - C_Alpha(N) / C_MM(N)",
         "stationary_limit": "1 - C_text / C_multimodal",
-        "status": "analytic expectations; receipts test the architecture"
+        "status": "analytic expectations; receipts test the architecture",
+        "superseded": "C_multimodal + (N - 1) * C_text"
       },
       "cost_labelling": {
         "estimated": "derived from catalog pricing; never called measured",
@@ -509,9 +529,13 @@
             "text_calls": 1
           },
           "depth": 1,
+          "e2_perception_calls": 1,
+          "e2_total_provider_calls": 2,
           "label": "architectural arithmetic; not an empirical result",
+          "metric_scope": "multimodal inference avoidance; NOT total provider-call avoidance",
           "multimodal_avoidance_fraction": 0.0,
-          "multimodal_calls_avoided": 0
+          "multimodal_calls_avoided": 0,
+          "reasoning_steps_per_arm": 1
         },
         {
           "E1_multimodal_resident": {
@@ -527,9 +551,13 @@
             "text_calls": 2
           },
           "depth": 2,
+          "e2_perception_calls": 1,
+          "e2_total_provider_calls": 3,
           "label": "architectural arithmetic; not an empirical result",
+          "metric_scope": "multimodal inference avoidance; NOT total provider-call avoidance",
           "multimodal_avoidance_fraction": 0.5,
-          "multimodal_calls_avoided": 1
+          "multimodal_calls_avoided": 1,
+          "reasoning_steps_per_arm": 2
         },
         {
           "E1_multimodal_resident": {
@@ -545,9 +573,13 @@
             "text_calls": 4
           },
           "depth": 4,
+          "e2_perception_calls": 1,
+          "e2_total_provider_calls": 5,
           "label": "architectural arithmetic; not an empirical result",
+          "metric_scope": "multimodal inference avoidance; NOT total provider-call avoidance",
           "multimodal_avoidance_fraction": 0.75,
-          "multimodal_calls_avoided": 3
+          "multimodal_calls_avoided": 3,
+          "reasoning_steps_per_arm": 4
         },
         {
           "E1_multimodal_resident": {
@@ -563,13 +595,24 @@
             "text_calls": 8
           },
           "depth": 8,
+          "e2_perception_calls": 1,
+          "e2_total_provider_calls": 9,
           "label": "architectural arithmetic; not an empirical result",
+          "metric_scope": "multimodal inference avoidance; NOT total provider-call avoidance",
           "multimodal_avoidance_fraction": 0.875,
-          "multimodal_calls_avoided": 7
+          "multimodal_calls_avoided": 7,
+          "reasoning_steps_per_arm": 8
         }
       ],
       "expected_call_structure_label": "architectural arithmetic, not an empirical result; the benchmark verifies that actual receipts match it",
       "fairness_rule": "One model serves all three arms, so capability and price schedule are identical across arms and only input modality per call varies. Architecture-measured call avoidance is reported separately from any model-price-dependent dollar extrapolation, and cheap-vs-expensive model pairs are never presented as 'AlphaClaw savings'.",
+      "frozen_population": {
+        "frozen_before_execution": true,
+        "generator": "scripts/make_v3b_suite.py",
+        "ground_truth": "benchmark/v3b-ground-truth.json",
+        "regenerated_at_run_time": false,
+        "stimuli_dir": "benchmark/v3b-stimuli"
+      },
       "harness_note": "E1/E2/E3 are measured with a single direct provider harness. E1 is not AlphaClaw and does not run Omega. Deployed AlphaClaw cost, where the text-only resident is a different model, is an ESTIMATE and is reported separately from measured call avoidance.",
       "model": {
         "model": "qwen/qwen3.7-flash",

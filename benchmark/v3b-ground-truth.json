@@ -1,0 +1,393 @@
+{
+  "depth_1_property": "At depth 1 the expected answer equals the first displayed integer, because the task is to add that integer to an initial state of 0. Any arm whose evidence is text (E2, E3) therefore contains the answer verbatim, while E1 must still read it from the image. Depth 1 is consequently a degenerate ACCURACY comparison and is retained only as the no-amortisation economic baseline, where expected multimodal avoidance is 0%. This is a property of the preregistered task at depth 1, recorded rather than engineered away; the frozen protocol fixes the depths as 1, 2, 4 and 8.",
+  "depths": [
+    1,
+    2,
+    4,
+    8
+  ],
+  "deterministic": true,
+  "family": "chained_accumulation",
+  "generator": "scripts/make_v3b_suite.py",
+  "ground_truth_sha256": "a2b1c2747f5c8d5ad226be27ce7e8d269838d54d622832ac6787d76b246c9b21",
+  "items": [
+    {
+      "episodes": [
+        {
+          "chain": [
+            {
+              "addend": 7,
+              "running_total": 7,
+              "step": 1
+            }
+          ],
+          "depth": 1,
+          "expected_answer": "7",
+          "reasoning_steps": 1,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 7,
+              "running_total": 7,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 19,
+              "step": 2
+            }
+          ],
+          "depth": 2,
+          "expected_answer": "19",
+          "reasoning_steps": 2,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 7. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 7,
+              "running_total": 7,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 19,
+              "step": 2
+            },
+            {
+              "addend": 5,
+              "running_total": 24,
+              "step": 3
+            },
+            {
+              "addend": 9,
+              "running_total": 33,
+              "step": 4
+            }
+          ],
+          "depth": 4,
+          "expected_answer": "33",
+          "reasoning_steps": 4,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+            "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+            "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 7. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 2 is 19. Add the number at position 3 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 3 is 24. Add the number at position 4 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 7,
+              "running_total": 7,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 19,
+              "step": 2
+            },
+            {
+              "addend": 5,
+              "running_total": 24,
+              "step": 3
+            },
+            {
+              "addend": 9,
+              "running_total": 33,
+              "step": 4
+            },
+            {
+              "addend": 14,
+              "running_total": 47,
+              "step": 5
+            },
+            {
+              "addend": 2,
+              "running_total": 49,
+              "step": 6
+            },
+            {
+              "addend": 11,
+              "running_total": 60,
+              "step": 7
+            },
+            {
+              "addend": 4,
+              "running_total": 64,
+              "step": 8
+            }
+          ],
+          "depth": 8,
+          "expected_answer": "64",
+          "reasoning_steps": 8,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "edf5a00f271a349fcee381cefd3bece7da8df98f2d787b655171859fac701fd3",
+            "c28a8101a1c5a97ee0a1f62cfc681b8b172cd8afc76e9e2ae424c702fd6fc29a",
+            "8ec52e720857de78af007f9b8476912af963f15b41631c182ae95547e99524d2",
+            "cbe02c3633df41d76b279b8820b439426dbb27eaa4de540c239cd4e2d37d63c1",
+            "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+            "394583d181cb584ce8ec6d92309630aca3359e0cbae1f40d227352c6ee8ed082",
+            "2c2a41710fd2be12e0abd4d16e84a8a40158e5a67da061685f2b483dd596660b"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 7. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 2 is 19. Add the number at position 3 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 3 is 24. Add the number at position 4 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 4 is 33. Add the number at position 5 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 5 is 47. Add the number at position 6 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 6 is 49. Add the number at position 7 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 7 is 60. Add the number at position 8 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        }
+      ],
+      "family": "chained_accumulation",
+      "image_filename": "chain_a.png",
+      "image_sha256": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+      "initial_state": 0,
+      "integers": [
+        7,
+        12,
+        5,
+        9,
+        14,
+        2,
+        11,
+        4
+      ],
+      "item_id": "chain_a",
+      "oracle_facts": "The numbers shown, in left-to-right order, are: 7, 12, 5, 9, 14, 2, 11, 4.",
+      "oracle_facts_sha256": "fe93f9be35c3226ced7f7d3b6439c082ae2555fc921dbc28d22d9c849127c0ac",
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "symbolic_handoff": {
+        "observation": {
+          "numbers_left_to_right": [
+            7,
+            12,
+            5,
+            9,
+            14,
+            2,
+            11,
+            4
+          ]
+        },
+        "schema_version": 1
+      }
+    },
+    {
+      "episodes": [
+        {
+          "chain": [
+            {
+              "addend": 9,
+              "running_total": 9,
+              "step": 1
+            }
+          ],
+          "depth": 1,
+          "expected_answer": "9",
+          "reasoning_steps": 1,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 9,
+              "running_total": 9,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 21,
+              "step": 2
+            }
+          ],
+          "depth": 2,
+          "expected_answer": "21",
+          "reasoning_steps": 2,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 9. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 9,
+              "running_total": 9,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 21,
+              "step": 2
+            },
+            {
+              "addend": 4,
+              "running_total": 25,
+              "step": 3
+            },
+            {
+              "addend": 15,
+              "running_total": 40,
+              "step": 4
+            }
+          ],
+          "depth": 4,
+          "expected_answer": "40",
+          "reasoning_steps": 4,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+            "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+            "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 9. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 2 is 21. Add the number at position 3 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 3 is 25. Add the number at position 4 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        },
+        {
+          "chain": [
+            {
+              "addend": 9,
+              "running_total": 9,
+              "step": 1
+            },
+            {
+              "addend": 12,
+              "running_total": 21,
+              "step": 2
+            },
+            {
+              "addend": 4,
+              "running_total": 25,
+              "step": 3
+            },
+            {
+              "addend": 15,
+              "running_total": 40,
+              "step": 4
+            },
+            {
+              "addend": 7,
+              "running_total": 47,
+              "step": 5
+            },
+            {
+              "addend": 22,
+              "running_total": 69,
+              "step": 6
+            },
+            {
+              "addend": 5,
+              "running_total": 74,
+              "step": 7
+            },
+            {
+              "addend": 11,
+              "running_total": 85,
+              "step": 8
+            }
+          ],
+          "depth": 8,
+          "expected_answer": "85",
+          "reasoning_steps": 8,
+          "step_prompt_sha256": [
+            "6c0dbf6fb2d9365a1b108ca496559da27f6e97469debcf33e6dae8e0a96dd275",
+            "f4d4637566772d4154c9c352c36c3a69bed6d1f98f26c91145940d4070fbd4b8",
+            "7c1e18713d058064adf4ea5ea100b551b58b659edb0a815b4f384b62cdc3c281",
+            "801ca3e071a62558ee667ecd9539062f987e82c1acae6726838511b0e5a70bdd",
+            "61c8a74fd6a312b39da6168c942bcebfaa494b650856c2d4ca3b53257d6e3fda",
+            "7082a5e8e5a63834efdab8670d3b5613ff05f1b8e7f46f83e9564e52d6665127",
+            "cbc6cb58e497eb2ac2201195e09295c0172b3aec54d9135205bb7a2d609972e1",
+            "90bb9ff3ae009cd2b847d9af976559f3b14fad90033e1073c5c88a5292dfc3bf"
+          ],
+          "step_prompts": [
+            "The numbers are added one at a time, from left to right. The running total after step 0 is 0. Add the number at position 1 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 1 is 9. Add the number at position 2 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 2 is 21. Add the number at position 3 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 3 is 25. Add the number at position 4 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 4 is 40. Add the number at position 5 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 5 is 47. Add the number at position 6 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 6 is 69. Add the number at position 7 and reply with the new running total. Use digits only. Reply with no spaces and no other text.",
+            "The numbers are added one at a time, from left to right. The running total after step 7 is 74. Add the number at position 8 and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+          ]
+        }
+      ],
+      "family": "chained_accumulation",
+      "image_filename": "chain_b.png",
+      "image_sha256": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+      "initial_state": 0,
+      "integers": [
+        9,
+        12,
+        4,
+        15,
+        7,
+        22,
+        5,
+        11
+      ],
+      "item_id": "chain_b",
+      "oracle_facts": "The numbers shown, in left-to-right order, are: 9, 12, 4, 15, 7, 22, 5, 11.",
+      "oracle_facts_sha256": "47f157c5eb9b52fc427d42fb46fa9791d62886fcf820e7748f85dda97db3baf5",
+      "output_contract": "Use digits only. Reply with no spaces and no other text.",
+      "symbolic_handoff": {
+        "observation": {
+          "numbers_left_to_right": [
+            9,
+            12,
+            4,
+            15,
+            7,
+            22,
+            5,
+            11
+          ]
+        },
+        "schema_version": 1
+      }
+    }
+  ],
+  "protocol_version": "v3",
+  "renderable_digits": "124579",
+  "repeats": 1,
+  "schema_version": 1,
+  "section": "V3-B",
+  "step_instruction_template": "The numbers are added one at a time, from left to right. The running total after step {previous_step} is {previous_total}. Add the number at position {step} and reply with the new running total. Use digits only. Reply with no spaces and no other text."
+}
