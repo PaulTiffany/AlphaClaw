@@ -96,11 +96,13 @@ def test_artifact_declares_itself_a_preregistration(spec) -> None:
         assert banned not in blob, banned
 
 
-def test_v3b_has_not_been_run(spec) -> None:
-    """V3-A has since run; V3-B must stay unexecuted until its generator is frozen."""
-    for name in ("benchmark-v3-B.json", "benchmark-v3.json", "screening-v3.json"):
-        assert not (ROOT / "benchmark" / name).exists(), name
+def test_v3b_execution_did_not_alter_the_preregistration(spec) -> None:
+    """V3-B has since run. The preregistration must still describe the same plan."""
     assert spec["sections"]["V3B"]["call_budget"]["total_calls"] == 98
+    assert spec["sections"]["V3B"]["call_budget"]["multimodal_calls"] == 38
+    assert spec["sections"]["V3B"]["call_budget"]["text_calls"] == 60
+    for name in ("benchmark-v3.json", "screening-v3.json"):
+        assert not (ROOT / "benchmark" / name).exists(), name
 
 
 def test_the_preregistration_artifact_holds_no_results(spec) -> None:

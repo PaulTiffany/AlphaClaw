@@ -413,6 +413,12 @@ def test_no_provider_or_network_path_in_any_v3b_module() -> None:
         assert "api_key" not in source.lower(), name
 
 
-def test_no_v3b_result_artifact_exists() -> None:
-    for name in ("benchmark-v3-B.json", "benchmark-v3b.json"):
-        assert not (ROOT / "benchmark" / name).exists(), name
+def test_execution_did_not_alter_the_frozen_population() -> None:
+    """V3-B has since run. Its fixtures must be byte-identical to the frozen ones."""
+    result = json.loads(
+        (ROOT / "benchmark" / "benchmark-v3-B.json").read_text(encoding="utf-8"))
+    assert result["ground_truth_file_sha256"] == GROUND_TRUTH_FILE_SHA
+    assert result["ground_truth_doc_sha256"] == GROUND_TRUTH_DOC_SHA
+    for item_id, digest in IMAGE_SHA.items():
+        path = STIMULI / f"{item_id}.png"
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest, item_id
