@@ -1,0 +1,117 @@
+{
+  "amendments": [
+    {
+      "changed": "froze the rule that B2 replays B1 repeat_index = 0 only, with no fall-through to repeat 1 and no quality-based selection",
+      "discovered": "after condition B1 completed",
+      "id": "v2.1",
+      "module": "scripts/amendment_v2_1.py",
+      "relative_to_inference": "BEFORE any B2 provider call",
+      "subject": "B2 replay-source selection",
+      "unchanged": [
+        "stimuli",
+        "sensory model",
+        "resident model",
+        "B2 item list",
+        "scorer",
+        "sensory boundary",
+        "B1 results",
+        "replay bytes",
+        "ASICloud caps"
+      ]
+    },
+    {
+      "changed": "defined the composed replay payload as the frozen instruction plus the frozen B1 handoff, byte-identical to what the live image+text route would build; clarified that the replay input does NOT equal the raw handoff",
+      "discovered": "during the B2 preflight",
+      "id": "v2.2",
+      "module": "scripts/amendment_v2_2.py",
+      "relative_to_inference": "BEFORE any B2 provider call",
+      "subject": "B2 composition replay semantics",
+      "unchanged": [
+        "B2 items",
+        "the repeat-0 rule",
+        "B1 handoff bytes",
+        "task text",
+        "sensory model",
+        "resident model",
+        "scorer",
+        "caps",
+        "live ingress behaviour"
+      ]
+    },
+    {
+      "changed": "a bare substring test falsely flagged the frozen number_arithmetic payload, whose image digest contains \"19\"; leakage now means the answer appears as a standalone token",
+      "discovered": "during the V3-A preflight",
+      "id": "v3.1",
+      "module": "scripts/representation_v3.py",
+      "relative_to_inference": "BEFORE any V3-A provider call",
+      "subject": "answer-leakage check",
+      "unchanged": [
+        "representations",
+        "transforms",
+        "models",
+        "budgets",
+        "conditions",
+        "the check still applies to every variant incl. R1"
+      ]
+    },
+    {
+      "changed": "Protocol v3 defined E2 twice and inconsistently; the ruling is reasoning-step parity, so C_Alpha(N) = C_multimodal + N * C_text and E2 issues N + 1 provider calls per episode",
+      "discovered": "after V3-A, during the V3-B fixture freeze",
+      "id": "v3.2",
+      "module": "scripts/economics_v3.py",
+      "relative_to_inference": "BEFORE any V3-B provider call and before the V3-B population was frozen",
+      "subject": "reasoning-step parity and the AlphaClaw cost equation",
+      "unchanged": [
+        "architectures",
+        "models",
+        "task family",
+        "depths",
+        "repeats",
+        "providers",
+        "expected_call_structure",
+        "all caps"
+      ]
+    }
+  ],
+  "base_commit": "5bb771df44809c731f1386a678c2cfe22f1e9d89",
+  "checkpoint_version": "research-checkpoint-1",
+  "derivation": {
+    "v2": "scripts/synthesis_v2.py",
+    "v3": "scripts/synthesis_v3.py",
+    "verifier": "scripts/verify_research_checkpoint.py"
+  },
+  "evidence": {
+    "benchmark/benchmark-v2-A.json": "644f36e406df5520f54e6bcb706b891e9dd1ff9094c6c0d59cfb305e68be65ea",
+    "benchmark/benchmark-v2-B2.json": "8b6cc4557b27c8cc2acf7803ca05293b0fd39ca1fe1cc6f89dbe838045fd7d48",
+    "benchmark/benchmark-v2-C.json": "b46ea2ceb4429c15bd3fa5b422d4e47e5a3acdb70467b6c5a3960eee090f6c88",
+    "benchmark/benchmark-v3-A.json": "98ab018e8f8dcb2de405e21a800239583968c7832b1a8665cd31686072ad6552",
+    "benchmark/benchmark-v3-B.json": "f5ddcf3d77f010a4d199d6eea4c87fa093b3fe7576d01258a9997b9b493aeab2",
+    "benchmark/protocol-v2.json": "b5ee0c3760a9540119526f1c51ac1dc5cc0d6fadc0fe1e378ddf770d3d02557f",
+    "benchmark/protocol-v3.json": "a65cbaad7640c3c64a03903dddef8b9162f08bd1d3a524fadc3367148ede0409",
+    "benchmark/screening-v2-B1.json": "847828d469d60269a289f5183d07a69c6afc4c123ef1ad51346490e778e0ab14",
+    "benchmark/v3b-ground-truth.json": "35ce510b03473c58a166c6fabafa93a21f6a57e16dd203a7adf7b2b64c8ef767",
+    "benchmark/v3b-stimuli/chain_a.png": "16454976d4be08df49380dd26a9e611a890d71ddc0f2a3c405da28672e6ed54c",
+    "benchmark/v3b-stimuli/chain_b.png": "758ab03f2d7238de860d03749094f1e284c2c0ec59af54c09a2aa41c6b00919a",
+    "scripts/score_handoff.py": "54fca8997f1f0dea9555b5b91f145d477c8b3172b4bc09a590b35454f6191699",
+    "scripts/synthesis_v2.py": "4a3f6f3d1bd5964bd5d7cefbea01b2e1541914ac79c997eb2903950c78f82b33",
+    "scripts/synthesis_v3.py": "9ef36891cbb2974da90b4810097778c0938f3a7729944bb397fde7dbb2ad331f"
+  },
+  "protocol_v4_started": false,
+  "protocols_complete": [
+    "v2",
+    "v3"
+  ],
+  "purpose": "an index of frozen evidence; results are NOT restated here and must be derived from the artifacts this file points at",
+  "restates_results": false,
+  "substrate": {
+    "omega_sha": "3d711e4b9f5254ae94f31123ca242f60cfd97d29",
+    "pins_all_true": true,
+    "source": "read from run manifests inside the frozen result artifacts",
+    "stock_omega_image_id": "sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a",
+    "threadkeeper_sha": "a64de99e10f9f8078d25bff511b44fd71819e931"
+  },
+  "synthesis_merge_commits": {
+    "v2": "364dac574464b1b39be9718a38a144a648b02976",
+    "v3": "5bb771df44809c731f1386a678c2cfe22f1e9d89"
+  }
+}
