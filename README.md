@@ -34,6 +34,19 @@ GitHub Wiki
 
 The first is AlphaClaw proper. OmegaClaw and ThreadKeeper are pinned upstream dependencies. The controller is experimental apparatus. The Wiki is a human contribution surface.
 
+## Research checkpoint
+
+Protocols **v2** and **v3** are complete and frozen. Start at **[RESEARCH.md](RESEARCH.md)**
+for the architecture, results, claims/non-claims and reproduction instructions.
+
+Verify the published analysis offline -- no API key, no cost, no containers:
+
+```
+python scripts/verify_research_checkpoint.py
+```
+
+`benchmark/research-checkpoint.json` indexes every frozen artifact by SHA256.
+
 ## 1. AlphaClaw: sensory boundary
 
 `ingress/` contains the AlphaClaw runtime idea.
