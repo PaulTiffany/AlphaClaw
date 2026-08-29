@@ -1013,6 +1013,122 @@ here in a way that says nothing about its behaviour under a larger loop budget.
 by the OpenRouter receipts. Requested and resolved model was
 `google/gemma-4-26b-a4b-it` on every call: no fallback, no substitution.
 
+## Protocol v2 -- synthesis (matrix complete)
+
+The preregistered v2 robustness question:
+
+> Does bounded AlphaClaw continue behaving sensibly when reasonable explicit
+> sensory/resident models are substituted while tasks and architecture are held fixed?
+
+**The answer is deliberately not collapsed into one accuracy number.** The four
+conditions measure different things. Every figure below is recomputed from the frozen
+artifacts by `scripts/synthesis_v2.py`; tests fail if any of them drifts from the
+evidence, including the numbers quoted in this section.
+
+| condition | what it varies | headline |
+|---|---|---|
+| **A** primary | dots sensory + ASICloud MiniMax M3 | text control **6/6**; image-only facts **20/21**, accuracy over scoreable **20/20**; image+text **5/6** |
+| **B1** sensory portability | frozen boundary -> Qwen | **12/12** calls, schema **12/12**, facts **40/42**, accuracy over scoreable **40/40** |
+| **B2** sensory substitution | dots handoff -> Qwen handoff | 3 paired cases, **0/3** pass/fail transitions |
+| **C** resident substitution | MiniMax -> Gemma | 3 paired cases, **3/3** PASS -> FAIL, exact match **0/3** |
+
+### B1 -- the frozen boundary is portable
+
+`qwen/qwen3.7-flash`: 12/12 calls succeeded, 12/12 schema-compliant, atomic-fact yield
+40/42, accuracy over scoreable facts 40/40, coverage 40/42. The two shortfalls are both
+`relation` facts scored **unknown** under the frozen lexicon. They are **not** manually
+upgraded, and the lexicon was not broadened after seeing the wording.
+
+### A -- primary condition
+
+Text control 6/6. Image-only sensory yield 20/21 with accuracy 20/20 over scoreable
+facts. Image+text exact match 5/6. Every one of the 18 runs held **1 boot + 1 episode**;
+zero bound violations. The single failure is `distractor_selection` image+text: sensory
+evidence correct 4/4, the correct token `RED` derived internally, but emitted as an
+invalid skill call rather than through `send`, so no response reached the channel.
+Classified output-contract, not rounded up.
+
+### B2 -- sensory substitution changed nothing here
+
+Same task instruction, same MiniMax resident, dots handoff versus Qwen handoff, zero new
+sensory calls. Both sensory sources contained every mechanically identified required
+fact. Transitions: `ocr_count` PASS -> PASS, `distractor_selection` FAIL -> FAIL,
+`multi_fact_composition` PASS -> PASS -- **0/3 transitions**.
+
+> **Within these three preregistered paired cases, changing the sensory-model-produced
+> symbolic evidence did not change downstream pass/fail outcome.**
+
+That is not a claim that sensory model choice never matters.
+
+### C -- resident substitution changed everything here
+
+Same resident-facing evidence, byte equality mechanically proven on all three, MiniMax
+versus Gemma. **3/3 PASS -> FAIL**, exact match 0/3: two reasoning/composition failures
+and one output-contract failure.
+
+> **Within these three preregistered paired cases, changing the resident model changed
+> every bounded outcome.**
+
+This is a one-turn bounded benchmark. A model that spends its one turn on bookkeeping
+fails this population; that does **not** establish its behaviour under a larger
+reasoning-loop budget.
+
+### Cross-condition conclusion
+
+> **Protocol v2 found stronger robustness to sensory-model substitution than to
+> resident-model substitution under the tested bounded conditions.**
+
+The finding is the asymmetry itself -- 0/3 transitions versus 3/3 -- not any single
+accuracy figure.
+
+**What this is not.** Not a universal ranking of models. Not evidence that dots is
+better than Qwen. Not evidence that MiniMax is better than Gemma generally. Not evidence
+that a larger-loop Gemma would fail. Not evidence that sensory substitution never
+matters.
+
+### Output-channel behaviour as an independent failure surface
+
+The `distractor_selection` failure survived sensory substitution, and a related emission
+failure appeared under a different resident:
+
+```
+dots -> MiniMax : (RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))
+Qwen -> MiniMax : (RESPONSE: ((Error UNKNOWN_SKILL_CALL "RED")))
+dots -> Gemma   : (RESPONSE: ((Error UNKNOWN_SKILL_CALL "19")))
+```
+
+In each case the correct token existed and never reached the channel. This supports
+treating output-channel / skill-selection behaviour as an **independently measurable
+failure surface**, rather than folding it into perception or semantic answer formation.
+Three cases across two residents do **not** establish a common cause, and none is
+claimed.
+
+### Accounting -- two ledgers, artifact-recorded only
+
+| ledger | detail |
+|---|---|
+| ASICloud resident | A 36 + B2 6 = **42 / 42** (cap not raised) |
+| OpenRouter sensory | B1 Qwen **12**, A dots **12**; B2 and C **0** each |
+| OpenRouter resident | C **6** calls, 11,199 in / 177 out, actual cost **$0.001085** |
+
+### Reproducibility
+
+| | |
+|---|---|
+| `protocol-v2.json` | `b5ee0c3760a9540119526f1c51ac1dc5cc0d6fadc0fe1e378ddf770d3d02557f` |
+| `screening-v2-B1.json` | `847828d469d60269a289f5183d07a69c6afc4c123ef1ad51346490e778e0ab14` |
+| `benchmark-v2-A.json` | `644f36e406df5520f54e6bcb706b891e9dd1ff9094c6c0d59cfb305e68be65ea` |
+| `benchmark-v2-B2.json` | `8b6cc4557b27c8cc2acf7803ca05293b0fd39ca1fe1cc6f89dbe838045fd7d48` |
+| `benchmark-v2-C.json` | `b46ea2ceb4429c15bd3fa5b422d4e47e5a3acdb70467b6c5a3960eee090f6c88` |
+| amendments | v2.1 (repeat-0 replay source), v2.2 (composition replay) |
+| OmegaClaw pin | `3d711e4b9f5254ae94f31123ca242f60cfd97d29` |
+| ThreadKeeper pin | `a64de99e10f9f8078d25bff511b44fd71819e931` |
+| stock image | `sha256:69ff11bf227b197f697aab4488e879258560730565838b19db25e3dd580af90a` |
+| scorer | `54fca8997f1f0dea9555b5b91f145d477c8b3172b4bc09a590b35454f6191699`, relation lexicon unbroadened |
+
+A single Omega SHA, a single ThreadKeeper SHA and a single image ID cover **all 24
+bounded runs** across A, B2 and C, with commit and byte pins true on every one.
+
 ## Unbounded Omega is a different population
 
 A developer who wants standing/autonomous/unbounded OmegaClaw runs upstream OmegaClaw directly instead of `controller/omegaboi.py`. That is a legitimate choice, but it is outside the bounded benchmark population and must not inherit its measurements or claims.
