@@ -1,6 +1,22 @@
-# AlphaClaw
+<p align="center">
+  <img src="assets/brand/alphaclaw-logo.png" alt="AlphaClaw" width="380">
+</p>
 
-**Multimodal at the boundary. Text inference in the loop. Human authority around both.**
+<h1 align="center">AlphaClaw</h1>
+
+<p align="center">
+  <strong>Multimodal at the boundary. Text inference in the loop. Human authority around both.</strong>
+</p>
+
+<p align="center">
+  <a href="https://youtu.be/IIjwI9CX4Vs">▶ Watch the 2:42 overview</a>
+  &nbsp;·&nbsp;
+  <a href="VIDEO.md">video notes</a>
+  &nbsp;·&nbsp;
+  <a href="RESEARCH.md">research checkpoint</a>
+  &nbsp;·&nbsp;
+  <a href="PHILOSOPHY.md">philosophy</a>
+</p>
 
 AlphaClaw is a small sensory tool for a text-only reasoning process.
 
@@ -57,6 +73,13 @@ python scripts/verify_research_checkpoint.py
 text -------------------------------> fixed Alpha prepend -> text-only handoff
 image -> one external perception ---> fixed Alpha prepend -> text-only handoff
 ```
+
+<p align="center">
+  <img src="assets/diagrams/perceive-once.svg" alt="The baseline re-sends the image on every reasoning turn; AlphaClaw perceives once and reasons over text" width="900">
+</p>
+
+<p align="center"><em>The perception call is an architectural setup cost, not one of the
+<code>N</code> reasoning steps.</em></p>
 
 For already-textual input:
 
@@ -129,6 +152,10 @@ The controller therefore also sets the first wake deadline later than the entire
 ### Provider seam
 
 Omega remains stock and uses its built-in generic `OpenAIAPI` provider. That documented OpenAI-compatible seam points to a small host-side metering gateway over `host.docker.internal`.
+
+<p align="center">
+  <img src="assets/diagrams/measurement-path.svg" alt="The raw provider receipt is written first; ThreadKeeper is a second, isolated accounting witness" width="900">
+</p>
 
 ```text
 stock Omega OpenAIAPI request
@@ -261,6 +288,10 @@ A Wiki save changes the Wiki only. It does not run OmegaClaw, become AlphaClaw s
 
 The controller keeps the experimental fixture outside the subject:
 
+<p align="center">
+  <img src="assets/diagrams/trust-boundary.svg" alt="Bounds, metering and stop authority run on the host, outside the container holding the reasoner" width="900">
+</p>
+
 ```text
 HOST
   Alpha ingress
@@ -299,6 +330,10 @@ Documentation machinery has to answer the same question. A runtime capability mu
 
 ## License and attribution
 
-AlphaClaw original code: MIT © 2026 Paul Carver Tiffany III.
+AlphaClaw original code: MIT © 2026 Paul Carver Tiffany III and Derek Tiffany.
+
+The project video and the diagrams under `assets/diagrams/` are licensed
+[CC BY 4.0](LICENSE-MEDIA) — share and adapt with credit. Music in the video is
+carried under its own Pixabay licence and is not relicensed.
 
 `OmegaClaw-Core` and `external/ThreadKeeper` are upstream works and retain their own upstream licenses, authorship, documentation, and notices.
