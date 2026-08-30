@@ -8,6 +8,7 @@ is a self-contained fragment that renders directly in GitHub markdown.
 | `perceive-once.svg` | the baseline re-sends the image every turn; AlphaClaw perceives once and reasons over text |
 | `trust-boundary.svg` | bounds, metering and stop authority run on the host, outside the container holding the reasoner |
 | `measurement-path.svg` | the raw provider receipt is written first; ThreadKeeper is a second, isolated witness |
+| `maxwell-ai-demon.svg` | an apparent free lunch always has a ledger; unknown cost is not zero cost |
 
 Palette follows the project social image: deep navy `#080E15`, electric blue `#31A9F0`
 for the path under discussion, crab red `#F04B36` for the cost being avoided.
