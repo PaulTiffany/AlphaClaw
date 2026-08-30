@@ -468,6 +468,63 @@ Intelligence may scale rapidly.
 
 Wisdom, trust, and authority still need room to spread, disagree, abstain, and say no.
 
+## Do not build a Maxwell demon
+
+In 1867 James Clerk Maxwell imagined a small being at a door between two chambers of
+gas. It lets the fast molecules through one way and the slow ones the other. One side
+warms, the other cools. Order appears out of disorder, and no work was done.
+
+The second law of thermodynamics, defeated by a doorman.
+
+<p align="center">
+  <img src="assets/diagrams/maxwell-ai-demon.svg" alt="Maxwell's demon appears to create order for free; the cost was always in the measurement and memory. The AI version hides the same ledger." width="900">
+</p>
+
+It took ninety years to say exactly what was wrong. The demon has to **measure** which
+molecules are fast. It has to **remember** what it measured. And eventually it has to
+**erase** that memory to keep sorting — which, as Landauer showed, costs energy that
+cannot be refunded.
+
+The demon never got a free lunch. It moved the cost into the bookkeeping, where nobody
+was looking.
+
+### The same trick, with agents
+
+A system that generates a million proposals and sorts the good ones from the bad looks
+like it creates value from nothing. It does not. Somebody paid for the sorting — in
+inference, in electricity, and above all in the human attention required to decide
+whether the sorted output is any good.
+
+That cost is easy to hide, because unlike a gas chamber nobody is holding a thermometer
+to it. A demo where the accounting is off-screen will always look like a free lunch.
+
+So:
+
+> **Unknown cost is not zero cost.**
+
+This is why the benchmark in this repository refuses to record a provider call whose
+usage it could not read. Not because the number would be slightly wrong, but because a
+system that silently rounds unmeasured cost down to zero is a Maxwell demon with better
+marketing.
+
+In symbols:
+
+\[
+\text{unmeasured} \neq 0
+\]
+
+\[
+\text{apparent free lunch} \Rightarrow \text{look for the ledger}
+\]
+
+Cheap intelligence does not repeal conservation. It relocates the bill. The work is
+finding out where it went — and writing it down where someone else can check.
+
+**Keep the receipts. Then check the claim.**
+
+*(Landauer's principle is a claim about physics and is not in dispute. The application
+to agent systems is an analogy — a useful one, we think, but say which is which.)*
+
 ## This philosophy may also be wrong
 
 This is important.
